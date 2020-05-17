@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">KITA</string>
+
+    <!-- activity_main -->
+    <string name="activity_main_text_01">Welcome</string>
+    <string name="activity_main_text_02">Is this your first visit?</string>
+</resources>

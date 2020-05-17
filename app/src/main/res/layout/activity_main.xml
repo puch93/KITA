@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/replace_area"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/above_shadow" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
+
+            <LinearLayout
+                android:id="@+id/ll_menu_01"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="17.7dp"
+                    android:layout_height="19.3dp"
+                    android:src="@drawable/sel_main_menu01" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_menu_02"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="17.7dp"
+                    android:layout_height="19.3dp"
+                    android:src="@drawable/sel_main_menu02" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_menu_03"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="17.7dp"
+                    android:layout_height="19.3dp"
+                    android:src="@drawable/sel_main_menu03" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_menu_04"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="17.7dp"
+                    android:layout_height="19.3dp"
+                    android:src="@drawable/sel_main_menu04" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

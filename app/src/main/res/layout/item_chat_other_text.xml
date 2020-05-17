@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="5.7dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_aaaaaa"
+            android:layout_gravity="bottom"
+            tools:text="15:06"
+            />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_chat_chat_02"
+            android:includeFontPadding="false"
+            android:paddingLeft="14dp"
+            android:paddingTop="10dp"
+            android:maxWidth="270dp"
+            android:minWidth="40dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="10dp"
+            android:text="hi~ It is content..."
+            android:textColor="@color/color_white"
+            android:textSize="13dp" />
+    </LinearLayout>
+</LinearLayout>

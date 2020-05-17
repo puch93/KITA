@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="title_bar_height">49dp</dimen>
+    <dimen name="deco_20">20dp</dimen>
+    <dimen name="deco_16">16dp</dimen>
+
+
+    <dimen name="size_profile_talk_minus">54dp</dimen>
+    <dimen name="size_profile_talk_default">102dp</dimen>
+
+    <dimen name="size_home_item_minus">46dp</dimen>
+    <dimen name="size_home_item_default">223dp</dimen>
+</resources>

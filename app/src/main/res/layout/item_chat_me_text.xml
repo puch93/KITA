@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginLeft="20dp"
+            android:scaleType="centerCrop"
+            tools:background="@color/color_e5e5e5" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:maxWidth="270dp"
+            android:minWidth="40dp"
+            android:background="@drawable/bg_chat_chat_01"
+            android:includeFontPadding="false"
+            android:paddingLeft="14dp"
+            android:paddingTop="10dp"
+            android:paddingRight="14dp"
+            android:paddingBottom="10dp"
+            tools:text="hi~ It is content..."
+            android:textColor="@color/color_404040"
+            android:textSize="13dp" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="5.7dp"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_aaaaaa"
+            android:layout_gravity="bottom"
+            tools:text="15:06"
+            />
+    </LinearLayout>
+</LinearLayout>

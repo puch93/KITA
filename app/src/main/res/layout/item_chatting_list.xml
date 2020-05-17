@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:background="@color/color_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="46dp"
+            android:scaleType="centerCrop"
+            android:layout_height="46dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="@color/color_292929"
+                android:textSize="13dp"
+                tools:text="Sunny" />
+
+            <TextView
+                android:id="@+id/tv_contents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="@color/color_404040"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                tools:text="live talk title~~" />
+
+            <TextView
+                android:id="@+id/tv_reg_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:includeFontPadding="false"
+                android:textColor="@color/color_aaaaaa"
+                android:textSize="11dp"
+                tools:text="2020.02.09" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_read_count"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:includeFontPadding="false"
+            android:visibility="invisible"
+            android:background="@drawable/shape_circle_red"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="13dp"
+            tools:text="1"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_e5e5e5" />
+</LinearLayout>

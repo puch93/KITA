@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/title_bar_height"
+        android:background="@color/color_white">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:paddingLeft="16dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_gravity="center"
+                android:src="@drawable/btn_back" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Sign Up"
+            android:textColor="@color/color_292929"
+            android:includeFontPadding="false"
+            android:textSize="19dp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_e5e5e5" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="none"
+        android:fillViewport="true"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="360dp"
+                    tools:background="@color/color_e5e5e5" />
+
+                <ImageView
+                    android:layout_width="98dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/btn_join_editphoto" />
+            </FrameLayout>
+
+
+            <!-- id area -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="29.3dp"
+                android:layout_marginTop="20dp"
+                android:includeFontPadding="false"
+                android:text="ID"
+                android:textColor="@color/color_404040"
+                android:textSize="13.3dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="42.7dp"
+                android:layout_marginLeft="29.7dp"
+                android:layout_marginRight="29.7dp"
+                android:background="@null"
+                android:hint="enter your ID"
+                android:inputType="textEmailAddress"
+                android:textSize="12dp"
+                tools:text="KITA@KITA.com" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1.3dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/color_e5e5e5" />
+
+
+            <!-- password area -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="29.3dp"
+                android:layout_marginTop="20dp"
+                android:includeFontPadding="false"
+                android:text="Password"
+                android:textColor="@color/color_404040"
+                android:textSize="13.3dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="42.7dp"
+                android:layout_marginLeft="29.7dp"
+                android:layout_marginRight="29.7dp"
+                android:background="@null"
+                android:hint="enter your Password"
+                android:inputType="textPassword"
+                android:textSize="12dp"
+                tools:text="12345678" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1.3dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/color_e5e5e5" />
+
+            <!-- password confirm area -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="29.3dp"
+                android:layout_marginTop="20dp"
+                android:includeFontPadding="false"
+                android:text="Confirm Password"
+                android:textColor="@color/color_404040"
+                android:textSize="13.3dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="42.7dp"
+                android:layout_marginLeft="29.7dp"
+                android:layout_marginRight="29.7dp"
+                android:background="@null"
+                android:hint="enter your Confirm Password"
+                android:inputType="textPassword"
+                android:textSize="12dp"
+                tools:text="12345678" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1.3dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/color_e5e5e5" />
+
+
+            <!-- nick name area -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="29.3dp"
+                android:layout_marginTop="20dp"
+                android:includeFontPadding="false"
+                android:text="Nickname"
+                android:textColor="@color/color_404040"
+                android:textSize="13.3dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="42.7dp"
+                android:layout_marginLeft="29.7dp"
+                android:layout_marginRight="29.7dp"
+                android:background="@null"
+                android:hint="enter your Nickname"
+                android:inputType="textEmailAddress"
+                android:textSize="12dp"
+                tools:text="KITA@KITA.com" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1.3dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@color/color_e5e5e5" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
