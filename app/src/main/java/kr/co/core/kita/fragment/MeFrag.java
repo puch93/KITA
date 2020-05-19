@@ -1,6 +1,7 @@
 package kr.co.core.kita.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.SettingAct;
 import kr.co.core.kita.adapter.ChattingListAdapter;
 import kr.co.core.kita.adapter.ProfileTalkAdapter;
 import kr.co.core.kita.data.ChattingLIstData;
@@ -47,6 +49,12 @@ public class MeFrag extends BaseFrag {
 
         setTestData();
 
+        binding.flMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                act.startActivity(new Intent(act, SettingAct.class));
+            }
+        });
         return binding.getRoot();
     }
 

@@ -1,7 +1,36 @@
 <resources>
     <string name="app_name">KITA</string>
 
+    <!-- 앱내부 사용 문자열 -->
+    <string name="toast_network">네트워크 상태를 확인해주세요</string>
+    <string name="toast_develop">현재 개발중인 기능입니다</string>
+
+    <string name="ago_seconds">초전</string>
+    <string name="ago_minutes">분전</string>
+    <string name="ago_hours">시간전</string>
+    <string name="ago_days">일전</string>
+    <string name="ago_months">달전</string>
+    <string name="ago_years">년전</string>
+
     <!-- activity_main -->
     <string name="activity_main_text_01">Welcome</string>
     <string name="activity_main_text_02">Is this your first visit?</string>
+
+    <string-array name="region_select_w">
+        <item>Makati</item>
+        <item>Malate</item>
+        <item>Pasay</item>
+        <item>Angeles</item>
+        <item>Cebu</item>
+    </string-array>
+
+    <string-array name="region_select_m">
+        <item>Republic of Korea</item>
+        <item>Philippines</item>
+    </string-array>
+
+    <string-array name="gender_select">
+        <item>Female</item>
+        <item>Male</item>
+    </string-array>
 </resources>

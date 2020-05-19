@@ -4,13 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.util.StringUtil;
 
 
-public class WarningPopupDlg extends BaseDialog {
+public class WarningPopupDlg extends BaseDlg {
     public static final String REPORT = "report";
     Activity act;
 

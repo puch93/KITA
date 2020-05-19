@@ -1,6 +1,7 @@
 package kr.co.core.kita.fragment;
 
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,15 +19,25 @@ import androidx.databinding.DataBindingUtil;
 import com.google.android.material.tabs.TabLayout;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.CallHistoryAct;
+import kr.co.core.kita.activity.SearchAct;
 import kr.co.core.kita.adapter.HomePagerAdapter;
 import kr.co.core.kita.adapter.TalkPagerAdapter;
 import kr.co.core.kita.databinding.FragmentHomeBinding;
 import kr.co.core.kita.databinding.FragmentTalkBinding;
 import kr.co.core.kita.util.StringUtil;
 
+import static android.app.Activity.RESULT_OK;
+
 public class TalkFrag extends BaseFrag {
     private FragmentTalkBinding binding;
     private AppCompatActivity act;
+
+    private static final int SEARCH = 101;
+    private int currentPos = 0;
+    private String search_result_01 = "";
+    private String search_result_02 = "";
+    private TalkPagerAdapter adapter;
 
     @Nullable
     @Override
@@ -36,13 +47,53 @@ public class TalkFrag extends BaseFrag {
 
         setLayout();
 
+        binding.flHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, CallHistoryAct.class));
+            }
+        });
+
+        binding.flSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentPos == 0) {
+                    startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result_01), SEARCH);
+                } else {
+                    startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result_02), SEARCH);
+                }
+            }
+        });
 
         return binding.getRoot();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SEARCH:
+                    if(currentPos == 0) {
+                        Log.i(StringUtil.TAG, "onActivityResult: false");
+                        search_result_01 = data.getStringExtra("value");
+                        TalkLiveFrag frag = (TalkLiveFrag) adapter.instantiateItem(binding.viewPager, 0);
+                        frag.setSearch(search_result_01);
+                    } else {
+                        Log.i(StringUtil.TAG, "onActivityResult: true");
+                        search_result_02 = data.getStringExtra("value");
+                        TalkLiveFrag frag = (TalkLiveFrag) adapter.instantiateItem(binding.viewPager, 1);
+                        frag.setSearch(search_result_02);
+                    }
+                    break;
+            }
+        }
+    }
+
     private void setLayout() {
         // set view pager
-        binding.viewPager.setAdapter(new TalkPagerAdapter(act.getSupportFragmentManager()));
+        adapter = new TalkPagerAdapter(act.getSupportFragmentManager());
+        binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
         // set tab layout
@@ -59,6 +110,7 @@ public class TalkFrag extends BaseFrag {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.i(StringUtil.TAG, "onTabSelected: " + tab.getPosition());
+                currentPos = tab.getPosition();
 
                 binding.viewPager.setCurrentItem(tab.getPosition(), true);
 

@@ -17,11 +17,14 @@ import kr.co.core.kita.fragment.ChatFrag;
 import kr.co.core.kita.fragment.HomeFrag;
 import kr.co.core.kita.fragment.MeFrag;
 import kr.co.core.kita.fragment.TalkFrag;
+import kr.co.core.kita.util.BackPressCloseHandler;
 
 public class MainAct extends BaseAct implements View.OnClickListener {
     ActivityMainBinding binding;
     Activity act;
     FragmentManager fragmentManager;
+
+    private BackPressCloseHandler backPressCloseHandler;
 
     HomeFrag homeFrag = null;
     TalkFrag talkFrag = null;
@@ -32,11 +35,14 @@ public class MainAct extends BaseAct implements View.OnClickListener {
     public static final String TAG_TALK = "talk";
     public static final String TAG_CHAT = "chat";
     public static final String TAG_ME = "me";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main, null);
         act = this;
+
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
         setClickListener();
 
@@ -44,6 +50,12 @@ public class MainAct extends BaseAct implements View.OnClickListener {
 
         binding.llMenu01.performClick();
     }
+
+    @Override
+    public void onBackPressed() {
+        backPressCloseHandler.onBackPressed();
+    }
+
 
     private void setClickListener() {
         binding.llMenu01.setOnClickListener(this);

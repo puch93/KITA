@@ -34,14 +34,12 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
         binding.flBack.setOnClickListener(this);
         binding.flReport.setOnClickListener(this);
 
-
         binding.recyclerView.setLayoutManager(new GridLayoutManager(act, 3));
         binding.recyclerView.setItemViewCacheSize(20);
         binding.recyclerView.setHasFixedSize(true);
         adapter = new ProfileTalkAdapter(act, list);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(new AllOfDecoration(act, AllOfDecoration.PROFILE_DETAIL));
-
 
         setTestData();
     }

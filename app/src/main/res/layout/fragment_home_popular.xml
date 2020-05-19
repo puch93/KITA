@@ -47,21 +47,15 @@
             android:layout_height="1dp"
             android:background="@color/color_e5e5e5" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refresh_layout"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fadingEdge="none"
-                android:overScrollMode="never"
-                android:paddingLeft="17dp"
-                android:paddingRight="17dp" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            android:layout_height="match_parent"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp" />
 
     </LinearLayout>
 </layout>

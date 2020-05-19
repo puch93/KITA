@@ -9,14 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.TalkDetailAct"></activity>
-        <activity android:name=".dialog.BaseDialog" />
+        <activity android:name=".activity.SearchAct"></activity>
+        <activity android:name=".activity.CallHistoryAct" />
+        <activity android:name=".activity.TermSettingAct" />
+        <activity android:name=".activity.SettingAct" />
+        <activity android:name=".activity.GiftHistoryAct" />
+        <activity android:name=".activity.JoinAct" />
+        <activity android:name=".activity.TermJoinAct" />
+        <activity android:name=".activity.MainAct" />
+        <activity android:name=".activity.TalkDetailAct" />
+        <activity android:name=".dialog.BaseDlg" />
         <activity android:name=".activity.ProfileDetailAct" />
         <activity android:name=".activity.BaseAct" />
         <activity
             android:name=".dialog.WarningPopupDlg"
             android:theme="@style/ActivityDialog" />
-        <activity android:name=".activity.MainAct">
+        <activity
+            android:name=".dialog.SelectDlg"
+            android:theme="@style/ActivityDialog" />
+        <activity android:name=".activity.LoginAct">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

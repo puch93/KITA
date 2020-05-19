@@ -19,9 +19,11 @@ import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.adapter.TalkListAdapter;
+import kr.co.core.kita.data.HomeMemberData;
 import kr.co.core.kita.data.TalkListData;
 import kr.co.core.kita.databinding.FragmentTalkLiveBinding;
 import kr.co.core.kita.util.AllOfDecoration;
+import kr.co.core.kita.util.StringUtil;
 
 public class TalkLiveFrag extends BaseFrag {
     private FragmentTalkLiveBinding binding;
@@ -70,6 +72,24 @@ public class TalkLiveFrag extends BaseFrag {
         setTestData();
 
         return binding.getRoot();
+    }
+
+    public void setSearch(String contents) {
+
+        if(!StringUtil.isNull(contents)) {
+            isScroll = true;
+            ArrayList<TalkListData> search_list = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                if(list.get(i).getContents().contains(contents)) {
+                    search_list.add(list.get(i));
+                }
+            }
+
+            adapter.setList(search_list);
+        } else {
+            adapter.setList(list);
+            isScroll = false;
+        }
     }
 
     private void setTestData() {

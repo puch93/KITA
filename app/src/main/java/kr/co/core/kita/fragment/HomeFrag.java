@@ -2,6 +2,7 @@ package kr.co.core.kita.fragment;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,37 +21,68 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.tabs.TabLayout;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.CallHistoryAct;
+import kr.co.core.kita.activity.GiftHistoryAct;
+import kr.co.core.kita.activity.SearchAct;
 import kr.co.core.kita.adapter.HomeAdapter;
 import kr.co.core.kita.adapter.HomePagerAdapter;
 import kr.co.core.kita.databinding.FragmentHomeBinding;
 import kr.co.core.kita.util.StringUtil;
 
+import static android.app.Activity.RESULT_OK;
+
 public class HomeFrag extends BaseFrag {
     private FragmentHomeBinding binding;
     private AppCompatActivity act;
+
+    private static final int SEARCH = 101;
+    private HomePagerAdapter adapter;
+    private int currentPos = 0;
+    private String search_result = "";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
-        System.out.println("check spot 1");
         act = (AppCompatActivity) getActivity();
 
         setLayout();
 
+        binding.flHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, CallHistoryAct.class));
+            }
+        });
+
+        binding.flSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result), SEARCH);
+            }
+        });
 
         return binding.getRoot();
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        System.out.println("check spot 2");
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SEARCH:
+                    search_result = data.getStringExtra("value");
+                    HomePopularFrag frag = (HomePopularFrag) adapter.instantiateItem(binding.viewPager, 0);
+                    frag.setSearch(search_result);
+                    break;
+            }
+        }
     }
 
     private void setLayout() {
         // set view pager
-        binding.viewPager.setAdapter(new HomePagerAdapter(act.getSupportFragmentManager()));
+        adapter = new HomePagerAdapter(act.getSupportFragmentManager());
+        binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(binding.tabLayout));
 
         // set tab layout
@@ -67,8 +99,15 @@ public class HomeFrag extends BaseFrag {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 Log.i(StringUtil.TAG, "onTabSelected: " + tab.getPosition());
+                currentPos = tab.getPosition();
 
                 binding.viewPager.setCurrentItem(tab.getPosition(), true);
+
+                if(currentPos == 0) {
+                    binding.flSearch.setVisibility(View.VISIBLE);
+                } else {
+                    binding.flSearch.setVisibility(View.INVISIBLE);
+                }
 
 
                 // 선택된 탭 텍스트 BOLD 처리

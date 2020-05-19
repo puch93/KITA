@@ -10,4 +10,5 @@
 
     <dimen name="size_home_item_minus">46dp</dimen>
     <dimen name="size_home_item_default">223dp</dimen>
+    <dimen name="size_call_item_default">157dp</dimen>
 </resources>

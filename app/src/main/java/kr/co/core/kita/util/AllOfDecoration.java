@@ -13,6 +13,8 @@ public class AllOfDecoration extends RecyclerView.ItemDecoration {
     public static final String HOME_LIST = "home";
     public static final String PROFILE_DETAIL = "profile_detail";
     public static final String TALK_LIST = "talk_list";
+    public static final String HISTORY_GIFT_LIST = "history_gift_list";
+    public static final String HISTORY_CALL_LIST = "history_call_list";
     private Activity act;
     private String type;
 
@@ -29,6 +31,7 @@ public class AllOfDecoration extends RecyclerView.ItemDecoration {
 
         switch (type) {
             case HOME_LIST:
+            case HISTORY_CALL_LIST:
                 if (position < 2)
                     outRect.top = act.getResources().getDimensionPixelSize(R.dimen.deco_20);
                 break;
@@ -38,6 +41,7 @@ public class AllOfDecoration extends RecyclerView.ItemDecoration {
                     outRect.top = act.getResources().getDimensionPixelSize(R.dimen.deco_20);
                 break;
 
+            case HISTORY_GIFT_LIST:
             case TALK_LIST:
                 if (position == 0)
                     outRect.top = act.getResources().getDimensionPixelSize(R.dimen.deco_16);

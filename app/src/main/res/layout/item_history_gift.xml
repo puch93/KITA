@@ -15,8 +15,10 @@
         android:paddingRight="20dp">
 
         <ImageView
+            android:id="@+id/iv_profile"
             android:layout_width="46dp"
-            android:layout_height="46dp" />
+            android:layout_height="46dp"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -28,6 +30,7 @@
 
 
             <TextView
+                android:id="@+id/tv_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -39,6 +42,7 @@
                 tools:text="Tom" />
 
             <TextView
+                android:id="@+id/tv_gift_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -69,6 +73,7 @@
                     tools:text="￦" />
 
                 <TextView
+                    android:id="@+id/tv_gift_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:includeFontPadding="false"
@@ -82,6 +87,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/tv_profile"
             android:layout_width="64dp"
             android:layout_height="31dp"
             android:background="@drawable/sel_talk_more_btn"
