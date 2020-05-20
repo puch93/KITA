@@ -11,16 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.CallHistoryAct;
 import kr.co.core.kita.activity.SearchAct;
-import kr.co.core.kita.adapter.ChattingListAdapter;
+import kr.co.core.kita.adapter.ChatListAdapter;
 import kr.co.core.kita.data.ChattingLIstData;
-import kr.co.core.kita.data.TalkListData;
 import kr.co.core.kita.databinding.FragmentChatBinding;
 import kr.co.core.kita.util.StringUtil;
 
@@ -31,7 +29,7 @@ public class ChatFrag extends BaseFrag {
     Activity act;
 
     LinearLayoutManager manager;
-    ChattingListAdapter adapter;
+    ChatListAdapter adapter;
     ArrayList<ChattingLIstData> list = new ArrayList<>();
 
     private String search_result = "";
@@ -48,7 +46,7 @@ public class ChatFrag extends BaseFrag {
         binding.recyclerView.setLayoutManager(manager);
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setItemViewCacheSize(20);
-        adapter = new ChattingListAdapter(act, list);
+        adapter = new ChatListAdapter(act, list);
         binding.recyclerView.setAdapter(adapter);
 
         setTestData();

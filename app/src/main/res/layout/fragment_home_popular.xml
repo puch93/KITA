@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="7dp"
                 android:gravity="center"
-                android:text="Popularity"
+                android:text="Gift"
                 android:textColor="@color/color_aaaaaa"
                 android:textSize="12.8dp" />
 

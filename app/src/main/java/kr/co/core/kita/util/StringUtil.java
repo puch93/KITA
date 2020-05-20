@@ -75,41 +75,41 @@ public class StringUtil {
     }
 
     // 안드로이드10 부터 디바이스id 가져오는거 안되서 다른방법 사용
-    public static String getDeviceId(Context ctx) {
-        String newId = "";
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            newId = "35" +
-                    Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
-                    Build.DEVICE.length() % 10 +
-                    Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
-                    Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
-                    Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
-                    Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
-                    Build.USER.length() % 10;
-        } else {
-            if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-                newId = ((TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
-            }
-
-            if (StringUtil.isNull(newId)) {
-                newId = "35" +
-                        Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
-                        Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
-                        Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
-                        Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
-                        Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
-                        Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
-                        Build.USER.length() % 10;
-            }
-        }
-
-        if (!StringUtil.isNull(newId)) {
-//            AppPreference.setProfilePref(ctx, AppPreference.PREF_DEVICE_ID, newId);
-            Log.e(StringUtil.TAG, "device id: " + newId);
-        }
-
-        return newId;
-    }
+//    public static String getDeviceId(Context ctx) {
+//        String newId = "";
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            newId = "35" +
+//                    Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+//                    Build.DEVICE.length() % 10 +
+//                    Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+//                    Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+//                    Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+//                    Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+//                    Build.USER.length() % 10;
+//        } else {
+//            if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+//                newId = ((TelephonyManager) ctx.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+//            }
+//
+//            if (StringUtil.isNull(newId)) {
+//                newId = "35" +
+//                        Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+//                        Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+//                        Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+//                        Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+//                        Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+//                        Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+//                        Build.USER.length() % 10;
+//            }
+//        }
+//
+//        if (!StringUtil.isNull(newId)) {
+////            AppPreference.setProfilePref(ctx, AppPreference.PREF_DEVICE_ID, newId);
+//            Log.e(StringUtil.TAG, "device id: " + newId);
+//        }
+//
+//        return newId;
+//    }
 
     public static void logLargeString(String str) {
         if (str.length() > 1500) {

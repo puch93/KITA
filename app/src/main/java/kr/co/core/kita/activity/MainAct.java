@@ -1,13 +1,22 @@
 package kr.co.core.kita.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.BaseAct;
@@ -17,7 +26,9 @@ import kr.co.core.kita.fragment.ChatFrag;
 import kr.co.core.kita.fragment.HomeFrag;
 import kr.co.core.kita.fragment.MeFrag;
 import kr.co.core.kita.fragment.TalkFrag;
+import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.BackPressCloseHandler;
+import kr.co.core.kita.util.StringUtil;
 
 public class MainAct extends BaseAct implements View.OnClickListener {
     ActivityMainBinding binding;
@@ -42,6 +53,9 @@ public class MainAct extends BaseAct implements View.OnClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main, null);
         act = this;
 
+        //TODO
+        AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, "1");
+
         backPressCloseHandler = new BackPressCloseHandler(this);
 
         setClickListener();
@@ -49,7 +63,43 @@ public class MainAct extends BaseAct implements View.OnClickListener {
         fragmentManager = getSupportFragmentManager();
 
         binding.llMenu01.performClick();
+
+        requestPermission();
+
+        getFcmToken();
     }
+
+    private void getFcmToken() {
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d(StringUtil.TAG, "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String fcm_token = task.getResult().getToken();
+                        Log.i(StringUtil.TAG, "fcm_token: " + fcm_token);
+                    }
+                });
+    }
+
+    //TODO
+    private void requestPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            requestPermissions(new String[]{
+                    Manifest.permission.READ_PHONE_STATE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.RECORD_AUDIO
+
+            },0);
+        }
+    }
+
 
     @Override
     public void onBackPressed() {

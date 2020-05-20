@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1025227267701",
+    "firebase_url": "https://kita-2e271.firebaseio.com",
+    "project_id": "kita-2e271",
+    "storage_bucket": "kita-2e271.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1025227267701:android:f366d3c91d8ad7fe58623c",
+        "android_client_info": {
+          "package_name": "kr.co.core.kita"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1025227267701-le0j0kjmkuvi9km86k6r311ehndeoj7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWGlO5QGa6UC_uJA00kYtIxCv3mgxsRYs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1025227267701-le0j0kjmkuvi9km86k6r311ehndeoj7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

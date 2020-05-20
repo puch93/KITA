@@ -2,10 +2,12 @@ package kr.co.core.kita.fragment;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,10 +31,11 @@ import kr.co.core.kita.adapter.HomeAdapter;
 import kr.co.core.kita.data.HomeMemberData;
 import kr.co.core.kita.databinding.FragmentHomeBinding;
 import kr.co.core.kita.databinding.FragmentHomePopularBinding;
+import kr.co.core.kita.dialog.WarningPopupDlg;
 import kr.co.core.kita.util.AllOfDecoration;
 import kr.co.core.kita.util.StringUtil;
 
-public class HomePopularFrag extends BaseFrag {
+public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemClickListener, View.OnClickListener {
     private FragmentHomePopularBinding binding;
     private Activity act;
 
@@ -49,12 +53,7 @@ public class HomePopularFrag extends BaseFrag {
         act = (AppCompatActivity) getActivity();
 
         // set click listener
-        binding.tvSort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        binding.tvSort.setOnClickListener(this);
 
         // set recycler view
         manager = new GridLayoutManager(act, 2);
@@ -119,5 +118,33 @@ public class HomePopularFrag extends BaseFrag {
                 adapter.setList(list);
             }
         });
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        binding.tvSort.setText(item.getTitle());
+
+        switch (item.getItemId()) {
+            case R.id.sort_popularity:
+                return true;
+            case R.id.sort_heart:
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_sort:
+                PopupMenu popup = new PopupMenu(act, v);
+                popup.setOnMenuItemClickListener(this);
+                popup.inflate(R.menu.menu_home_popular);
+                popup.show();
+                break;
+        }
+
     }
 }

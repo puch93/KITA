@@ -11,18 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.SettingAct;
-import kr.co.core.kita.adapter.ChattingListAdapter;
 import kr.co.core.kita.adapter.ProfileTalkAdapter;
-import kr.co.core.kita.data.ChattingLIstData;
 import kr.co.core.kita.data.ProfileTalkData;
-import kr.co.core.kita.databinding.FragmentChatBinding;
 import kr.co.core.kita.databinding.FragmentMeBinding;
 import kr.co.core.kita.util.AllOfDecoration;
 
