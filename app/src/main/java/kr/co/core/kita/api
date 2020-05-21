@@ -1,0 +1,18 @@
+kita.adamstore.co.kr
+
+
+1.회원가입
+/Member/regist_member
+join_type=general/naver/facebook(필수)
+fcm=fcm 키(필수)
+id=아이디(필수)
+pw=비밀번호(필수)
+pw_confirm=비밀번호확인(필수)
+nick=닉네임(필수)
+gender=성별(male/female)(필수)
+image=프로필이미지(필수)
+location=위치(필수)
+location2=위치상세(선택)
+intro=자기소개(필수)
+referrer=추천인 아이디(선택)
+facebook_id=페이스북 아이디(선택)

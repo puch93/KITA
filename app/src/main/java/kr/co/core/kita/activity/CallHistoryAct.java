@@ -30,7 +30,6 @@ public class CallHistoryAct extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_call_history, null);
         act = this;
 
-        AppPreference.setProfilePref(act, AppPreference.PREF_SEARCH, null);
 
         binding.recyclerView.setLayoutManager(new GridLayoutManager(act, 2));
         binding.recyclerView.setHasFixedSize(true);
