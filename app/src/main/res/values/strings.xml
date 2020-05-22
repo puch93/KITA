@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">KITA</string>
+    <string name="oauth_client_id">4AnLXEz2fENqoeGhgaRQ</string>
+    <string name="oauth_client_secret">EeZO8CBtd6</string>
+    <string name="oauth_client_name">KITA</string>
 
     <!-- 앱내부 사용 문자열 -->
     <string name="toast_network">네트워크 상태를 확인해주세요</string>

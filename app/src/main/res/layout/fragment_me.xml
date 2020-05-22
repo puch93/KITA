@@ -103,6 +103,7 @@
                             android:background="@color/color_white" />
 
                         <LinearLayout
+                            android:id="@+id/ll_gift_area"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

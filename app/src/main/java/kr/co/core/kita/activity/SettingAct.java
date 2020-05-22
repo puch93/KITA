@@ -25,16 +25,22 @@ public class SettingAct extends BaseAct implements View.OnClickListener {
         binding.llEditProfile.setOnClickListener(this);
         binding.llTerm.setOnClickListener(this);
         binding.llLogout.setOnClickListener(this);
+        binding.llPayment.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.ll_payment:
+                startActivity(new Intent(act, PaymentAct.class));
+                break;
+
             case R.id.fl_back:
                 finish();
                 break;
 
             case R.id.ll_edit_profile:
+                startActivity(new Intent(act, EditProfileAct.class));
                 break;
 
             case R.id.ll_term:

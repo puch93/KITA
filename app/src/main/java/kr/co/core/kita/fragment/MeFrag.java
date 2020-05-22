@@ -15,13 +15,15 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.GiftAct;
+import kr.co.core.kita.activity.GiftHistoryAct;
 import kr.co.core.kita.activity.SettingAct;
 import kr.co.core.kita.adapter.ProfileTalkAdapter;
 import kr.co.core.kita.data.ProfileTalkData;
 import kr.co.core.kita.databinding.FragmentMeBinding;
 import kr.co.core.kita.util.AllOfDecoration;
 
-public class MeFrag extends BaseFrag {
+public class MeFrag extends BaseFrag implements View.OnClickListener {
     FragmentMeBinding binding;
     Activity act;
 
@@ -44,12 +46,8 @@ public class MeFrag extends BaseFrag {
 
         setTestData();
 
-        binding.flMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                act.startActivity(new Intent(act, SettingAct.class));
-            }
-        });
+        binding.flMenu.setOnClickListener(this);
+        binding.llGiftArea.setOnClickListener(this);
         return binding.getRoot();
     }
 
@@ -64,5 +62,18 @@ public class MeFrag extends BaseFrag {
                 adapter.setList(list);
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fl_menu:
+                act.startActivity(new Intent(act, SettingAct.class));
+                break;
+
+            case R.id.ll_gift_area:
+                act.startActivity(new Intent(act, GiftHistoryAct.class));
+                break;
+        }
     }
 }

@@ -2,79 +2,65 @@ package kr.co.core.kita.fragment;
 
 
 import android.app.Activity;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.tabs.TabLayout;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import kr.co.core.kita.R;
-import kr.co.core.kita.databinding.FragmentHomeBinding;
-import kr.co.core.kita.util.StringUtil;
+import kr.co.core.kita.adapter.HomeLocationAdapter;
+import kr.co.core.kita.databinding.FragmentHomeLocationBinding;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 
-public class HomeLocationFrag extends BaseFrag {
-    private FragmentHomeBinding binding;
+public class HomeLocationFrag extends BaseFrag implements View.OnClickListener {
+    private FragmentHomeLocationBinding binding;
     private Activity act;
+
+
+    private HomeLocationAdapter adapter;
+    private List<String> list;
+    private boolean isScroll = false;
+    private int page = 1;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false);
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_home_location, container, false);
         act = (AppCompatActivity) getActivity();
 
-        setTabLayout();
+        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase(Common.GENDER_M)) {
+            list = Arrays.asList(getResources().getStringArray(R.array.region_select_w));
+        } else {
+            list = Arrays.asList(getResources().getStringArray(R.array.region_select_m));
+        }
 
+        // set recycler view
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(act));
+        binding.recyclerView.setItemViewCacheSize(20);
+        binding.recyclerView.setHasFixedSize(true);
+
+        adapter = new HomeLocationAdapter(act, list);
+        binding.recyclerView.setAdapter(adapter);
 
         return binding.getRoot();
     }
 
-    private void setViewPager() {
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+
+        }
 
     }
-
-    /**
-     * tab 관련 코드
-     * selected / unselected 타이틀 텍스트 -> BOLD / NORMAL
-     */
-    private void setTabLayout() {
-        LinearLayout tabLayout = (LinearLayout) ((ViewGroup) binding.tabLayout.getChildAt(0)).getChildAt(0);
-        TextView tabTextView = (TextView) tabLayout.getChildAt(1);
-        tabTextView.setTypeface(null, Typeface.BOLD);
-
-        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                Log.i(StringUtil.TAG, "onTabSelected: " + tab.getPosition());
-
-                LinearLayout tabLayout = (LinearLayout) ((ViewGroup) binding.tabLayout.getChildAt(0)).getChildAt(tab.getPosition());
-                TextView tabTextView = (TextView) tabLayout.getChildAt(1);
-                tabTextView.setTypeface(null, Typeface.BOLD);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                Log.i(StringUtil.TAG, "onTabUnselected: " + tab.getPosition());
-
-                LinearLayout tabLayout = (LinearLayout) ((ViewGroup) binding.tabLayout.getChildAt(0)).getChildAt(tab.getPosition());
-                TextView tabTextView = (TextView) tabLayout.getChildAt(1);
-                tabTextView.setTypeface(null, Typeface.NORMAL);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
 }

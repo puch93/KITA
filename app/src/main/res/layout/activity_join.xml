@@ -57,14 +57,22 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:background="@color/color_fafafa"
+                    android:layout_height="360dp">
+
+
+                    <ImageView
+                        android:id="@+id/iv_image_none"
+                        android:layout_width="113.7dp"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:layout_gravity="center"
+                        android:src="@drawable/img_edit_register" />
 
                     <ImageView
                         android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="360dp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/dongsuk" />
+                        android:layout_height="match_parent"/>
 
                     <ImageView
                         android:id="@+id/iv_profile_reg"
@@ -278,7 +286,39 @@
                     android:layout_marginLeft="29.7dp"
                     android:layout_marginRight="29.7dp"
                     android:background="@null"
-                    android:hint="Referrer ID"
+                    android:hint="Referrer ID (option)"
+                    android:singleLine="true"
+                    android:textColor="@color/color_404040"
+                    android:textSize="12dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1.3dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@color/color_e5e5e5" />
+
+                <!-- referrer area -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="29.3dp"
+                    android:layout_marginTop="20dp"
+                    android:includeFontPadding="false"
+                    android:text="Facebook ID"
+                    android:textColor="@color/color_404040"
+                    android:textSize="13.3dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/et_facebook_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="42.7dp"
+                    android:layout_marginLeft="29.7dp"
+                    android:layout_marginRight="29.7dp"
+                    android:background="@null"
+                    android:hint="Facebook ID (option)"
                     android:singleLine="true"
                     android:textColor="@color/color_404040"
                     android:textSize="12dp" />

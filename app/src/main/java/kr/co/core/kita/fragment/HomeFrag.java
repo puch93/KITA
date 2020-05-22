@@ -1,7 +1,6 @@
 package kr.co.core.kita.fragment;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -16,15 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.tabs.TabLayout;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.CallHistoryAct;
-import kr.co.core.kita.activity.GiftHistoryAct;
 import kr.co.core.kita.activity.SearchAct;
-import kr.co.core.kita.adapter.HomeAdapter;
 import kr.co.core.kita.adapter.HomePagerAdapter;
 import kr.co.core.kita.databinding.FragmentHomeBinding;
 import kr.co.core.kita.util.StringUtil;

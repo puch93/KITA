@@ -28,6 +28,7 @@ import kr.co.core.kita.fragment.MeFrag;
 import kr.co.core.kita.fragment.TalkFrag;
 import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.BackPressCloseHandler;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class MainAct extends BaseAct implements View.OnClickListener {
@@ -55,6 +56,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
 
         //TODO 삭제
         AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, "1");
+        AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, Common.GENDER_M);
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 

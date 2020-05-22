@@ -2,7 +2,6 @@ package kr.co.core.kita.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +20,12 @@ import java.util.ArrayList;
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.ProfileDetailAct;
 import kr.co.core.kita.data.HomeMemberData;
-import kr.co.core.kita.util.StringUtil;
 
-public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
+public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.ViewHolder> {
     ArrayList<HomeMemberData> list = new ArrayList<>();
     Activity act;
 
-    public HomeAdapter(Activity act, ArrayList<HomeMemberData> list) {
+    public HomeMemberAdapter(Activity act, ArrayList<HomeMemberData> list) {
         this.list = list;
         this.act = act;
     }
@@ -36,7 +34,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_member, parent, false);
-        HomeAdapter.ViewHolder viewHolder = new HomeAdapter.ViewHolder(view);
+        HomeMemberAdapter.ViewHolder viewHolder = new HomeMemberAdapter.ViewHolder(view);
         int height = (parent.getMeasuredWidth() - act.getResources().getDimensionPixelSize(R.dimen.size_home_item_minus)) / 2;
 
         if(height <= 0) {

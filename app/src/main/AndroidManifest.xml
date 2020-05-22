@@ -12,10 +12,7 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-
-    <!-- other -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- other -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -27,7 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
-        <activity android:name=".activity.LoginAct"/>
+        <activity android:name=".activity.GiftAct"></activity>
+        <activity android:name=".activity.EditProfileAct" />
+        <activity android:name=".activity.PaymentAct" />
+        <activity android:name=".activity.LoginAct" />
         <activity android:name=".activity.rtc.ConnectActivity" />
         <activity android:name=".activity.rtc.VideoReceiveAct" />
         <activity android:name=".activity.rtc.VideoCallAct" />

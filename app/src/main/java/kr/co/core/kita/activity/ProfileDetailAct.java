@@ -33,6 +33,9 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
 
         binding.flBack.setOnClickListener(this);
         binding.flReport.setOnClickListener(this);
+        binding.llGift.setOnClickListener(this);
+        binding.llChat.setOnClickListener(this);
+        binding.llHeart.setOnClickListener(this);
 
         binding.recyclerView.setLayoutManager(new GridLayoutManager(act, 3));
         binding.recyclerView.setItemViewCacheSize(20);
@@ -66,6 +69,16 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
             case R.id.fl_back:
                 finish();
                 break;
+
+            case R.id.ll_gift:
+                startActivity(new Intent(act, GiftAct.class));
+                break;
+
+            case R.id.ll_chat:
+                break;
+            case R.id.ll_heart:
+                break;
+
         }
     }
 }

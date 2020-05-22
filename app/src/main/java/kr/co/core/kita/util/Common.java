@@ -30,6 +30,14 @@ import kr.co.core.kita.R;
 
 
 public class Common {
+    public static final String GENDER_M = "male";
+    public static final String GENDER_W = "female";
+
+    public static final String ITEM_01 = "peso_1000";
+    public static final String ITEM_02 = "peso_2000";
+    public static final String ITEM_03 = "peso_5000";
+
+
     /* toast setting */
     public static void showToast(final Activity act, final String msg) {
         if(null != act) {

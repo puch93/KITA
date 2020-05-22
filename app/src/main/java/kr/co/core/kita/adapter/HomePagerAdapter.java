@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kr.co.core.kita.fragment.BaseFrag;
 import kr.co.core.kita.fragment.HomeFrag;
+import kr.co.core.kita.fragment.HomeLocationFrag;
 import kr.co.core.kita.fragment.HomePopularFrag;
 
 public class HomePagerAdapter extends FragmentStatePagerAdapter {
@@ -23,10 +24,11 @@ public class HomePagerAdapter extends FragmentStatePagerAdapter {
         BaseFrag currentFragment = null;
         switch (position) {
             case 0:
-            case 1:
                 currentFragment = new HomePopularFrag();
                 break;
-
+            case 1:
+                currentFragment = new HomeLocationFrag();
+                break;
         }
 
         return currentFragment;

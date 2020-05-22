@@ -73,6 +73,35 @@
             android:background="@color/color_e5e5e5" />
 
         <LinearLayout
+            android:id="@+id/ll_payment"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="17dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Payment"
+                android:textColor="@color/color_292929"
+                android:textSize="13dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="13dp"
+                android:layout_height="13dp"
+                android:src="@drawable/btn_set_arrowright" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_e5e5e5" />
+
+        <LinearLayout
             android:id="@+id/ll_term"
             android:layout_width="match_parent"
             android:layout_height="46dp"
