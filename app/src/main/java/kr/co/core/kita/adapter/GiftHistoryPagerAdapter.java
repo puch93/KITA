@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kr.co.core.kita.fragment.BaseFrag;
 import kr.co.core.kita.fragment.HistoryGiftedFrag;
-import kr.co.core.kita.fragment.TalkLiveFrag;
 
 public class GiftHistoryPagerAdapter extends FragmentStatePagerAdapter {
 

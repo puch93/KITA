@@ -1,19 +1,31 @@
 <resources>
     <string name="app_name">KITA</string>
+
+    <!-- 네이버 로그인 -->
     <string name="oauth_client_id">4AnLXEz2fENqoeGhgaRQ</string>
     <string name="oauth_client_secret">EeZO8CBtd6</string>
     <string name="oauth_client_name">KITA</string>
+
+    <!-- 페이스북 로그인 -->
+    <string name="facebook_app_id">262390551787681</string>
+    <string name="fb_login_protocol_scheme">fb262390551787681</string>
 
     <!-- 앱내부 사용 문자열 -->
     <string name="toast_network">네트워크 상태를 확인해주세요</string>
     <string name="toast_develop">현재 개발중인 기능입니다</string>
 
+    <!-- 시간 -->
     <string name="ago_seconds">초전</string>
     <string name="ago_minutes">분전</string>
     <string name="ago_hours">시간전</string>
     <string name="ago_days">일전</string>
     <string name="ago_months">달전</string>
     <string name="ago_years">년전</string>
+
+    <!-- 인앱 -->
+    <string name="pay_item_name">item_name</string>
+    <string name="pay_item_code">item_code</string>
+    <string name="pay_item_price">item_price</string>
 
     <!-- activity_main -->
     <string name="activity_main_text_01">Welcome</string>

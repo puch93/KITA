@@ -16,3 +16,60 @@ location2=위치상세(선택)
 intro=자기소개(필수)
 referrer=추천인 아이디(선택)
 facebook_id=페이스북 아이디(선택)
+
+
+2. 로그인
+/Member/login
+id=아이디
+pw=비밀번호"
+fcm=fcm키
+
+
+3. 회원 정보 수정하기
+/Member/setProfile
+m_idx=내 인덱스
+intro=소개글
+location=지역
+location2=상세지역
+image=프로필 사진
+
+
+4. 메인 인기 회원리스트 가져오기
+/Member/main_popular_memberlist
+m_idx=내인덱스
+type=heart/gift(하트 많이 받은 순/선물 많이 받은순)
+pagenum=페이징숫자
+
+
+5. 메인 지역 회원리스트 가져오기
+/Member/main_location_memberlist
+m_idx=내인덱스
+location=지역
+pagenum=페이징숫자
+
+
+6-1. 상대회원 상세정보 가져오기
+/Member/getProfile
+m_idx=열람하는 내 인덱스
+y_idx= 열람하는 상대 인덱스
+
+
+6-2. 내 정보 가져오기
+/Member/getMyProfile
+u_idx=나의 인덱스
+
+7. 회원 토크 리스트 가져오기
+/Board/talk_memlist
+u_idx=회원 인덱스
+
+8. 토크 리스트 가져오기
+/Board/talk_list
+u_idx=내 인덱스
+type=normal(최근 작성순)/best(댓글 많이 달린 순)
+pagenum=페이징숫자
+
+11. 토크 등록하기
+/Board/talk_regist_input
+m_idx=작성자 인덱스
+image1~image20 첨부이미지
+content=내용

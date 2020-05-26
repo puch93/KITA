@@ -1,12 +1,12 @@
 package kr.co.core.kita.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,6 @@ import kr.co.core.kita.adapter.HistoryCallAdapter;
 import kr.co.core.kita.data.HistoryCallData;
 import kr.co.core.kita.databinding.ActivityCallHistoryBinding;
 import kr.co.core.kita.util.AllOfDecoration;
-import kr.co.core.kita.util.AppPreference;
 
 public class CallHistoryAct extends AppCompatActivity {
     ActivityCallHistoryBinding binding;

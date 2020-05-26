@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kr.co.core.kita.fragment.BaseFrag;
-import kr.co.core.kita.fragment.HomePopularFrag;
 import kr.co.core.kita.fragment.TalkLiveFrag;
 
 public class TalkPagerAdapter extends FragmentStatePagerAdapter {

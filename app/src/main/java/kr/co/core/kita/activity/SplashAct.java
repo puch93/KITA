@@ -1,10 +1,5 @@
 package kr.co.core.kita.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -13,14 +8,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,11 +33,11 @@ import java.util.TimerTask;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivitySplashBinding;
-import kr.co.core.kita.dialog.PermissionDlg;
 import kr.co.core.kita.server.ReqBasic;
 import kr.co.core.kita.server.netUtil.HttpResult;
 import kr.co.core.kita.server.netUtil.NetUrls;
 import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class SplashAct extends AppCompatActivity {
@@ -140,11 +138,12 @@ public class SplashAct extends AppCompatActivity {
 
     private void startProgram() {
         if (!checkPermission()) {
-            startActivityForResult(new Intent(act, PermissionDlg.class), PERMISSION);
+            startActivityForResult(new Intent(act, PermissionAct.class), PERMISSION);
         } else {
             checkSetting();
         }
     }
+
     private void checkSetting() {
         checkNetwork(new Runnable() {
             @Override
@@ -227,7 +226,7 @@ public class SplashAct extends AppCompatActivity {
     private boolean checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (
-                            checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
+                    checkSelfPermission(Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
                             checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                             checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
                             checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
@@ -242,6 +241,42 @@ public class SplashAct extends AppCompatActivity {
         }
     }
 
+    private void doAutoLogin() {
+        ReqBasic server = new ReqBasic(act, NetUrls.LOGIN) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONObject job = jo.getJSONObject("value");
+                            AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, StringUtil.getStr(job, "idx"));
+                            AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, StringUtil.getStr(job, "gender"));
+                            AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, true);
+
+                            startActivity(new Intent(act, MainAct.class));
+                            finish();
+                        } else {
+                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Auto Login");
+        server.addParams("id", AppPreference.getProfilePref(act, AppPreference.PREF_ID));
+        server.addParams("pw", AppPreference.getProfilePref(act, AppPreference.PREF_PW));
+        server.addParams("fcm", AppPreference.getProfilePref(act, AppPreference.PREF_FCM));
+        server.execute(true, false);
+    }
 
     //로딩중 텍스트 애니메이션
     public void checkTimer() {
@@ -254,12 +289,14 @@ public class SplashAct extends AppCompatActivity {
                         if (isReady && !StringUtil.isNull(fcm_token)) {
                             isReady = false;
                             AppPreference.setProfilePref(act, AppPreference.PREF_FCM, fcm_token);
-//                            if (AppPreference.getProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE)) {
-//                                doAutoLogin();
-//                            } else {
+                            if (AppPreference.getProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE)) {
+                                doAutoLogin();
+                            } else {
                                 startActivity(new Intent(act, LoginAct.class));
                                 finish();
-//                            }
+                            }
+
+                            timer.cancel();
                         }
                         binding.tvLoading.setText("Loading");
                     }
@@ -289,6 +326,7 @@ public class SplashAct extends AppCompatActivity {
         };
         timer.schedule(adTask, 0, 1500);
     }
+
     private void getFcmToken() {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {

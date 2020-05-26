@@ -15,6 +15,7 @@ public class AllOfDecoration extends RecyclerView.ItemDecoration {
     public static final String TALK_LIST = "talk_list";
     public static final String HISTORY_GIFT_LIST = "history_gift_list";
     public static final String HISTORY_CALL_LIST = "history_call_list";
+    public static final String TALK_IMAGE_LIST = "talk_image_list";
     private Activity act;
     private String type;
 
@@ -45,6 +46,12 @@ public class AllOfDecoration extends RecyclerView.ItemDecoration {
             case TALK_LIST:
                 if (position == 0)
                     outRect.top = act.getResources().getDimensionPixelSize(R.dimen.deco_16);
+                break;
+
+            case TALK_IMAGE_LIST:
+                if(position == 0) {
+                    outRect.left = act.getResources().getDimensionPixelSize(R.dimen.deco_20);
+                }
                 break;
 
         }

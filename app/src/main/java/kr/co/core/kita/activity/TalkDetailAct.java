@@ -1,19 +1,17 @@
 package kr.co.core.kita.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 
 import java.util.ArrayList;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import kr.co.core.kita.R;
 import kr.co.core.kita.adapter.CommentAdapter;
 import kr.co.core.kita.adapter.ImagePagerAdapter;

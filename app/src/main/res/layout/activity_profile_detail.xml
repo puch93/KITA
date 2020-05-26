@@ -81,10 +81,11 @@
                     android:layout_height="358dp">
 
                     <ImageView
+                        android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
                         android:layout_height="358dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/dongsuk"
+                        tools:src="@drawable/dongsuk"
                         tools:background="@color/color_e5e5e5" />
 
                     <LinearLayout
@@ -163,6 +164,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_payment"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="1215"
@@ -259,7 +261,7 @@
                 <ImageView
                     android:layout_width="19dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/btn_profile_good_on" />
+                    android:src="@drawable/sel_profile_heart" />
 
                 <TextView
                     android:layout_width="wrap_content"

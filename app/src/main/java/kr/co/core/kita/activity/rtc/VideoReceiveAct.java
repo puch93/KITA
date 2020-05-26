@@ -24,9 +24,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.corertc.coresdk.rtc.AppRTCAudioManager;
 import com.corertc.coresdk.rtc.AppRTCClient;
 import com.corertc.coresdk.rtc.DirectRTCClient;
@@ -59,7 +57,6 @@ import java.util.Set;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.BaseAct;
-import kr.co.core.kita.util.StringUtil;
 
 public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEvents,
         PeerConnectionClient.PeerConnectionEvents {

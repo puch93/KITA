@@ -11,17 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
 
 import kr.co.core.kita.R;
-import kr.co.core.kita.adapter.HistoryGiftAdapter;
-import kr.co.core.kita.data.HistoryGiftData;
-import kr.co.core.kita.databinding.FragmentHistoryGiftedBinding;
 import kr.co.core.kita.databinding.FragmentTermSettingBinding;
-import kr.co.core.kita.util.AllOfDecoration;
 
 public class TermSettingFrag extends BaseFrag {
     private FragmentTermSettingBinding binding;

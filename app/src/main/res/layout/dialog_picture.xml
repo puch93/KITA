@@ -32,7 +32,7 @@
                 android:textColor="@color/color_404040"
                 android:text="Camera"
                 />
-            
+
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"

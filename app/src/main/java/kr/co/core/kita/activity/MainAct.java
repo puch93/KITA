@@ -1,34 +1,23 @@
 package kr.co.core.kita.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import android.app.Activity;
+import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
-import android.app.Activity;
-import android.os.Build;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-
 import kr.co.core.kita.R;
-import kr.co.core.kita.activity.BaseAct;
 import kr.co.core.kita.databinding.ActivityMainBinding;
 import kr.co.core.kita.fragment.BaseFrag;
 import kr.co.core.kita.fragment.ChatFrag;
 import kr.co.core.kita.fragment.HomeFrag;
 import kr.co.core.kita.fragment.MeFrag;
 import kr.co.core.kita.fragment.TalkFrag;
-import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.BackPressCloseHandler;
-import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class MainAct extends BaseAct implements View.OnClickListener {
@@ -54,9 +43,6 @@ public class MainAct extends BaseAct implements View.OnClickListener {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main, null);
         act = this;
 
-        //TODO 삭제
-        AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, "1");
-        AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, Common.GENDER_M);
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
@@ -65,6 +51,17 @@ public class MainAct extends BaseAct implements View.OnClickListener {
         fragmentManager = getSupportFragmentManager();
 
         binding.llMenu01.performClick();
+
+//        getReleaseHashKey();
+    }
+
+
+    // SHA1: 14:80:F5:6C:A9:40:D0:6E:F7:0E:28:A7:A7:9A:FC:A3:7A:EF:57:3A
+    private void getReleaseHashKey() {
+        byte[] sha1 = {
+                0x14, (byte) 0x80, (byte) 0xF5, 0x6C, (byte) 0xA9, 0x40, (byte) 0xD0, 0x6E, (byte) 0xF7, 0x0E, 0x28, (byte) 0xA7, (byte) 0xA7, (byte) 0x9A, (byte) 0xFC, (byte) 0xA3, 0x7A, (byte) 0xEF, 0x57, 0x3A
+        };
+        Log.e(StringUtil.TAG, "getReleaseHashKey: " + Base64.encodeToString(sha1, Base64.NO_WRAP));
     }
 
     @Override

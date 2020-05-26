@@ -72,6 +72,7 @@
                     <ImageView
                         android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
+                        android:scaleType="centerCrop"
                         android:layout_height="match_parent"/>
 
                     <ImageView
@@ -124,7 +125,7 @@
                     android:layout_marginLeft="29.3dp"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
-                    android:text="Recent work"
+                    android:text="Region"
                     android:textColor="@color/color_404040"
                     android:textSize="13.3dp"
                     android:textStyle="bold" />
@@ -173,7 +174,7 @@
                     android:layout_marginLeft="29.3dp"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
-                    android:text="Recent work2"
+                    android:text="Recent work"
                     android:textColor="@color/color_404040"
                     android:textSize="13.3dp"
                     android:textStyle="bold" />

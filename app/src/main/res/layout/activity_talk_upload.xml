@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/title_bar_height"
+            android:background="@color/color_white">
+
+            <FrameLayout
+                android:id="@+id/fl_back"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="left"
+                android:paddingLeft="16dp"
+                android:paddingRight="10dp">
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/btn_back" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:includeFontPadding="false"
+                android:text="Upload"
+                android:textColor="@color/color_292929"
+                android:textSize="19dp"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_e5e5e5" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="135.3dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never" />
+
+        <EditText
+            android:id="@+id/et_contents"
+            android:layout_width="match_parent"
+            android:layout_height="212dp"
+            android:gravity="top"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:padding="16.7dp"
+            android:textColor="@color/color_404040"
+            android:textColorHint="@color/color_aaaaaa"
+            android:hint="Please fill in the blanks"
+            android:background="@drawable/bg_myupload_input" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tv_upload"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/color_e307ec"
+            android:gravity="center"
+            android:text="Upload"
+            android:textColor="@color/color_white"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</layout>

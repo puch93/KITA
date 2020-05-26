@@ -1,15 +1,15 @@
 package kr.co.core.kita.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.databinding.DataBindingUtil;
+
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivitySettingBinding;
+import kr.co.core.kita.util.AppPreference;
 
 public class SettingAct extends BaseAct implements View.OnClickListener {
     ActivitySettingBinding binding;
@@ -26,6 +26,7 @@ public class SettingAct extends BaseAct implements View.OnClickListener {
         binding.llTerm.setOnClickListener(this);
         binding.llLogout.setOnClickListener(this);
         binding.llPayment.setOnClickListener(this);
+        binding.llLogout.setOnClickListener(this);
     }
 
     @Override
@@ -48,6 +49,9 @@ public class SettingAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_logout:
+                AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, false);
+                startActivity(new Intent(act, LoginAct.class));
+                finishAffinity();
                 break;
         }
     }

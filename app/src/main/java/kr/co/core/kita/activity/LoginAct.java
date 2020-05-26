@@ -1,39 +1,64 @@
 package kr.co.core.kita.activity;
 
-import androidx.databinding.DataBindingUtil;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivityLoginBinding;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class LoginAct extends BaseAct implements View.OnClickListener {
     ActivityLoginBinding binding;
-    Activity act;
+    public static Activity act;
 
+    private String joinType = "normal";
+    private String joinToken = "";
+    CallbackManager facebookCallbackManager;
     OAuthLogin mOAuthLoginModule;
+
+    private String REGEX_ID = "^[a-z0-9]{5,11}$"; // 영문 소문자, 숫자 (5~11자) (선택적)
+    private String REGEX_PW = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,12}$"; // 영문 대/소문자, 특수문자 (6~12자) (필수적)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_login, null);
         act = this;
+
+        FacebookSdk.fullyInitialize();
+        LoginManager.getInstance().logOut();
 
         binding.flBack.setOnClickListener(this);
         binding.llLoginBtn.setOnClickListener(this);
@@ -44,11 +69,61 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
         mOAuthLoginModule = OAuthLogin.getInstance();
         mOAuthLoginModule.init(
                 act
-                ,getResources().getString(R.string.oauth_client_id)
-                ,getResources().getString(R.string.oauth_client_secret)
-                ,getResources().getString(R.string.oauth_client_name)
+                , getResources().getString(R.string.oauth_client_id)
+                , getResources().getString(R.string.oauth_client_secret)
+                , getResources().getString(R.string.oauth_client_name)
         );
+
+        setFaceBookCallBack();
     }
+
+    private void setFaceBookCallBack() {
+        /* set facebook callback */
+        facebookCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(facebookCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // 로그인에 성공하면 LoginResult 매개변수에 새로운 AccessToken 과 최근에 부여되거나 거부된 권한이 포함됩니다.
+                final GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                        new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject object, GraphResponse response) {
+                                if (response.getError() != null) {
+                                    Log.e(StringUtil.TAG, "onCompleted error message: " + response.getError().getErrorMessage());
+                                } else {
+                                    Log.i(StringUtil.TAG, "onCompleted success data: " + object.toString());
+                                    try {
+                                        joinType = "facebook";
+                                        joinToken = object.getString("id");
+                                        Log.i(StringUtil.TAG, "facebook result token: " + joinToken);
+                                        //TODO
+//                                        doLogin(facebook_token, facebook_token, false);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        });
+
+
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,name,email,gender,birthday");
+                graphRequest.setParameters(parameters);
+                graphRequest.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e(StringUtil.TAG, "facebook onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e(StringUtil.TAG, "facebook onError: " + error.getMessage());
+            }
+        });
+    }
+
 
     @SuppressLint("HandlerLeak")
     private OAuthLoginHandler mOAuthLoginHandler = new OAuthLoginHandler() {
@@ -97,8 +172,11 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                                 JSONObject naverResponse = naverData.getJSONObject("response");
 
                                 OAuthLogin.getInstance().logout(act);
-                                Log.i(StringUtil.TAG, "naver token: " + naverResponse.getString("id"));
+
                                 //TODO
+                                joinType = "naver";
+                                joinToken = naverResponse.getString("id");
+                                Log.i(StringUtil.TAG, "naver result token: " + joinToken);
 //                                reqJoinCheck("naver", naverResponse.getString("id"));
                             }
                         } catch (Exception e) {
@@ -111,8 +189,56 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                 String errorDesc = mOAuthLoginModule.getLastErrorDesc(act);
                 Log.i(StringUtil.TAG, "naver errorCode:" + errorCode + ", naver errorDesc:" + errorDesc);
             }
-        };
+        }
+
+        ;
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        facebookCallbackManager.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void doLogin() {
+        ReqBasic server = new ReqBasic(act, NetUrls.LOGIN) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONObject job = jo.getJSONObject("value");
+                            AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, StringUtil.getStr(job, "idx"));
+                            AppPreference.setProfilePref(act, AppPreference.PREF_ID, binding.etId.getText().toString());
+                            AppPreference.setProfilePref(act, AppPreference.PREF_PW, binding.etPw.getText().toString());
+                            AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, StringUtil.getStr(job, "gender"));
+                            AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, true);
+
+                            startActivity(new Intent(act, MainAct.class));
+                            finish();
+                        } else {
+                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Login");
+        server.addParams("id", binding.etId.getText().toString());
+        server.addParams("pw", binding.etPw.getText().toString());
+        server.addParams("fcm", AppPreference.getProfilePref(act, AppPreference.PREF_FCM));
+        server.execute(true, false);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -122,17 +248,24 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_login_btn:
-                startActivity(new Intent(act, MainAct.class));
-                finish();
+                if(binding.etId.length() == 0) {
+                    Common.showToast(act, "Please enter your ID");
+                } else if(binding.etPw.length() == 0) {
+                    Common.showToast(act, "Please enter your Password");
+                } else {
+                    doLogin();
+                }
                 break;
+
             case R.id.ll_naver_btn:
                 mOAuthLoginModule.startOauthLoginActivity(LoginAct.this, mOAuthLoginHandler);
                 break;
             case R.id.ll_facebook_btn:
+                LoginManager.getInstance().logInWithReadPermissions(act, Arrays.asList("public_profile"));
                 break;
 
             case R.id.tv_join:
-                startActivity(new Intent(act, TermJoinAct.class));
+                startActivity(new Intent(act, TermJoinAct.class).putExtra("join_type", Common.JOIN_TYPE_GENERAL));
                 break;
         }
     }

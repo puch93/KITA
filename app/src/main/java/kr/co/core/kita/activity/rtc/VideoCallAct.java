@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.service.autofill.UserData;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -24,9 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.corertc.coresdk.rtc.AppRTCAudioManager;
 import com.corertc.coresdk.rtc.AppRTCClient;
 import com.corertc.coresdk.rtc.DirectRTCClient;
@@ -34,8 +31,6 @@ import com.corertc.coresdk.rtc.PeerConnectionClient;
 import com.corertc.coresdk.rtc.UnhandledExceptionHandler;
 import com.corertc.coresdk.rtc.WebSocketRTCClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
@@ -59,7 +54,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.BaseAct;

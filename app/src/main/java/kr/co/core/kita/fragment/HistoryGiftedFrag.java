@@ -20,7 +20,6 @@ import kr.co.core.kita.R;
 import kr.co.core.kita.adapter.HistoryGiftAdapter;
 import kr.co.core.kita.data.HistoryGiftData;
 import kr.co.core.kita.databinding.FragmentHistoryGiftedBinding;
-import kr.co.core.kita.databinding.FragmentTalkLiveBinding;
 import kr.co.core.kita.util.AllOfDecoration;
 
 public class HistoryGiftedFrag extends BaseFrag {

@@ -1,10 +1,9 @@
 package kr.co.core.kita.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.os.Bundle;
 import android.view.View;
+
+import androidx.databinding.DataBindingUtil;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivityGiftBinding;

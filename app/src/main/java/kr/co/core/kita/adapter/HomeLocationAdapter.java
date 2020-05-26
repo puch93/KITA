@@ -1,6 +1,7 @@
 package kr.co.core.kita.adapter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.HomeLocationAct;
 
 public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapter.ViewHolder> {
     List<String> list;
@@ -43,6 +45,7 @@ public class HomeLocationAdapter extends RecyclerView.Adapter<HomeLocationAdapte
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                act.startActivity(new Intent(act, HomeLocationAct.class).putExtra("location", data));
             }
         });
 

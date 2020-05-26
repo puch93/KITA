@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import kr.co.core.kita.R;
-import kr.co.core.kita.util.StringUtil;
 
 
 public class PictureDlg extends BaseDlg {

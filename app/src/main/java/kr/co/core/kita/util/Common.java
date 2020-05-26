@@ -9,14 +9,7 @@ import android.os.Build;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,12 +23,27 @@ import kr.co.core.kita.R;
 
 
 public class Common {
+    public static final String JOIN_TYPE_GENERAL = "general";
+    public static final String JOIN_TYPE_FACEBOOK = "facebook";
+    public static final String JOIN_TYPE_NAVER = "naver";
+
     public static final String GENDER_M = "male";
     public static final String GENDER_W = "female";
 
-    public static final String ITEM_01 = "peso_1000";
-    public static final String ITEM_02 = "peso_2000";
-    public static final String ITEM_03 = "peso_5000";
+    public static final String ITEM_01_CODE = "peso_1000";
+    public static final String ITEM_01_NAME = "1000 peso";
+    public static final String ITEM_01_PRICE = "25000";
+
+    public static final String ITEM_02_CODE = "peso_2000";
+    public static final String ITEM_02_NAME = "2000 peso";
+    public static final String ITEM_02_PRICE = "50000";
+
+    public static final String ITEM_03_CODE = "peso_5000";
+    public static final String ITEM_03_NAME = "5000 peso";
+    public static final String ITEM_03_PRICE = "125000";
+
+
+
 
 
     /* toast setting */

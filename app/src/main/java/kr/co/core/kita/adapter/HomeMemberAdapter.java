@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.ProfileDetailAct;
 import kr.co.core.kita.data.HomeMemberData;
+import kr.co.core.kita.util.StringUtil;
 
 public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.ViewHolder> {
     ArrayList<HomeMemberData> list = new ArrayList<>();
@@ -37,7 +38,7 @@ public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.Vi
         HomeMemberAdapter.ViewHolder viewHolder = new HomeMemberAdapter.ViewHolder(view);
         int height = (parent.getMeasuredWidth() - act.getResources().getDimensionPixelSize(R.dimen.size_home_item_minus)) / 2;
 
-        if(height <= 0) {
+        if (height <= 0) {
             height = act.getResources().getDimensionPixelSize(R.dimen.size_home_item_default);
         } else {
             height = (int) (height * 1.42);
@@ -63,12 +64,19 @@ public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.Vi
         // 소개글
         holder.tv_intro.setText(data.getIntro());
 
-        // 프로필 사진
-        Glide.with(act)
-//                .load(data.getProfile_img())
-                .load(R.drawable.dongsuk)
-                .centerCrop()
-                .into(holder.iv_profile);
+        if(!StringUtil.isNull(data.getProfile_img())) {
+            // 프사 유
+            Glide.with(act)
+                    .load(data.getProfile_img())
+                    .centerCrop()
+                    .into(holder.iv_profile);
+        } else {
+            //프사 무
+            Glide.with(act)
+                    .load(R.drawable.img_noimg01)
+                    .centerCrop()
+                    .into(holder.iv_profile);
+        }
 
         // 로그인 상태
         holder.iv_login_state.setSelected(data.isLogin());
@@ -77,7 +85,7 @@ public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.Vi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                act.startActivity(new Intent(act, ProfileDetailAct.class));
+                act.startActivity(new Intent(act, ProfileDetailAct.class).putExtra("yidx", data.getIdx()));
             }
         });
     }

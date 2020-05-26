@@ -3,9 +3,6 @@ package kr.co.core.kita.util;
 import android.app.Activity;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 
 public class BackPressCloseHandler {
 	

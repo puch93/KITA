@@ -1,8 +1,5 @@
 package kr.co.core.kita.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +8,12 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.google.android.material.tabs.TabLayout;
 
 import kr.co.core.kita.R;
-import kr.co.core.kita.adapter.GiftHistoryPagerAdapter;
 import kr.co.core.kita.adapter.TermPagerAdapter;
 import kr.co.core.kita.databinding.ActivityTermSettingBinding;
 import kr.co.core.kita.util.StringUtil;

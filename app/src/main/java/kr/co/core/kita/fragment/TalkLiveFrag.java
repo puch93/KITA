@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.adapter.TalkListAdapter;
-import kr.co.core.kita.data.HomeMemberData;
 import kr.co.core.kita.data.TalkListData;
 import kr.co.core.kita.databinding.FragmentTalkLiveBinding;
 import kr.co.core.kita.util.AllOfDecoration;

@@ -1,6 +1,5 @@
 package kr.co.core.kita.firebase;
 
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,19 +12,12 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
 import kr.co.core.kita.R;
-import kr.co.core.kita.activity.MainAct;
-import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.StringUtil;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

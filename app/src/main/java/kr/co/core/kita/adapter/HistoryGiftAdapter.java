@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.ProfileDetailAct;
-import kr.co.core.kita.activity.TalkDetailAct;
 import kr.co.core.kita.data.HistoryGiftData;
 
 public class HistoryGiftAdapter extends RecyclerView.Adapter<HistoryGiftAdapter.ViewHolder> {

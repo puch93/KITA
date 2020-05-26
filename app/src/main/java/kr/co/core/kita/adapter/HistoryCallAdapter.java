@@ -1,7 +1,6 @@
 package kr.co.core.kita.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
-import kr.co.core.kita.activity.ProfileDetailAct;
 import kr.co.core.kita.data.HistoryCallData;
 
 public class HistoryCallAdapter extends RecyclerView.Adapter<HistoryCallAdapter.ViewHolder> {

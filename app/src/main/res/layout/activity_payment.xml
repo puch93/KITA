@@ -89,7 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" (PHP 1500)"
+                    android:text=" (peso 1500)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -148,7 +148,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" PHP (￦25,000)"
+                    android:text=" peso (￦25,000)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -195,7 +195,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" PHP (￦50,000)"
+                    android:text=" peso (￦50,000)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -242,7 +242,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" PHP (￦125,000)"
+                    android:text=" peso (￦125,000)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />

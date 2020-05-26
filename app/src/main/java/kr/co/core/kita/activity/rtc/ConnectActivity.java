@@ -3,15 +3,10 @@ package kr.co.core.kita.activity.rtc;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.PermissionChecker;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 import kr.co.core.kita.util.StringUtil;

@@ -58,10 +58,11 @@
                     android:layout_height="358dp">
 
                     <ImageView
+                        android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
                         android:layout_height="358dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/dongsuk"
+                        tools:src="@drawable/dongsuk"
                         tools:background="@color/color_e5e5e5" />
 
                     <LinearLayout
@@ -83,7 +84,7 @@
                                 android:id="@+id/tv_nick"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Sunny"
+                                tools:text="Sunny"
                                 android:textColor="@color/color_white"
                                 android:textSize="14dp"
                                 android:textStyle="bold" />
@@ -111,9 +112,10 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_gift"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="112"
+                                tools:text="112"
                                 android:textColor="@color/color_white"
                                 android:textSize="14dp"
                                 android:textStyle="bold" />
@@ -140,9 +142,10 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_payment"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="1215"
+                                tools:text="1215"
                                 android:textColor="@color/color_white"
                                 android:textSize="14dp"
                                 android:textStyle="bold" />
@@ -173,6 +176,7 @@
 
 
         <TextView
+            android:id="@+id/tv_upload"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:background="@color/color_e307ec"

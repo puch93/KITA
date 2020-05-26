@@ -21,9 +21,7 @@ import com.google.android.material.tabs.TabLayout;
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.CallHistoryAct;
 import kr.co.core.kita.activity.SearchAct;
-import kr.co.core.kita.adapter.HomePagerAdapter;
 import kr.co.core.kita.adapter.TalkPagerAdapter;
-import kr.co.core.kita.databinding.FragmentHomeBinding;
 import kr.co.core.kita.databinding.FragmentTalkBinding;
 import kr.co.core.kita.util.StringUtil;
 

@@ -1,17 +1,13 @@
 package kr.co.core.kita.adapter;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,11 +15,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 
 import java.util.ArrayList;
 
-import jp.wasabeef.glide.transformations.BlurTransformation;
 import kr.co.core.kita.R;
-import kr.co.core.kita.activity.ProfileDetailAct;
 import kr.co.core.kita.data.CommentData;
-import kr.co.core.kita.util.StringUtil;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     ArrayList<CommentData> list = new ArrayList<>();

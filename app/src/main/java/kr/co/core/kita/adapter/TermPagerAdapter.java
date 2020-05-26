@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kr.co.core.kita.fragment.BaseFrag;
-import kr.co.core.kita.fragment.HistoryGiftedFrag;
 import kr.co.core.kita.fragment.TermSettingFrag;
 
 public class TermPagerAdapter extends FragmentStatePagerAdapter {
