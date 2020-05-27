@@ -68,8 +68,23 @@ u_idx=내 인덱스
 type=normal(최근 작성순)/best(댓글 많이 달린 순)
 pagenum=페이징숫자
 
+9. 토크 상세 정보 가져오기
+/Board/talk_detail
+t_idx=게시물 인덱스
+
+10. 토크 댓글 등록하기
+/Board/talk_comment_input
+t_idx=게시물번호
+m_idx=코멘트 작성 회원번호
+contents=코멘트 내용
+
 11. 토크 등록하기
 /Board/talk_regist_input
 m_idx=작성자 인덱스
 image1~image20 첨부이미지
 content=내용
+
+12.토크 삭제하기
+/Board/talk_del
+t_idx=토크 인덱스
+m_idx=작성자 회원번호

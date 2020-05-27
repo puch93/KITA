@@ -121,9 +121,12 @@ public class TalkUploadAct extends AppCompatActivity {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
-
+//                            Common.showToast(act, StringUtil.getStr(jo, "comment"));
+                            Common.showToast(act, "written successfully");
+                            setResult(RESULT_OK);
+                            finish();
                         } else {
-
+                            Common.showToast(act, StringUtil.getStr(jo, "comment"));
                         }
 
                     } catch (JSONException e) {
@@ -139,8 +142,46 @@ public class TalkUploadAct extends AppCompatActivity {
         server.setTag("Register Talk");
         server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
         for (int i = 1; i < list.size(); i++) {
-            File file = new File(StringUtil.getPath(act, list.get(i)));
+            String realPath = StringUtil.getPath(act, list.get(i));
+            File file = new File(realPath);
+            long fileSize = file.length();
+            Log.i(StringUtil.TAG, "file size: " + file.length());
+            // 10485760 용량제한
             server.addFileParams("image" + i, file);
+
+//            if (fileSize > 10485760) {
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inSampleSize = 2;
+//                Bitmap bm = BitmapFactory.decodeFile(realPath, options);
+//
+//                Bitmap resize = null;
+//                try {
+//                    File resize_file = new File(realPath);
+//                    FileOutputStream out = new FileOutputStream(resize_file);
+//
+//                    int width = bm.getWidth();
+//                    int height = bm.getHeight();
+//
+//                    if (width > 1024) {
+//                        int resizeHeight = 0;
+//                        if (height > 768) {
+//                            resizeHeight = 768;
+//                        } else {
+//                            resizeHeight = height / (width / 1024);
+//                        }
+//
+//                        resize = Bitmap.createScaledBitmap(bm, 1024, resizeHeight, true);
+//                        resize.compress(Bitmap.CompressFormat.PNG, 100, out);
+//                    } else {
+//                        resize = Bitmap.createScaledBitmap(bm, width, height, true);
+//                        resize.compress(Bitmap.CompressFormat.PNG, 100, out);
+//                    }
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                server.addFileParams("image" + i, file);
+//            }
         }
         server.addParams("content", binding.etContents.getText().toString());
         server.execute(true, true);

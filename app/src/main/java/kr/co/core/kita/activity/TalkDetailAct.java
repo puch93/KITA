@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
@@ -17,6 +21,12 @@ import kr.co.core.kita.adapter.CommentAdapter;
 import kr.co.core.kita.adapter.ImagePagerAdapter;
 import kr.co.core.kita.data.CommentData;
 import kr.co.core.kita.databinding.ActivityTalkDetailBinding;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
+import kr.co.core.kita.util.StringUtil;
 
 public class TalkDetailAct extends BaseAct implements View.OnClickListener {
     private ActivityTalkDetailBinding binding;
@@ -28,6 +38,9 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
     private CommentAdapter adapter;
     private ArrayList<CommentData> list = new ArrayList<>();
 
+    private String t_idx = "";
+    private String u_idx, u_nick, u_image;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,25 +49,42 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
 
         // 클릭 리스너
         binding.flBack.setOnClickListener(this);
-
-        //테스트데이터 세팅
-        Glide.with(act)
-                .load(R.drawable.dongsuk)
-                .transform(new CircleCrop())
-                .into(binding.ivProfile);
-
-        // 토크 이미지 세팅
-        imageList.add("test");
-        imageList.add("test");
-        imageList.add("test");
-        imageList.add("test");
-        imagePagerAdapter = new ImagePagerAdapter(getSupportFragmentManager(), imageList);
-        binding.imagePager.setAdapter(imagePagerAdapter);
-        binding.pageIndicator.attachTo(binding.imagePager);
+        binding.flDelete.setOnClickListener(this);
+        binding.flCommentReg.setOnClickListener(this);
 
 
-        // 토크 댓글 세팅
-        setTestData();
+        t_idx = getIntent().getStringExtra("t_idx");
+        u_idx = getIntent().getStringExtra("u_idx");
+        u_nick = getIntent().getStringExtra("u_nick");
+        u_image = getIntent().getStringExtra("u_image");
+
+
+        // 내 토크글 상세인지 상대 토크글 상세인지 확인인
+       if(u_idx.equalsIgnoreCase(AppPreference.getProfilePref(act, AppPreference.PREF_MIDX))) {
+           binding.llCommentArea.setVisibility(View.GONE);
+           binding.tvChat.setVisibility(View.GONE);
+        } else {
+           binding.flDelete.setVisibility(View.GONE);
+        }
+
+        //회원 데이터 세팅
+        binding.tvNick.setText(u_nick);
+        binding.tvNickTop.setText(u_nick);
+
+        if(StringUtil.isNull(u_image)) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .transform(new CircleCrop())
+                    .into(binding.ivProfile);
+        } else {
+            Glide.with(act)
+                    .load(u_image)
+                    .transform(new CircleCrop())
+                    .into(binding.ivProfile);
+        }
+
+        // 토크 상세정보 세팅
+        getTalkDetail();
 
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(act));
         binding.recyclerView.setItemViewCacheSize(20);
@@ -64,10 +94,139 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
         binding.recyclerView.setAdapter(adapter);
     }
 
-    private void setTestData() {
-        for (int i = 0; i < 10; i++) {
-            list.add(new CommentData(null, "마동석" + i, "It is comment content It is comment ", "2020.02.09 15:30",null));
-        }
+    private void doDeleteTalk() {
+        ReqBasic server = new ReqBasic(act, NetUrls.TALK_DELETE) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Talk Delete");
+        server.addParams("t_idx", t_idx);
+        server.addParams("m_idx", u_idx);
+        server.execute(true, false);
+    }
+
+    private void getTalkDetail() {
+        ReqBasic server = new ReqBasic(act, NetUrls.TALK_DETAIL) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONObject job = jo.getJSONObject("data");
+
+                            //토크 이미지 세팅
+                            for (int i = 1; i < 21; i++) {
+                                String imageUrl = StringUtil.getStr(job, "t_image"+i);
+                                if(StringUtil.isNull(imageUrl)) {
+                                    break;
+                                } else {
+                                    imageList.add(imageUrl);
+                                }
+                            }
+
+                            //토크 댓글 세팅
+                            JSONArray ja_comment = job.getJSONArray("comment");
+                            for (int i = 0; i < ja_comment.length(); i++) {
+                                JSONObject job_comment = ja_comment.getJSONObject(i);
+
+                                String idx = StringUtil.getStr(job_comment, "idx");
+                                String comment = StringUtil.getStr(job_comment, "comment");
+                                String nick = StringUtil.getStr(job_comment, "nick");
+                                String p_image1 = StringUtil.getStr(job_comment, "p_image1");
+                                String regdate = StringUtil.getStr(job_comment, "idx");
+
+                                list.add(new CommentData(idx, nick, comment, regdate, p_image1));
+                            }
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imagePagerAdapter = new ImagePagerAdapter(getSupportFragmentManager(), imageList);
+                                    binding.imagePager.setAdapter(imagePagerAdapter);
+                                    binding.pageIndicator.attachTo(binding.imagePager);
+
+                                    binding.tvContents.setText(StringUtil.getStr(job, "content"));
+                                    binding.tvRegDate.setText(StringUtil.getStr(job, "tb_regdate"));
+                                    binding.tvCountComment.setText(StringUtil.getStr(job, "tb_commentcnt"));
+
+                                    adapter.setList(list);
+                                }
+                            });
+                        } else {
+                            Common.showToast(act, "This is a temporary error.");
+                            finish();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Talk Detail");
+        server.addParams("t_idx", t_idx);
+        server.execute(true, false);
+    }
+
+    private void doRegisterComment() {
+        ReqBasic server = new ReqBasic(act, NetUrls.REGISTER_TALK_COMMENT) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                }
+                            });
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Register Comment");
+        server.addParams("t_idx", t_idx);
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("contents", binding.etComment.getText().toString());
+        server.execute(true, false);
     }
 
     @Override
@@ -75,6 +234,23 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.fl_back:
                 finish();
+                break;
+
+            case R.id.fl_delete:
+                showAlert(act, "Talk Delete", "Are you sure you want to delete the post?", new OnAfterConnection() {
+                    @Override
+                    public void onAfter() {
+                        doDeleteTalk();
+                    }
+                });
+                break;
+
+            case R.id.fl_comment_reg:
+                if(binding.etComment.length() == 0) {
+                    Common.showToast(act, "Please enter a comment.");
+                } else {
+                    doRegisterComment();
+                }
                 break;
         }
     }

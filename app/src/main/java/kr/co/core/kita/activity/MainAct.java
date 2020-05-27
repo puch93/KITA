@@ -52,16 +52,15 @@ public class MainAct extends BaseAct implements View.OnClickListener {
 
         binding.llMenu01.performClick();
 
-//        getReleaseHashKey();
+        getReleaseHashKey();
     }
 
 
-    // SHA1: 14:80:F5:6C:A9:40:D0:6E:F7:0E:28:A7:A7:9A:FC:A3:7A:EF:57:3A
     private void getReleaseHashKey() {
         byte[] sha1 = {
                 0x14, (byte) 0x80, (byte) 0xF5, 0x6C, (byte) 0xA9, 0x40, (byte) 0xD0, 0x6E, (byte) 0xF7, 0x0E, 0x28, (byte) 0xA7, (byte) 0xA7, (byte) 0x9A, (byte) 0xFC, (byte) 0xA3, 0x7A, (byte) 0xEF, 0x57, 0x3A
         };
-        Log.e(StringUtil.TAG, "getReleaseHashKey: " + Base64.encodeToString(sha1, Base64.NO_WRAP));
+        Log.i(StringUtil.TAG, "getReleaseHashKey: " + Base64.encodeToString(sha1, Base64.NO_WRAP));
     }
 
     @Override

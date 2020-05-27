@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.data.CommentData;
+import kr.co.core.kita.util.StringUtil;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     ArrayList<CommentData> list = new ArrayList<>();
@@ -49,15 +50,23 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         // 댓글내용
         holder.tv_contents.setText(data.getContents());
 
+        // 댓글작성시간
+        holder.tv_reg_date.setText(data.getReg_date());
 
         // 프로필 사진
-        Glide.with(act)
-//                .load(data.getProfile_img())
-                .load(R.drawable.dongsuk)
-                .centerCrop()
-                .transform(new CircleCrop())
-                .into(holder.iv_profile);
-
+        if(StringUtil.isNull(data.getProfile_img())) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        } else {
+            Glide.with(act)
+                    .load(data.getProfile_img())
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        }
     }
 
     @Override

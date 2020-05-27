@@ -75,6 +75,7 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
 
         getMyInfo();
     }
+
     private File downloadImage(String imgUrl) {
         Bitmap img = null;
         File f = null;
@@ -131,9 +132,8 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
                                     // 영상통화시 몇 peso 썼는지
                                     binding.etRecentWork02.setText(location2);
                                     // 프로필 사진 등록
-                                    if(!StringUtil.isNull(mImgFilePath_origin))
+                                    if (!StringUtil.isNull(mImgFilePath_origin))
                                         Glide.with(act).load(mImgFilePath_origin).into(binding.ivProfile);
-
                                 }
                             });
                         } else {
@@ -163,10 +163,11 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
                     try {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
-                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
-
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            Common.showToast(act, "Edited successfully.");
+                            finish();
                         } else {
-
+                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
                         }
 
                     } catch (JSONException e) {
@@ -184,7 +185,7 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
         server.addParams("intro", binding.etIntro.getText().toString());
         server.addParams("location", binding.tvRecentWork01.getText().toString());
         server.addParams("location2", binding.etRecentWork02.getText().toString());
-        if(!isPhotoChanged && !StringUtil.isNull(mImgFilePath_origin)) {
+        if (!isPhotoChanged && !StringUtil.isNull(mImgFilePath_origin)) {
             File file = downloadImage(mImgFilePath_origin);
             server.addFileParams("image", file);
         } else {
@@ -202,9 +203,9 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.tv_edit:
-                if(binding.etIntro.length() == 0) {
+                if (binding.etIntro.length() == 0) {
                     Common.showToast(act, "Please enter your Introduction");
-                } else if(binding.tvRecentWork01.length() == 0) {
+                } else if (binding.tvRecentWork01.length() == 0) {
                     Common.showToast(act, "Please select a region");
                 } else {
                     doEdit();
@@ -228,7 +229,7 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             String value = data.getStringExtra("value");
 
             switch (requestCode) {

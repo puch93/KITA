@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,12 +36,19 @@ import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MeFrag extends BaseFrag implements View.OnClickListener {
     FragmentMeBinding binding;
     Activity act;
 
     ProfileTalkAdapter adapter;
     ArrayList<ProfileTalkData> list = new ArrayList<>();
+
+
+    private static final int SETTING = 1001;
+    private static final int TALK_UPLOAD = 1002;
+    public static final int TALK_DETAIL = 101;
 
 
     @Nullable
@@ -53,10 +61,10 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
         binding.recyclerView.setItemViewCacheSize(20);
         binding.recyclerView.setHasFixedSize(true);
         adapter = new ProfileTalkAdapter(act, list);
+        adapter.setMeFrag(this);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.addItemDecoration(new AllOfDecoration(act, AllOfDecoration.PROFILE_DETAIL));
 
-        setTestData();
 
         binding.flMenu.setOnClickListener(this);
         binding.llGiftArea.setOnClickListener(this);
@@ -69,6 +77,8 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
     }
 
     private void getMyTalkList() {
+        list = new ArrayList<>();
+
         ReqBasic server = new ReqBasic(act, NetUrls.LIST_TALK) {
             @Override
             public void onAfter(int resultCode, HttpResult resultData) {
@@ -77,11 +87,25 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
-
+                            JSONArray ja = jo.getJSONArray("data");
+                            for (int i = 0; i < ja.length(); i++) {
+                                JSONObject job = ja.getJSONObject(i);
+                                String u_idx = StringUtil.getStr(job, "u_idx");
+                                String tb_idx = StringUtil.getStr(job, "tb_idx");
+                                String thumb_image = StringUtil.getStr(job, "thumb_image");
+                                list.add(new ProfileTalkData(u_idx, tb_idx, thumb_image));
+                            }
                         } else {
 //                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
                             Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
                         }
+
+                        act.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.setList(list);
+                            }
+                        });
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -128,7 +152,7 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                                     else
                                         Glide.with(act).load(R.drawable.img_noimg02).into(binding.ivProfile);
 
-
+                                    adapter.setInfo(AppPreference.getProfilePref(act, AppPreference.PREF_MIDX), nick, p_image1);
                                 }
                             });
                         } else {
@@ -150,24 +174,12 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
         server.execute(true, false);
     }
 
-    private void setTestData() {
-        for (int i = 0; i < 20; i++) {
-            list.add(new ProfileTalkData(null, null));
-        }
-
-        act.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setList(list);
-            }
-        });
-    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fl_menu:
-                act.startActivity(new Intent(act, SettingAct.class));
+                act.startActivityForResult(new Intent(act, SettingAct.class), SETTING);
                 break;
 
             case R.id.ll_gift_area:
@@ -175,8 +187,27 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                 break;
 
             case R.id.tv_upload:
-                act.startActivity(new Intent(act, TalkUploadAct.class));
+                startActivityForResult(new Intent(act, TalkUploadAct.class), TALK_UPLOAD);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case SETTING:
+                    getMyInfo();
+                    break;
+
+                case TALK_DETAIL:
+                case TALK_UPLOAD:
+                    Log.i(StringUtil.TAG, "onActivityResult: ");
+                    getMyTalkList();
+                    break;
+
+            }
         }
     }
 }

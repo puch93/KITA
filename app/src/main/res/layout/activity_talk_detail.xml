@@ -35,10 +35,25 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:includeFontPadding="false"
-                android:text="Sunny"
+                tools:text="Sunny"
                 android:textColor="@color/color_292929"
                 android:textSize="19dp"
                 android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/fl_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp">
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/btn_del" />
+            </FrameLayout>
         </FrameLayout>
 
         <ImageView
@@ -94,7 +109,7 @@
                                 android:ellipsize="end"
                                 android:includeFontPadding="false"
                                 android:singleLine="true"
-                                android:text="Sunny"
+                                tools:text="Sunny"
                                 android:textColor="@color/color_292929"
                                 android:textSize="14dp"
                                 android:textStyle="bold" />
@@ -105,7 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5.7dp"
                                 android:includeFontPadding="false"
-                                android:text="2020.02.09 15:30"
+                                tools:text="2020.02.09 15:30"
                                 android:textColor="@color/color_aaaaaa"
                                 android:textSize="11dp" />
                         </LinearLayout>
@@ -154,7 +169,7 @@
                         android:layout_height="wrap_content"
                         android:lineSpacingExtra="4dp"
                         android:padding="20dp"
-                        android:text="Hello, the weather is good, Blabla Blabla\nit is livetalk content it is livetalk content it is livetalk"
+                        tools:text="Hello, the weather is good, Blabla Blabla\nit is livetalk content it is livetalk content it is livetalk"
                         android:textColor="@color/color_404040"
                         android:textSize="13dp" />
 
@@ -181,7 +196,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="8dp"
-                            android:text="9"
+                            tools:text="9"
                             android:textColor="@color/color_e307ec"
                             android:textSize="14dp"
                             android:textStyle="bold" />
@@ -210,6 +225,7 @@
         </FrameLayout>
 
         <LinearLayout
+            android:id="@+id/ll_comment_area"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical">

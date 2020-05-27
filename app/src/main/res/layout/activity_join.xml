@@ -94,6 +94,7 @@
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
                     android:text="ID"
+                    android:visibility="gone"
                     android:textColor="@color/color_404040"
                     android:textSize="13.3dp"
                     android:textStyle="bold" />
@@ -104,6 +105,7 @@
                     android:layout_height="42.7dp"
                     android:layout_marginLeft="29.7dp"
                     android:layout_marginRight="29.7dp"
+                    android:visibility="gone"
                     android:background="@null"
                     android:hint="Please enter your ID"
                     android:inputType="textEmailAddress"
@@ -116,6 +118,7 @@
                     android:layout_height="1.3dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:visibility="gone"
                     android:background="@color/color_e5e5e5" />
 
 
@@ -124,6 +127,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginLeft="29.3dp"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
@@ -137,6 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="42.7dp"
                     android:layout_marginLeft="29.7dp"
+                    android:visibility="gone"
                     android:layout_marginRight="29.7dp"
                     android:background="@null"
                     android:hint="Please enter your Password"
@@ -149,6 +154,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1.3dp"
                     android:layout_marginLeft="20dp"
+                    android:visibility="gone"
                     android:layout_marginRight="20dp"
                     android:background="@color/color_e5e5e5" />
 
@@ -158,6 +164,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="29.3dp"
+                    android:visibility="gone"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
                     android:text="Confirm Password"
@@ -173,6 +180,7 @@
                     android:layout_marginRight="29.7dp"
                     android:background="@null"
                     android:hint="Please enter your Confirm Password"
+                    android:visibility="gone"
                     android:inputType="textPassword"
                     android:singleLine="true"
                     android:textColor="@color/color_404040"
@@ -182,6 +190,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1.3dp"
                     android:layout_marginLeft="20dp"
+                    android:visibility="gone"
                     android:layout_marginRight="20dp"
                     android:background="@color/color_e5e5e5" />
 

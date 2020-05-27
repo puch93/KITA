@@ -1,6 +1,7 @@
 package kr.co.core.kita.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.databinding.DataBindingUtil;
 import com.bumptech.glide.Glide;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.EnlargeAct;
 import kr.co.core.kita.databinding.FragmentTalkImageBinding;
 
 public class ImageFrag extends BaseFrag {
@@ -28,9 +30,16 @@ public class ImageFrag extends BaseFrag {
         act = (AppCompatActivity) getActivity();
 
         Glide.with(act)
-                .load(R.drawable.dongsuk)
+                .load(image)
                 .centerCrop()
                 .into(binding.ivProfile);
+
+        binding.ivProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, EnlargeAct.class).putExtra("imageUrl", image));
+            }
+        });
 
         return binding.getRoot();
     }

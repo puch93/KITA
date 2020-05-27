@@ -2,6 +2,7 @@ package kr.co.core.kita.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,28 @@ import java.util.ArrayList;
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.TalkDetailAct;
 import kr.co.core.kita.data.ProfileTalkData;
+import kr.co.core.kita.fragment.MeFrag;
+import kr.co.core.kita.util.StringUtil;
 
 public class ProfileTalkAdapter extends RecyclerView.Adapter<ProfileTalkAdapter.ViewHolder> {
     ArrayList<ProfileTalkData> list = new ArrayList<>();
     Activity act;
+
+    String u_idx, u_nick, u_image;
+
+    public void setMeFrag(MeFrag meFrag) {
+        this.meFrag = meFrag;
+    }
+
+    MeFrag meFrag;
+
+    public static final int TALK_DETAIL = 101;
+
+    public void setInfo(String u_idx, String u_nick, String u_image) {
+        this.u_idx = u_idx;
+        this.u_nick = u_nick;
+        this.u_image = u_image;
+    }
 
     public ProfileTalkAdapter(Activity act, ArrayList<ProfileTalkData> list) {
         this.list = list;
@@ -56,17 +75,31 @@ public class ProfileTalkAdapter extends RecyclerView.Adapter<ProfileTalkAdapter.
 
         // 프로필 사진
         Glide.with(act)
-//                .load(data.getImage())
-                .load(R.drawable.dongsuk)
+                .load(data.getImage())
                 .into(holder.iv_image);
 
         //
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                act.startActivity(new Intent(act, TalkDetailAct.class));
+                if(meFrag != null) {
+                    Log.i(StringUtil.TAG, "frag: ");
+                    meFrag.startActivityForResult(new Intent(act, TalkDetailAct.class)
+                            .putExtra("t_idx", data.getT_idx())
+                            .putExtra("u_idx", u_idx)
+                            .putExtra("u_nick", u_nick)
+                            .putExtra("u_image", u_image), TALK_DETAIL);
+                } else {
+                    Log.i(StringUtil.TAG, "act: ");
+                    act.startActivityForResult(new Intent(act, TalkDetailAct.class)
+                            .putExtra("t_idx", data.getT_idx())
+                            .putExtra("u_idx", u_idx)
+                            .putExtra("u_nick", u_nick)
+                            .putExtra("u_image", u_image), TALK_DETAIL);
+                }
             }
         });
+
     }
 
     @Override

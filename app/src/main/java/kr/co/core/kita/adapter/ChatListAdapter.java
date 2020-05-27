@@ -46,8 +46,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final ChattingLIstData data = list.get(position);
 
-
-
         // 채팅 내용
         holder.tv_contents.setText(data.getContents());
 
