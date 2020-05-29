@@ -53,6 +53,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
         binding.llMenu01.performClick();
 
         getReleaseHashKey();
+
     }
 
 
@@ -119,7 +120,6 @@ public class MainAct extends BaseAct implements View.OnClickListener {
             case R.id.ll_menu_03:
                 switchLayout(v);
                 chatFrag = new ChatFrag();
-
 
                 replaceFragment(chatFrag, TAG_CHAT);
                 break;

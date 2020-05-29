@@ -30,7 +30,7 @@
             android:layout_height="13dp"
             android:layout_margin="8dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/img_on" />
+            android:src="@drawable/sel_login_state" />
 
         <LinearLayout
             android:layout_width="match_parent"

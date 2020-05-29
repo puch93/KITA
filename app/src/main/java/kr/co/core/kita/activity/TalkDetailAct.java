@@ -2,6 +2,7 @@ package kr.co.core.kita.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
@@ -63,6 +64,9 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
        if(u_idx.equalsIgnoreCase(AppPreference.getProfilePref(act, AppPreference.PREF_MIDX))) {
            binding.llCommentArea.setVisibility(View.GONE);
            binding.tvChat.setVisibility(View.GONE);
+           if(!StringUtil.isNull(getIntent().getStringExtra("from"))) {
+               binding.flDelete.setVisibility(View.GONE);
+           }
         } else {
            binding.flDelete.setVisibility(View.GONE);
         }
@@ -106,7 +110,9 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                            Common.showToastNetwork(act);
                         }
 
                     } catch (JSONException e) {
@@ -119,13 +125,14 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
             }
         };
 
-        server.setTag("Talk Delete");
+        server.setTag("Delete");
         server.addParams("t_idx", t_idx);
         server.addParams("m_idx", u_idx);
         server.execute(true, false);
     }
 
     private void getTalkDetail() {
+        list = new ArrayList<>();
         ReqBasic server = new ReqBasic(act, NetUrls.TALK_DETAIL) {
             @Override
             public void onAfter(int resultCode, HttpResult resultData) {
@@ -147,17 +154,19 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
                             }
 
                             //토크 댓글 세팅
-                            JSONArray ja_comment = job.getJSONArray("comment");
-                            for (int i = 0; i < ja_comment.length(); i++) {
-                                JSONObject job_comment = ja_comment.getJSONObject(i);
+                            if(!StringUtil.isNull(job.getString("comment"))) {
+                                JSONArray ja_comment = job.getJSONArray("comment");
+                                for (int i = 0; i < ja_comment.length(); i++) {
+                                    JSONObject job_comment = ja_comment.getJSONObject(i);
 
-                                String idx = StringUtil.getStr(job_comment, "idx");
-                                String comment = StringUtil.getStr(job_comment, "comment");
-                                String nick = StringUtil.getStr(job_comment, "nick");
-                                String p_image1 = StringUtil.getStr(job_comment, "p_image1");
-                                String regdate = StringUtil.getStr(job_comment, "idx");
+                                    String idx = StringUtil.getStr(job_comment, "u_idx");
+                                    String comment = StringUtil.getStr(job_comment, "comment");
+                                    String nick = StringUtil.getStr(job_comment, "nick");
+                                    String p_image1 = StringUtil.getStr(job_comment, "p_image1");
+                                    String regdate = StringUtil.converTime(StringUtil.getStr(job_comment, "regdate"), "yyyy.MM.dd hh:mm");
 
-                                list.add(new CommentData(idx, nick, comment, regdate, p_image1));
+                                    list.add(new CommentData(idx, nick, comment, regdate, p_image1));
+                                }
                             }
 
                             runOnUiThread(new Runnable() {
@@ -168,7 +177,7 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
                                     binding.pageIndicator.attachTo(binding.imagePager);
 
                                     binding.tvContents.setText(StringUtil.getStr(job, "content"));
-                                    binding.tvRegDate.setText(StringUtil.getStr(job, "tb_regdate"));
+                                    binding.tvRegDate.setText(StringUtil.converTime(StringUtil.getStr(job, "tb_regdate"), "yyyy.MM.dd hh:mm"));
                                     binding.tvCountComment.setText(StringUtil.getStr(job, "tb_commentcnt"));
 
                                     adapter.setList(list);
@@ -203,9 +212,13 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            Common.showToast(act, "Registered successfully.");
+                            getTalkDetail();
+
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    binding.etComment.setText("");
                                 }
                             });
                         } else {
@@ -237,7 +250,7 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.fl_delete:
-                showAlert(act, "Talk Delete", "Are you sure you want to delete the post?", new OnAfterConnection() {
+                showAlert(act, "Delete", "Are you sure you want to delete the post?", new OnAfterConnection() {
                     @Override
                     public void onAfter() {
                         doDeleteTalk();

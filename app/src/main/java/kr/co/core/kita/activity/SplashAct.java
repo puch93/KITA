@@ -7,13 +7,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -72,68 +75,67 @@ public class SplashAct extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                checkVersion();
-                startProgram();
+                checkVersion();
             }
         }, 1000);
     }
 
     private void checkVersion() {
-//        ReqBasic server = new ReqBasic(this, NetUrls.TERMS) {
-//            @Override
-//            public void onAfter(int resultCode, HttpResult resultData) {
-//                final String res = resultData.getResult();
-//
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            if (!StringUtil.isNull(res)) {
-//                                JSONObject jo = new JSONObject(res);
-//
-//                                String[] version = jo.getString("app_version").split("\\.");
-//                                String[] version_me = device_version.split("\\.");
-//
-//
-//                                for (int i = 0; i < 3; i++) {
-//                                    int tmp1 = Integer.parseInt(version[i]);
-//                                    int tmp2 = Integer.parseInt(version_me[i]);
-//
-//                                    if(tmp2 < tmp1) {
-//                                        android.app.AlertDialog.Builder alertDialogBuilder =
-//                                                new android.app.AlertDialog.Builder(new ContextThemeWrapper(act, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert));
-//                                        alertDialogBuilder.setTitle("업데이트");
-//                                        alertDialogBuilder.setMessage("새로운 버전이 있습니다.")
-//                                                .setPositiveButton("업데이트 바로가기", new DialogInterface.OnClickListener() {
-//                                                    @Override
-//                                                    public void onClick(DialogInterface dialogInterface, int i) {
-//                                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-//                                                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=kr.co.core.thefiven"));
-//                                                        startActivity(intent);
-//                                                        finish();
-//                                                    }
-//                                                });
-//                                        android.app.AlertDialog alertDialog = alertDialogBuilder.create();
-//                                        alertDialog.setCanceledOnTouchOutside(false);
-//                                        alertDialog.show();
-//
-//                                        return;
-//                                    }
-//                                }
-//
-//                                startProgram();
-//                            } else {
-//                                startProgram();
-//                            }
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//            }
-//        };
-//        server.setTag("Version Check");
-//        server.execute(true, false);
+        ReqBasic server = new ReqBasic(this, NetUrls.TERMS) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                final String res = resultData.getResult();
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (!StringUtil.isNull(res)) {
+                                JSONObject jo = new JSONObject(res);
+
+                                String[] version = jo.getString("app_version").split("\\.");
+                                String[] version_me = device_version.split("\\.");
+
+
+                                for (int i = 0; i < 3; i++) {
+                                    int tmp1 = Integer.parseInt(version[i]);
+                                    int tmp2 = Integer.parseInt(version_me[i]);
+
+                                    if(tmp2 < tmp1) {
+                                        android.app.AlertDialog.Builder alertDialogBuilder =
+                                                new android.app.AlertDialog.Builder(new ContextThemeWrapper(act, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert));
+                                        alertDialogBuilder.setTitle("Update");
+                                        alertDialogBuilder.setMessage("There is a new version.")
+                                                .setPositiveButton("Go to update", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                                        intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=kr.co.core.kita"));
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                });
+                                        android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+                                        alertDialog.setCanceledOnTouchOutside(false);
+                                        alertDialog.show();
+
+                                        return;
+                                    }
+                                }
+
+                                startProgram();
+                            } else {
+                                startProgram();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        };
+        server.setTag("Version Check");
+        server.execute(true, false);
     }
 
     private void startProgram() {
@@ -155,20 +157,47 @@ public class SplashAct extends AppCompatActivity {
 
     //데이터 또는 WIFI 켜져 있는지 확인 / 안켜져있으면 데이터 설정창으로
     private void checkNetwork(final Runnable afterCheckAction) {
-        ConnectivityManager manager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = null;
-        if (manager != null) {
-            networkInfo = manager.getActiveNetworkInfo();
-        }
+//        ConnectivityManager manager = (ConnectivityManager) act.getSystemService(Context.CONNECTIVITY_SERVICE);
+//        NetworkInfo networkInfo = null;
+//        if (manager != null) {
+//            networkInfo = manager.getActiveNetworkInfo();
+//        }
+//
+//        if (networkInfo != null && networkInfo.isConnected()) {
+//            if (afterCheckAction != null) {
+//                afterCheckAction.run();
+//            }
+//        } else {
+//            showNetworkAlert();
+//        }
 
-        if (networkInfo != null && networkInfo.isConnected()) {
-            if (afterCheckAction != null) {
-                afterCheckAction.run();
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (cm != null) {
+                NetworkCapabilities capabilities = cm.getNetworkCapabilities(cm.getActiveNetwork());
+                if (capabilities != null) {
+                    if (afterCheckAction != null) {
+                        afterCheckAction.run();
+                    }
+                } else {
+                    showNetworkAlert();
+                }
             }
         } else {
-            showNetworkAlert();
+            if (cm != null) {
+                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+                if (networkInfo != null) {
+                    if (afterCheckAction != null) {
+                        afterCheckAction.run();
+                    }
+                } else {
+                    showNetworkAlert();
+                }
+            }
         }
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -249,7 +278,7 @@ public class SplashAct extends AppCompatActivity {
                     try {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
-                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             JSONObject job = jo.getJSONObject("value");
                             AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, StringUtil.getStr(job, "idx"));
                             AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, StringUtil.getStr(job, "gender"));
@@ -258,7 +287,10 @@ public class SplashAct extends AppCompatActivity {
                             startActivity(new Intent(act, MainAct.class));
                             finish();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
+                            Common.showToast(act, "Login failed");
+
                         }
 
                     } catch (JSONException e) {

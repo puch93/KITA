@@ -89,7 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" (peso 1500)"
+                    android:text=" (PHP 1500)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -148,7 +148,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" peso (￦25,000)"
+                    android:text=" PHP (￦25,000)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -195,7 +195,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" peso (￦50,000)"
+                    android:text=" PHP (￦50,000)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -242,7 +242,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text=" peso (￦125,000)"
+                    android:text=" PHP (￦125,000)"
                     android:textColor="@color/color_404040"
                     android:textSize="16dp"
                     android:textStyle="bold" />
@@ -260,9 +260,8 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-
         <TextView
-            android:id="@+id/tv_payment"
+            android:id="@+id/tv_ticket"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:background="@color/color_e307ec"
@@ -272,5 +271,36 @@
             android:textSize="18dp"
             android:textStyle="bold" />
 
+        <LinearLayout
+            android:id="@+id/ll_button_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_google"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="55dp"
+                android:background="@color/color_1b1a26"
+                android:gravity="center"
+                android:text="In-app payment"
+                android:textColor="@color/color_white"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/tv_zeropay"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="55dp"
+                android:background="@color/color_e307ec"
+                android:gravity="center"
+                android:text="Other payment"
+                android:textColor="@color/color_white"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
     </LinearLayout>
 </layout>

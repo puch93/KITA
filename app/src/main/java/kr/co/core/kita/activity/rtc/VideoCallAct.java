@@ -31,6 +31,8 @@ import com.corertc.coresdk.rtc.PeerConnectionClient;
 import com.corertc.coresdk.rtc.UnhandledExceptionHandler;
 import com.corertc.coresdk.rtc.WebSocketRTCClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
@@ -57,7 +59,14 @@ import java.util.Timer;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.BaseAct;
+import kr.co.core.kita.activity.GiftAct;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.SSLConnect;
+import kr.co.core.kita.util.StringUtil;
 
 public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvents,
         PeerConnectionClient.PeerConnectionEvents {
@@ -110,7 +119,6 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
     public static final String EXTRA_DISPLAY_HUD = "DISPLAY_HUD";
     public static final String RECEIVE_IDX = "RECEIVE_IDX";
     public static final String EXTRA_ID = "ID";
-
 
     private static final int CAPTURE_PERMISSION_REQUEST_CODE = 1;
     private static final int STAT_CALLBACK_PERIOD = 1000;
@@ -168,7 +176,10 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
     private boolean micEnabled = true;
     private boolean isSwappedFeeds;
 
-    public boolean callingState = true;
+    private int peso = 0;
+    boolean isMoney = false;
+
+    public boolean callingState = false;
 
     TextView profileNickname, profileRegion;
     ImageView profileImage;
@@ -193,11 +204,14 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
     public static int possible_point = 0;
 
     boolean isSelected = true;
+    boolean isFunctionCalled = false;
 
     Intent intent;
 
     // 유저정보
     private String u_idx, u_nick, u_region, u_profile_img;
+    String startTimeStr, endTimeStr;
+    LinearLayout ll_wait_area, ll_gift;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -229,9 +243,12 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
         disconnectButton02 = (LinearLayout) findViewById(R.id.ll_disconnect02);
         convertCameraButton = (LinearLayout) findViewById(R.id.ll_convert_camera);
 
+        ll_wait_area = (LinearLayout) findViewById(R.id.ll_wait_area);
+        ll_gift = (LinearLayout) findViewById(R.id.ll_gift);
+
         intent = getIntent();
 
-
+        getMyInfo();
 
         /* 상대 데이터 세팅 */
         u_idx = getIntent().getStringExtra("u_idx");
@@ -240,14 +257,21 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
         u_profile_img = getIntent().getStringExtra("u_profile_img");
 
         // 닉네임
-//        profileNickname.setText(u_nick);
+        profileNickname.setText(u_nick);
         // 프로필 이미지
-        Glide.with(act)
-                .load(R.drawable.dongsuk)
-                .transform(new CircleCrop())
-                .into(profileImage);
+        if(StringUtil.isNull(u_profile_img)) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .transform(new CircleCrop())
+                    .into(profileImage);
+        } else {
+            Glide.with(act)
+                    .load(u_profile_img)
+                    .transform(new CircleCrop())
+                    .into(profileImage);
+        }
         // 지역
-//        profileRegion.setText(u_region);
+        profileRegion.setText(u_region);
 
 
         // 카메라 전환 버튼
@@ -255,6 +279,14 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
             @Override
             public void onClick(View v) {
                 onCameraSwitch();
+            }
+        });
+
+        // 선물
+        ll_gift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, GiftAct.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
             }
         });
 
@@ -412,6 +444,7 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
                 this, peerConnectionParameters, VideoCallAct.this);
 
         startCall();
+        callOtherUser();
         //TODO
 //        callOtherUser(u_idx);
 
@@ -452,10 +485,75 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
 //        timer.schedule(timerTask, 0, 2000);
     }
 
+    private void getMyInfo() {
+        ReqBasic server = new ReqBasic(act, NetUrls.INFO_ME) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONObject job = jo.getJSONObject("value");
+                            peso = Integer.parseInt(StringUtil.getStr(job, "peso"));
+                            if (peso == 0) {
+                                onCallHangUp();
+                                Common.showToast(act, "Your PHP is not enough");
+                            }
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("My Info");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver();
+    }
+
+    private void callOtherUser() {
+        ReqBasic server = new ReqBasic(act, NetUrls.CALL) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Call Other User");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("t_idx", u_idx);
+        server.addParams("room_id", roomId);
+        server.execute(true, false);
     }
 
 
@@ -489,75 +587,75 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
         }
     }
 
-    private void sendDisconnectPush(String yidx) {
-//        ReqBasic server = new ReqBasic(act, NetUrls.ADDRESS) {
-//            @Override
-//            public void onAfter(int resultCode, HttpResult resultData) {
-//                if (resultData.getResult() != null) {
-//                    try {
-//                        JSONObject jo = new JSONObject(resultData.getResult());
-//
-//                        if (jo.getString("result").equalsIgnoreCase("Y")) {
-//
-//                        } else {
-//
-//                        }
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//                }
-//            }
-//        };
-//
-//        server.setTag("Disconnect Push");
-//        server.addParams("siteUrl", NetUrls.SITEURL);
-//        server.addParams("CONNECTCODE", "APP");
-//        server.addParams("_APP_MEM_IDX", UserPref.getMidx(act));
-//
-//        server.addParams("dbControl", "getVideoChattingENDSend");
-//        server.addParams("guest_idx", yidx);
-//        server.addParams("msg", "call");
-//        server.execute(true, false);
+
+    private void doDisconnect() {
+        callingState = false;
+        endTimeStr = StringUtil.convertCallTime(System.currentTimeMillis(), "yyyy-MM-dd hh:mm:ss");
+        ReqBasic server = new ReqBasic(act, NetUrls.CALL_DISCONNECT) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            isFunctionCalled = true;
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Call Disconnect");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("t_idx", u_idx);
+        server.addParams("vcl_sdate", startTimeStr);
+        server.addParams("vcl_edate", endTimeStr);
+        server.addParams("room_id", roomId);
+        server.execute(true, false);
     }
 
+    private void doDisconnectPass() {
+        callingState = false;
+        endTimeStr = StringUtil.convertCallTime(System.currentTimeMillis(), "yyyy-MM-dd hh:mm:ss");
+        ReqBasic server = new ReqBasic(act, NetUrls.CALL_DISCONNECT) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
 
-    private void callOtherUser(String yidx) {
-//        ReqBasic server = new ReqBasic(act, NetUrls.ADDRESS) {
-//            @Override
-//            public void onAfter(int resultCode, HttpResult resultData) {
-//                if (resultData.getResult() != null) {
-//                    try {
-//                        JSONObject jo = new JSONObject(resultData.getResult());
-//
-//                        if (jo.getString("result").equalsIgnoreCase("Y")) {
-//
-//                        } else {
-//
-//                        }
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-////                        Common.showToastNetwork(act);
-//                    }
-//                } else {
-//                    Log.e(TAG, "onAfter: null");
-////                    Common.showToastNetwork(act);
-//                }
-//            }
-//        };
-//
-//        server.setTag("Call Other (Video)");
-//        server.addParams("siteUrl", NetUrls.SITEURL);
-//        server.addParams("CONNECTCODE", "APP");
-//        server.addParams("_APP_MEM_IDX", UserPref.getMidx(act));
-//
-//        server.addParams("dbControl", "getVideoChattingIDSend");
-//        server.addParams("guest_idx", yidx);
-//        server.addParams("_ID", roomId);
-//        server.addParams("_CLASS", "영상");
-//        server.execute(true, false);
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            isFunctionCalled = true;
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Call Disconnect Pass");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("t_idx", u_idx);
+        server.addParams("vcl_sdate", "");
+        server.addParams("vcl_edate", "");
+        server.addParams("room_id", roomId);
+        server.execute(true, false);
     }
 
     @Override
@@ -583,6 +681,7 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
     }
 
     private void result_cancel() {
+        Log.i(TAG, "result_cancel: ");
         setResult(RESULT_CANCELED);
 
 //        if (calledStartedTime != 0) {
@@ -596,13 +695,21 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
     }
 
     private void result_ok() {
+        Log.i(TAG, "result_ok: ");
         if (calledStartedTime != 0) {
-            Intent resultIntent = new Intent(VideoCallAct.this, ConnectActivity.class);
-//            resultIntent.putExtra("result_time", callTime.getText().toString());
+            long result_time_long = (System.currentTimeMillis() - calledStartedTime) / 1000;
+            double result_multiply = (double) result_time_long / 60;
+            String result_point = String.valueOf((int) (result_multiply * 20));
 
+            Intent resultIntent = new Intent();
+            if(isMoney) {
+                resultIntent.putExtra("result_point", String.valueOf(peso));
+            } else {
+                resultIntent.putExtra("result_point", result_point);
+            }
             setResult(RESULT_OK, resultIntent);
-        } else {
-            setResult(RESULT_OK);
+
+            calledStartedTime = 0;
         }
     }
 
@@ -722,8 +829,6 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
     }
 
     public void onCallHangUp() {
-        if (callingState)
-            sendDisconnectPush(u_idx);
         disconnect();
     }
 
@@ -743,7 +848,10 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
 
     // Should be called from UI thread
     private void callConnected() {
+        calledStartedTime = System.currentTimeMillis();
+        callingState = true;
         final long delta = System.currentTimeMillis() - callStartedTimeMs;
+        startTimeStr = StringUtil.convertCallTime(System.currentTimeMillis(), "yyyy-MM-dd hh:mm:ss");
         Log.i(TAG, "Call connected: delay=" + delta + "ms");
         if (peerConnectionClient == null) {
             Log.w(TAG, "Call is connected in closed or error state");
@@ -771,6 +879,7 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
 //        callTime.setVisibility(View.VISIBLE);
 
         // 레이아웃 전환
+        ll_wait_area.setVisibility(View.GONE);
 //        muteBtn.setVisibility(View.VISIBLE);
     }
 
@@ -789,6 +898,13 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
+        if(!isFunctionCalled) {
+            if (callingState)
+                doDisconnect();
+            else
+                doDisconnectPass();
+        }
+
         Log.i("TEST_HOME", "disconnect");
         if (soundStatus) {
             callSound.stop();
@@ -1032,7 +1148,6 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
             @Override
             public void run() {
                 iceConnected = true;
-                callingState = false;
 
                 callConnected();
             }
@@ -1063,7 +1178,18 @@ public class VideoCallAct extends BaseAct implements AppRTCClient.SignalingEvent
                     if (act != null) {
                         long originTime = System.currentTimeMillis() - calledStartedTime;
 //                        callTime.setText(getDate(originTime, "mm:ss"));
+
+                        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+                            long result_time_long = (System.currentTimeMillis() - calledStartedTime) / 1000;
+                            double result_multiply = (double) result_time_long / 60;
+                            int result_point = (int) (result_multiply * 20);
+                            if (result_point > peso) {
+                                isMoney = true;
+                                onCallHangUp();
+                            }
+                        }
                     }
+
                 }
             }
         });

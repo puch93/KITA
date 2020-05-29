@@ -1,2 +1,2 @@
 rootProject.name='KITA'
-include ':app', ':sample', ':matisse'
+include ':app'

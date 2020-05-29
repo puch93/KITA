@@ -87,112 +87,110 @@
 
                 <!-- id area -->
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/ll_normal_area"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="29.3dp"
-                    android:layout_marginTop="20dp"
-                    android:includeFontPadding="false"
-                    android:text="ID"
-                    android:visibility="gone"
-                    android:textColor="@color/color_404040"
-                    android:textSize="13.3dp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/et_id"
-                    android:layout_width="match_parent"
-                    android:layout_height="42.7dp"
-                    android:layout_marginLeft="29.7dp"
-                    android:layout_marginRight="29.7dp"
-                    android:visibility="gone"
-                    android:background="@null"
-                    android:hint="Please enter your ID"
-                    android:inputType="textEmailAddress"
-                    android:singleLine="true"
-                    android:textColor="@color/color_404040"
-                    android:textSize="12dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="29.3dp"
+                        android:layout_marginTop="20dp"
+                        android:includeFontPadding="false"
+                        android:text="ID"
+                        android:textColor="@color/color_404040"
+                        android:textSize="13.3dp"
+                        android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1.3dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:visibility="gone"
-                    android:background="@color/color_e5e5e5" />
+                    <EditText
+                        android:id="@+id/et_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="42.7dp"
+                        android:layout_marginLeft="29.7dp"
+                        android:layout_marginRight="29.7dp"
+                        android:background="@null"
+                        android:hint="Please enter your ID"
+                        android:inputType="textEmailAddress"
+                        android:singleLine="true"
+                        android:textColor="@color/color_404040"
+                        android:textSize="12dp" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1.3dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/color_e5e5e5" />
 
 
-                <!-- password area -->
+                    <!-- password area -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:layout_marginLeft="29.3dp"
-                    android:layout_marginTop="20dp"
-                    android:includeFontPadding="false"
-                    android:text="Password"
-                    android:textColor="@color/color_404040"
-                    android:textSize="13.3dp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="29.3dp"
+                        android:layout_marginTop="20dp"
+                        android:includeFontPadding="false"
+                        android:text="Password"
+                        android:textColor="@color/color_404040"
+                        android:textSize="13.3dp"
+                        android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/et_pw"
-                    android:layout_width="match_parent"
-                    android:layout_height="42.7dp"
-                    android:layout_marginLeft="29.7dp"
-                    android:visibility="gone"
-                    android:layout_marginRight="29.7dp"
-                    android:background="@null"
-                    android:hint="Please enter your Password"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="@color/color_404040"
-                    android:textSize="12dp" />
+                    <EditText
+                        android:id="@+id/et_pw"
+                        android:layout_width="match_parent"
+                        android:layout_height="42.7dp"
+                        android:layout_marginLeft="29.7dp"
+                        android:layout_marginRight="29.7dp"
+                        android:background="@null"
+                        android:hint="Please enter your Password"
+                        android:inputType="textPassword"
+                        android:singleLine="true"
+                        android:textColor="@color/color_404040"
+                        android:textSize="12dp" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1.3dp"
-                    android:layout_marginLeft="20dp"
-                    android:visibility="gone"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/color_e5e5e5" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1.3dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/color_e5e5e5" />
 
-                <!-- password confirm area -->
+                    <!-- password confirm area -->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="29.3dp"
-                    android:visibility="gone"
-                    android:layout_marginTop="20dp"
-                    android:includeFontPadding="false"
-                    android:text="Confirm Password"
-                    android:textColor="@color/color_404040"
-                    android:textSize="13.3dp"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="29.3dp"
+                        android:layout_marginTop="20dp"
+                        android:includeFontPadding="false"
+                        android:text="Confirm Password"
+                        android:textColor="@color/color_404040"
+                        android:textSize="13.3dp"
+                        android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/et_pw_confirm"
-                    android:layout_width="match_parent"
-                    android:layout_height="42.7dp"
-                    android:layout_marginLeft="29.7dp"
-                    android:layout_marginRight="29.7dp"
-                    android:background="@null"
-                    android:hint="Please enter your Confirm Password"
-                    android:visibility="gone"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="@color/color_404040"
-                    android:textSize="12dp" />
+                    <EditText
+                        android:id="@+id/et_pw_confirm"
+                        android:layout_width="match_parent"
+                        android:layout_height="42.7dp"
+                        android:layout_marginLeft="29.7dp"
+                        android:layout_marginRight="29.7dp"
+                        android:background="@null"
+                        android:hint="Please enter your Confirm Password"
+                        android:inputType="textPassword"
+                        android:singleLine="true"
+                        android:textColor="@color/color_404040"
+                        android:textSize="12dp" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="1.3dp"
-                    android:layout_marginLeft="20dp"
-                    android:visibility="gone"
-                    android:layout_marginRight="20dp"
-                    android:background="@color/color_e5e5e5" />
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1.3dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:background="@color/color_e5e5e5" />
+                </LinearLayout>
 
 
                 <!-- nick name area -->
@@ -363,7 +361,6 @@
                     android:background="@null"
                     android:hint="Please enter your Introduction"
                     android:singleLine="true"
-                    android:text="Introduction text"
                     android:textColor="@color/color_404040"
                     android:textSize="12dp" />
 
@@ -383,7 +380,7 @@
                     android:layout_marginLeft="29.3dp"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
-                    android:text="Recent work"
+                    android:text="Region"
                     android:textColor="@color/color_404040"
                     android:textSize="13.3dp"
                     android:textStyle="bold" />
@@ -432,7 +429,7 @@
                     android:layout_marginLeft="29.3dp"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
-                    android:text="Recent work2"
+                    android:text="Recent work"
                     android:textColor="@color/color_404040"
                     android:textSize="13.3dp"
                     android:textStyle="bold" />

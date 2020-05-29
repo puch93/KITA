@@ -32,6 +32,8 @@ import com.corertc.coresdk.rtc.PeerConnectionClient;
 import com.corertc.coresdk.rtc.UnhandledExceptionHandler;
 import com.corertc.coresdk.rtc.WebSocketRTCClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.webrtc.Camera1Enumerator;
 import org.webrtc.Camera2Enumerator;
 import org.webrtc.CameraEnumerator;
@@ -57,6 +59,13 @@ import java.util.Set;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.BaseAct;
+import kr.co.core.kita.activity.GiftAct;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
+import kr.co.core.kita.util.StringUtil;
 
 public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEvents,
         PeerConnectionClient.PeerConnectionEvents {
@@ -110,6 +119,11 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     private static final int CAPTURE_PERMISSION_REQUEST_CODE = 1;
     private static final int STAT_CALLBACK_PERIOD = 1000;
+
+    private String roomId;
+
+    private int peso = 0;
+    boolean isMoney = false;
 
     private static class ProxyRenderer implements VideoRenderer.Callbacks {
         private VideoRenderer.Callbacks target;
@@ -166,7 +180,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     TextView profileNickname, profileRegion;
     ImageView profileImage;
-    LinearLayout disconnectButton01, disconnectButton02, disconnectButton03, convertCameraButton,connectButton;
+    LinearLayout disconnectButton01, disconnectButton02, disconnectButton03, convertCameraButton, connectButton;
     LinearLayout beforeArea, afterArea;
 
     public static Activity act;
@@ -175,6 +189,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     Vibrator vibrator = null;
     private long calledStartedTime = 0;
+    private long currentTime = 0;
     public boolean isToggleMirror = false;
 
     private static final int POINT_GIFT = 4;
@@ -188,6 +203,8 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     // 유저정보
     private String u_idx, u_nick, u_region, u_profile_img;
+    LinearLayout ll_gift;
+    long startTime, endTime;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -199,7 +216,6 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                 | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
         setContentView(R.layout.activity_video_receive);
-
         act = this;
 //        SSLConnect ssl = new SSLConnect();
 //        ssl.postHttps("https://appr.tc", 1000, 1000);
@@ -211,17 +227,20 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         fullscreenRenderer = findViewById(R.id.fullscreen_video_view);
 
         profileNickname = (TextView) findViewById(R.id.tv_nick);
+        profileRegion = (TextView) findViewById(R.id.tv_region);
         profileImage = (ImageView) findViewById(R.id.iv_profile);
 
         disconnectButton01 = (LinearLayout) findViewById(R.id.ll_disconnect01);
         disconnectButton02 = (LinearLayout) findViewById(R.id.ll_disconnect02);
         disconnectButton03 = (LinearLayout) findViewById(R.id.ll_disconnect03);
         convertCameraButton = (LinearLayout) findViewById(R.id.ll_convert_camera);
+        ll_gift = (LinearLayout) findViewById(R.id.ll_gift);
 
         beforeArea = (LinearLayout) findViewById(R.id.ll_before_area);
         afterArea = (LinearLayout) findViewById(R.id.ll_after_area);
         connectButton = (LinearLayout) findViewById(R.id.ll_connect);
 
+        getMyInfo();
 
         /* 상대 데이터 세팅 */
         u_idx = getIntent().getStringExtra("u_idx");
@@ -230,15 +249,30 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         u_profile_img = getIntent().getStringExtra("u_profile_img");
 
         // 닉네임
-//        profileNickname.setText(u_nick);
+        profileNickname.setText(u_nick);
         // 프로필 이미지
-        Glide.with(act)
-                .load(R.drawable.dongsuk)
-                .transform(new CircleCrop())
-                .into(profileImage);
-        // 지역
-//        profileRegion.setText(u_region);
+        if (StringUtil.isNull(u_profile_img)) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .transform(new CircleCrop())
+                    .into(profileImage);
+        } else {
+            Glide.with(act)
+                    .load(u_profile_img)
+                    .transform(new CircleCrop())
+                    .into(profileImage);
+        }
 
+        // 지역
+        profileRegion.setText(u_region);
+
+        // 선물
+        ll_gift.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, GiftAct.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
+            }
+        });
 
         // 진동끄기
         runOnUiThread(new Runnable() {
@@ -275,6 +309,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                 }
             }
         });
+
         disconnectButton02.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -289,6 +324,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                 }
             }
         });
+
         disconnectButton03.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -367,7 +403,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
 
         Uri roomUri = intent.getData();
-        String roomId = intent.getStringExtra(EXTRA_ROOMID);
+        roomId = intent.getStringExtra(EXTRA_ROOMID);
 
 
         boolean loopback = intent.getBooleanExtra(EXTRA_LOOPBACK, false);
@@ -434,6 +470,40 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                 this, peerConnectionParameters, VideoReceiveAct.this);
 
         startCall();
+    }
+
+    private void doDisconnect() {
+        endTime = System.currentTimeMillis();
+        ReqBasic server = new ReqBasic(act, NetUrls.CALL_DISCONNECT) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Call Disconnect");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("t_idx", u_idx);
+        server.addParams("vcl_sdate", String.valueOf(startTime));
+        server.addParams("vcl_edate", String.valueOf(endTime));
+        server.addParams("room_id", roomId);
+        server.execute(true, false);
     }
 
 
@@ -639,6 +709,8 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     // Should be called from UI thread
     private void callConnected() {
         final long delta = System.currentTimeMillis() - callStartedTimeMs;
+        startTime = System.currentTimeMillis();
+
         Log.i(TAG, "Call connected: delay=" + delta + "ms");
         if (peerConnectionClient == null) {
             Log.w(TAG, "Call is connected in closed or error state");
@@ -724,9 +796,10 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     }
 
     private void result_cancel() {
+        Log.i(TAG, "result_cancel: ");
         if (calledStartedTime != 0) {
             long result_time_long = (System.currentTimeMillis() - calledStartedTime) / 1000;
-            double result_multiply = (double) result_time_long / 30;
+            double result_multiply = (double) result_time_long / 60;
             String result_point = String.valueOf((int) (result_multiply * 115));
             String result_time = String.valueOf(result_time_long);
 
@@ -740,20 +813,57 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         }
     }
 
+    private void getMyInfo() {
+        ReqBasic server = new ReqBasic(act, NetUrls.INFO_ME) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONObject job = jo.getJSONObject("value");
+                            peso = Integer.parseInt(StringUtil.getStr(job, "peso"));
+                            if (peso == 0) {
+                                onCallHangUp();
+                                Common.showToast(act, "Your PHP is not enough");
+                            }
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("My Info");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
+    }
+
     private void result_ok() {
+        Log.i(TAG, "result_ok: ");
+        Log.i(TAG, "calledStartedTime: " + calledStartedTime);
         if (calledStartedTime != 0) {
             long result_time_long = (System.currentTimeMillis() - calledStartedTime) / 1000;
-            double result_multiply = (double) result_time_long / 30;
-            String result_point = String.valueOf((int) (result_multiply * 115));
-            String result_time = String.valueOf(result_time_long);
+            double result_multiply = (double) result_time_long / 60;
+            String result_point = String.valueOf((int) (result_multiply * 20));
 
-            Intent resultIntent = new Intent(VideoReceiveAct.this, ConnectActivity.class);
-            resultIntent.putExtra("result_time", result_time);
-            resultIntent.putExtra("result_point", result_point);
-
+            Intent resultIntent = new Intent();
+            if(isMoney) {
+                resultIntent.putExtra("result_point", String.valueOf(peso));
+            } else {
+                resultIntent.putExtra("result_point", result_point);
+            }
             setResult(RESULT_OK, resultIntent);
-        } else {
-            setResult(RESULT_OK);
+
+            calledStartedTime = 0;
         }
     }
 
@@ -983,7 +1093,17 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
             public void run() {
                 if (iceConnected) {
                     if (act != null) {
-                        long originTime = System.currentTimeMillis() - calledStartedTime;
+                        currentTime = System.currentTimeMillis() - calledStartedTime;
+
+                        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+                            long result_time_long = (System.currentTimeMillis() - calledStartedTime) / 1000;
+                            double result_multiply = (double) result_time_long / 60;
+                            int result_point = (int) (result_multiply * 20);
+                            if (result_point > peso) {
+                                isMoney = true;
+                                onCallHangUp();
+                            }
+                        }
 //                        callTime.setText(getDate(originTime, "mm:ss"));
                     }
                 }

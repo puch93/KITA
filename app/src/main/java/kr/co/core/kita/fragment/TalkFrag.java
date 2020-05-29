@@ -66,6 +66,7 @@ public class TalkFrag extends BaseFrag {
         return binding.getRoot();
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -75,12 +76,12 @@ public class TalkFrag extends BaseFrag {
                     if(currentPos == 0) {
                         Log.i(StringUtil.TAG, "onActivityResult: false");
                         search_result_01 = data.getStringExtra("value");
-                        TalkLiveFrag frag = (TalkLiveFrag) adapter.instantiateItem(binding.viewPager, 0);
+                        TalkSubFrag frag = (TalkSubFrag) adapter.instantiateItem(binding.viewPager, 0);
                         frag.setSearch(search_result_01);
                     } else {
                         Log.i(StringUtil.TAG, "onActivityResult: true");
                         search_result_02 = data.getStringExtra("value");
-                        TalkLiveFrag frag = (TalkLiveFrag) adapter.instantiateItem(binding.viewPager, 1);
+                        TalkSubFrag frag = (TalkSubFrag) adapter.instantiateItem(binding.viewPager, 1);
                         frag.setSearch(search_result_02);
                     }
                     break;

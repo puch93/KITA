@@ -85,6 +85,114 @@ image1~image20 첨부이미지
 content=내용
 
 12.토크 삭제하기
-/Board/talk_del
 t_idx=토크 인덱스
 m_idx=작성자 회원번호
+
+13. 하트/하트취소 하기
+/Member/set_heart
+/Board/talk_del
+m_idx=본인의 idx
+y_idx=상대방의 idx
+
+14. 선물 받은/한 기록 가져오기
+/Member/get_gift
+m_idx=본인의 idx
+type=gifted/gift(선물받은 기록/선물 한 기록)
+
+15. 선물하기
+/Member/set_gift
+m_idx=선물하는 사람인덱스
+y_idx=선물받는 사람인덱스
+g_name=선물 명
+g_price=선물 가격
+
+16. 오프라인 상태 적용하기
+/Member/setloginYN
+m_idx=유저인덱스
+
+17. 개인정보 처리방침 가져오기 & 앱 버전 정보
+/Main/app_info
+
+18. 신고하기
+/Member/declaremember
+midx=신고하는 유저인덱스
+yidx=신고대상 유저 인덱스
+
+
+===================== 결제 =======================
+- 결제결과 전송
+/Member/sell_item
+midx=구매자인덱스
+itype=point(고정)
+isubject=아이템명
+icode=아이템아이디
+p_order_id=주문ID
+p_store_type=GOOGLE/zeropay
+p_purchase_time=구매시간
+p_purchase_price=구매가격
+p_signature=구매토큰
+p_info=구매관련 json객체
+
+- 이용권 구매
+/Member/sell_ticket
+m_idx=구매하려는 인덱스
+
+===================== 채팅 =======================
+1. 채팅방 만들기
+/Chat/createRoom
+type=common
+uidx=회원본인의 인덱스
+tidx=상대방인덱스
+
+2. 채팅방 나가기
+/Chat/leaveChat
+midx=내인덱스
+room_idx=룸 인덱스
+
+3. 채팅 가능여부 확인
+/Chat/chkchatpossible
+m_idx=채팅자 인덱스
+room_idx=방번호
+
+4. 채팅 이용권 구매했는지 여부 확인
+/Chat/chkchatresponsepoint
+m_idx=내인덱스
+
+5. 채팅보내기
+/Chat/fcmMsg
+midx=회원인덱스
+contents=메시지 내용
+room_idx=방번호
+
+6. 이미지 업로드
+/Chat/addmsgimg
+pimg=파일
+
+7. 채팅방 리스트 가져오기
+/Chat/listChats
+m_idx=자신의 인덱스
+
+===================== 영상통화 =======================
+- 영상통화 걸기
+/Chat/reqMovieCall
+u_idx=내인덱스
+t_idx=상대방인덱스
+room_id=영상통화 고유ID
+
+2.통화 끊기
+/Chat/disconnectMovieCall
+u_idx=내 인덱스
+t_idx=상대방 인덱스
+vcl_sdate=통화시작시간
+vcl_edate=통화종료시간
+room_id=영상통화 고유ID
+
+3. 페소차감
+/Chat/setMovieCallPoint
+u_idx=회원인덱스
+peso=차감할 페소
+
+
+4. 영상통화 기록 리스트 가져오기
+/Chat/getMovieCallList
+m_idx=내인덱스

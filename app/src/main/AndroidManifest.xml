@@ -26,7 +26,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme">
-        <activity android:name=".activity.TalkUploadAct"></activity>
+        <activity android:name=".activity.TermAct"></activity>
+        <activity android:name=".activity.TalkUploadAct" />
         <activity android:name=".activity.HomeLocationAct" />
         <activity android:name=".activity.GiftAct" />
         <activity android:name=".activity.EditProfileAct" />
@@ -43,7 +44,6 @@
         <activity android:name=".activity.SettingAct" />
         <activity android:name=".activity.GiftHistoryAct" />
         <activity android:name=".activity.JoinAct" />
-        <activity android:name=".activity.TermJoinAct" />
         <activity android:name=".activity.MainAct" />
         <activity android:name=".activity.TalkDetailAct" />
         <activity android:name=".dialog.BaseDlg" />
@@ -51,10 +51,13 @@
         <activity android:name=".activity.BaseAct" />
         <activity android:name=".activity.PermissionAct" />
         <activity
+            android:name=".dialog.PaymentDlg"
+            android:theme="@style/ActivityDialog" />
+        <activity
             android:name=".dialog.PictureDlg"
             android:theme="@style/ActivityDialog" />
         <activity
-            android:name=".dialog.WarningPopupDlg"
+            android:name=".dialog.ReportDlg"
             android:theme="@style/ActivityDialog" />
         <activity
             android:name=".dialog.SelectDlg"

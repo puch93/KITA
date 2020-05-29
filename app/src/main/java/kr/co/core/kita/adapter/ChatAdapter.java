@@ -233,7 +233,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     private void setOtherData(ImageView iv_profile) {
         Glide.with(act)
-                .load(R.drawable.dongsuk)
+                .load(otherImage)
                 .centerCrop()
                 .transform(new CircleCrop())
                 .into(iv_profile);

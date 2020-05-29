@@ -65,17 +65,28 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         holder.tv_nick.setText(data.getU_nick());
 
         // 프로필 사진
-        Glide.with(act)
-//                .load(data.getProfile_img())
-                .load(R.drawable.dongsuk)
-                .centerCrop()
-                .transform(new CircleCrop())
-                .into(holder.iv_profile);
+        if(StringUtil.isNull(data.getU_profile_img())) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        } else {
+            Glide.with(act)
+                    .load(data.getU_profile_img())
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                act.startActivity(new Intent(act, ChatAct.class));
+                act.startActivity(new Intent(act, ChatAct.class)
+                        .putExtra("room_idx", data.getRoom_idx())
+                        .putExtra("yidx", data.getU_idx())
+                        .putExtra("otherImage", data.getU_profile_img())
+                );
             }
         });
 

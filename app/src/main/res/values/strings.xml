@@ -12,7 +12,7 @@
 
     <!-- 앱내부 사용 문자열 -->
     <string name="toast_network">네트워크 상태를 확인해주세요</string>
-    <string name="toast_develop">현재 개발중인 기능입니다</string>
+    <string name="toast_develop">This feature is currently in development</string>
 
     <!-- 시간 -->
     <string name="ago_seconds">초전</string>
@@ -21,6 +21,9 @@
     <string name="ago_days">일전</string>
     <string name="ago_months">달전</string>
     <string name="ago_years">년전</string>
+
+    <string name="gift_name">name</string>
+    <string name="gift_price">price</string>
 
     <!-- 인앱 -->
     <string name="pay_item_name">item_name</string>

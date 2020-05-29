@@ -1,29 +1,42 @@
 package kr.co.core.kita.firebase;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import kr.co.core.kita.R;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import kr.co.core.kita.activity.rtc.ConnectActivity;
+import kr.co.core.kita.activity.rtc.VideoCallAct;
+import kr.co.core.kita.activity.rtc.VideoReceiveAct;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.StringUtil;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private Context ctx;
 
-    private static final String TYPE_CHAT = "chatting";
+    private static final String TYPE_CALL = "video_request";
+    private static final String TYPE_DISCONNECT = "video_disconnect";
+
+    Timer timer;
+    TimerTask adTask;
+
+    private long currentTime;
+    private long lastTime;
+    private final long limitTime = 10000;
 
     @Override
     public void onNewToken(String token) {
@@ -56,146 +69,195 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         JSONObject jo = new JSONObject(remoteMessage.getData());
 
         String type = StringUtil.getStr(jo, "type");
+        switch (type) {
+            case TYPE_CALL:
+                if (!AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX).equalsIgnoreCase(StringUtil.getStr(jo, "msg_from"))) {
+                    if(checkCallState()) {
+                        cancelTimer();
+                        process_call(jo);
+                    } else {
+                        //통화중
+                        doDisconnectPass(StringUtil.getStr(jo, "msg_from"));
+                    }
+                }
+                break;
 
-//        switch (type) {
-//            case TYPE_CHAT:
-//                // 알람설정 켰는지 확인
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_CHATTING)) {
-//                    // 채팅액티비티 인지 or 해당회원 채팅방인지
-//                    if (ChattingAct.real_act == null || !ChattingAct.room_idx.equalsIgnoreCase(StringUtil.getStr(jo, "room_idx"))) {
-//
-//                        String target_idx = StringUtil.getStr(jo, "target_idx");
-//                        // 나에게 오는 푸시가 맞으면 (인덱스로 비교)
-//                        if (target_idx.equalsIgnoreCase(AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX))) {
-//                            // 메인액티비티 살아있을때 채팅 프래그먼트 리프래쉬
-//                            if (MainAct.act != null) {
-//                                ((MainAct) MainAct.act).refreshAboutChatting();
-//                            }
-//
-//                            if (StringUtil.getStr(jo, "room_type").equalsIgnoreCase("heartmessage")) {
-//                                sendChattingNotification(jo, true);
-//                            } else {
-//                                checkChattingPay(jo, StringUtil.getStr(jo, "room_idx"));
-//                            }
-//                        }
-//                    }
-//                }
-//                break;
-//
-//            case TYPE_LIKE:
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_LIKE)) {
-//
-//                    String target_idx = StringUtil.getStr(jo, "target_idx");
-//                    // 나에게 오는 푸시가 맞으면 (인덱스로 비교)
-//                    if (target_idx.equalsIgnoreCase(AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX))) {
-//                        sendSystemNotification(jo, "심쿵", 2);
-//                    }
-//                }
-//                break;
-//
-//            case TYPE_MATCHING:
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_MATCHING)) {
-//                    String target_idx = StringUtil.getStr(jo, "target_idx");
-//                    // 나에게 오는 푸시가 맞으면 (인덱스로 비교)
-//                    if (target_idx.equalsIgnoreCase(AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX))) {
-//                        sendSystemNotification(jo, "매칭", 3);
-//                    }
-//                }
-//                break;
-//
-//
-//            case TYPE_LIKE_MESSAGE:
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_LIKE_MESSAGE)) {
-//
-//                    String target_idx = StringUtil.getStr(jo, "target_idx");
-//                    // 나에게 오는 푸시가 맞으면 (인덱스로 비교)
-//                    if (target_idx.equalsIgnoreCase(AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX))) {
-//                        sendMessageNotification(jo, 7);
-//                    }
-//                }
-//                break;
-//
-//            case TYPE_LIKE_MESSAGE_CHAT:
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_LIKE_MESSAGE)) {
-//
-//                    String target_idx = StringUtil.getStr(jo, "target_idx");
-//                    // 나에게 오는 푸시가 맞으면 (인덱스로 비교)
-//                    if (target_idx.equalsIgnoreCase(AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX))) {
-//                        sendChattingRoomNotification(jo, 5);
-//                    }
-//                }
-//                break;
-//
-//            case TYPE_CGPMS:
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_OTHER)) {
-//                    sendCgpmsNotification(jo, 4);
-//                }
-//                break;
-//
-//            case TYPE_GIFT:
-//                if (AppPreference.getAlarmPref(ctx, AppPreference.ALARM_OTHER)) {
-//                    String target_idx = StringUtil.getStr(jo, "target_idx");
-//                    // 나에게 오는 푸시가 맞으면 (인덱스로 비교)
-//                    if (target_idx.equalsIgnoreCase(AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX))) {
-//                        sendSystemNotification(jo, "기프티콘", 6);
-//                    }
-//                }
-//                break;
-//        }
+            case TYPE_DISCONNECT:
+                if (!AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX).equalsIgnoreCase(StringUtil.getStr(jo, "msg_from"))) {
+                    timer = new Timer();
+                    lastTime = System.currentTimeMillis();
+                    checkDisconnect();
+                }
+
+                break;
+        }
+    }
+
+    private void doDisconnectPass(String u_idx) {
+
+        ReqBasic server = new ReqBasic(ctx, NetUrls.CALL_DISCONNECT) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                }
+            }
+        };
+
+        server.setTag("Call Disconnect Pass");
+        server.addParams("u_idx", AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX));
+        server.addParams("t_idx", u_idx);
+        server.addParams("vcl_sdate", "");
+        server.addParams("vcl_edate", "");
+        server.addParams("room_id", "");
+        server.execute(true, false);
+    }
+
+    private void process_disconnet(JSONObject jo) {
+        try {
+            String msg_from = StringUtil.getStr(jo, "msg_from");
+            String room_id = StringUtil.getStr(new JSONObject(jo.getString("room_idx")), "vc_refidx");
+            String nick = StringUtil.getStr(jo, "nick");
+            String profile_img = StringUtil.getStr(jo, "sender_img");
+            String location = StringUtil.getStr(jo, "sender_location");
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), ConnectActivity.class);
+                    intent.putExtra("type", "receive");
+                    intent.putExtra("roomId", room_id);
+                    intent.putExtra("u_idx", msg_from);
+                    intent.putExtra("u_nick", nick);
+                    intent.putExtra("u_region", location);
+                    intent.putExtra("u_profile_img", profile_img);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    try {
+                        pendingIntent.send();
+                    } catch (PendingIntent.CanceledException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 4000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void process_call(JSONObject jo) {
+        try {
+            String msg_from = StringUtil.getStr(jo, "msg_from");
+            String room_id = StringUtil.getStr(new JSONObject(jo.getString("room_idx")), "vc_refidx");
+            String nick = StringUtil.getStr(jo, "nick");
+            String profile_img = StringUtil.getStr(jo, "sender_img");
+            String location = StringUtil.getStr(jo, "sender_location");
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(getApplicationContext(), ConnectActivity.class);
+                    intent.putExtra("type", "receive");
+                    intent.putExtra("roomId", room_id);
+                    intent.putExtra("u_idx", msg_from);
+                    intent.putExtra("u_nick", nick);
+                    intent.putExtra("u_region", location);
+                    intent.putExtra("u_profile_img", profile_img);
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                    try {
+                        pendingIntent.send();
+                    } catch (PendingIntent.CanceledException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 4000);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
+    //통화종료 타이머실행
+    public void checkDisconnect() {
+        adTask = new TimerTask() {
+            @Override
+            public void run() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!checkCallState()) {
+                            checkDisconnectState();
+                        }
 
+                        currentTime = System.currentTimeMillis();
+                        if ((currentTime - lastTime) > limitTime) {
+                            cancelTimer();
+                        }
 
+                        Log.i("TEST_TIME", "currentTime: " + currentTime);
+                        Log.i("TEST_TIME", "currentTime - lastTime: " + (currentTime - lastTime));
+                    }
+                });
+            }
+        };
+        timer.schedule(adTask, 0, 500);
+    }
 
-    private void sendCgpmsNotification(JSONObject jo, int id) {
-        String status = StringUtil.getStr(jo, "status");
-        String idx = StringUtil.getStr(jo, "idx");
-        String msg = StringUtil.getStr(jo, "msg");
-        String url = StringUtil.getStr(jo, "url");
-        String send = StringUtil.getStr(jo, "send");
-        String type = StringUtil.getStr(jo, "type");
-        String cgpms = StringUtil.getStr(jo, "cgpms");
-        String edate = StringUtil.getStr(jo, "edate");
-        String sdate = StringUtil.getStr(jo, "sdate");
-        String title = StringUtil.getStr(jo, "title");
-        String regdate = StringUtil.getStr(jo, "regdate");
-        String senddate = StringUtil.getStr(jo, "senddate");
+    private void checkDisconnectState() {
+        VideoReceiveAct act_video_receive = (VideoReceiveAct) VideoReceiveAct.act;
+        VideoCallAct act_video = (VideoCallAct) VideoCallAct.act;
+        if (act_video_receive != null) {
+            cancelTimer();
+            act_video_receive.disconnectFromService();
 
-
-        //매니저 설정
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-        //채널설정
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("default", "더 파이브", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("더 파이브 알림설정");
-
-            notificationManager.createNotificationChannel(channel);
+            Log.i("TEST_TIME", "act_video_receive");
         }
 
-        //인텐트 설정
-        Intent intent = null;
-        if (StringUtil.isNull(url)) {
-//            intent = new Intent(ctx, PushAct.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (act_video != null) {
+            cancelTimer();
+            act_video.disconnectFromService();
+
+            Log.i("TEST_TIME", "act_video");
+        }
+    }
+
+    private void cancelTimer() {
+        Log.i("TEST_TIME", "cancelTimer");
+        if (adTask != null) {
+            adTask.cancel();
+            adTask = null;
+        }
+
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+    }
+
+    private boolean checkCallState() {
+        VideoReceiveAct act_video_receive = (VideoReceiveAct) VideoReceiveAct.act;
+        VideoCallAct act_video = (VideoCallAct) VideoCallAct.act;
+
+
+        if (act_video != null || act_video_receive != null) {
+            return false;
         } else {
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            return true;
         }
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        //노티 설정
-        Notification notification = new NotificationCompat.Builder(ctx, "default")
-                .setContentTitle(title)
-                .setContentText(msg)
-                .setAutoCancel(true)
-                .setSmallIcon(R.drawable.app_icon)
-                .setContentIntent(pendingIntent)
-                .build();
-
-        //푸시 날리기
-        notificationManager.notify(id, notification);
     }
-
 }

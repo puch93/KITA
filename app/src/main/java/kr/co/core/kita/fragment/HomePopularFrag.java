@@ -3,6 +3,7 @@ package kr.co.core.kita.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -116,8 +117,11 @@ public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemCli
 
                             isScroll = false;
                         } else {
-                            if (page == 1)
-                                Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                            if (page == 1) {
+//                                Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                                Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                                Common.showToast(act, "There is no member.");
+                            }
 
                             isScroll = true;
                         }

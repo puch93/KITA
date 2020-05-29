@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.ProfileDetailAct;
 import kr.co.core.kita.data.HistoryGiftData;
+import kr.co.core.kita.util.StringUtil;
 
 public class HistoryGiftAdapter extends RecyclerView.Adapter<HistoryGiftAdapter.ViewHolder> {
     ArrayList<HistoryGiftData> list = new ArrayList<>();
@@ -49,12 +50,19 @@ public class HistoryGiftAdapter extends RecyclerView.Adapter<HistoryGiftAdapter.
         holder.tv_nick.setText(data.getU_nick());
 
         // 프로필 사진
-        Glide.with(act)
-//                .load(data.getProfile_img())
-                .load(R.drawable.dongsuk)
-                .centerCrop()
-                .transform(new CircleCrop())
-                .into(holder.iv_profile);
+        if(StringUtil.isNull(data.getU_profile_img())) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        } else {
+            Glide.with(act)
+                .load(data.getU_profile_img())
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        }
 
         // 선물 상품이름
         holder.tv_gift_name.setText(data.getG_name());
@@ -64,10 +72,9 @@ public class HistoryGiftAdapter extends RecyclerView.Adapter<HistoryGiftAdapter.
         holder.tv_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                act.startActivity(new Intent(act, ProfileDetailAct.class));
+                act.startActivity(new Intent(act, ProfileDetailAct.class).putExtra("yidx", data.getU_idx()));
             }
         });
-
     }
 
     @Override

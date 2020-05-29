@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kr.co.core.kita.fragment.BaseFrag;
-import kr.co.core.kita.fragment.TalkLiveFrag;
+import kr.co.core.kita.fragment.TalkSubFrag;
 
 public class TalkPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -19,11 +19,15 @@ public class TalkPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        BaseFrag currentFragment = null;
+        TalkSubFrag currentFragment = null;
         switch (position) {
             case 0:
+                currentFragment = new TalkSubFrag();
+                currentFragment.setType("normal");
+                break;
             case 1:
-                currentFragment = new TalkLiveFrag();
+                currentFragment = new TalkSubFrag();
+                currentFragment.setType("best");
                 break;
 
         }

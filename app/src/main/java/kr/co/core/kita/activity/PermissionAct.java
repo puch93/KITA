@@ -5,23 +5,51 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+
+import kr.co.core.kita.R;
+import kr.co.core.kita.databinding.ActivityPermissionBinding;
+import kr.co.core.kita.util.Common;
 
 
 public class PermissionAct extends BaseAct {
+    ActivityPermissionBinding binding;
+    Activity act;
+
     public static final String CAMERA = "camera";
     public static final String GALLERY = "gallery";
-    Activity act;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_permission, null);
         act = this;
-//        setContentView(R.layout.dialog_picture);
 
-        requestPermission();
+        binding.flBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        binding.flTerm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                startActivity(new Intent(act, TermAct.class));
+                Common.showToastDevelop(act);
+            }
+        });
+
+        binding.tvAgree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestPermission();
+            }
+        });
     }
 
     private void requestPermission() {

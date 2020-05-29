@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.data.HistoryCallData;
+import kr.co.core.kita.util.StringUtil;
 
 public class HistoryCallAdapter extends RecyclerView.Adapter<HistoryCallAdapter.ViewHolder> {
     ArrayList<HistoryCallData> list = new ArrayList<>();
@@ -59,12 +60,17 @@ public class HistoryCallAdapter extends RecyclerView.Adapter<HistoryCallAdapter.
         holder.tv_region.setText(data.getU_region());
 
         // 프로필 사진
-        Glide.with(act)
-//                .load(data.getProfile_img())
-                .load(R.drawable.dongsuk)
-                .centerCrop()
-                .into(holder.iv_profile);
-
+        if(StringUtil.isNull(data.getProfile_img())) {
+            Glide.with(act)
+                    .load(R.drawable.img_noimg02)
+                    .centerCrop()
+                    .into(holder.iv_profile);
+        } else {
+            Glide.with(act)
+                    .load(data.getProfile_img())
+                    .centerCrop()
+                    .into(holder.iv_profile);
+        }
 
 
         //통화시간

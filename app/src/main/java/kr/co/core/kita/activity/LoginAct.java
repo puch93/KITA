@@ -43,7 +43,7 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
     ActivityLoginBinding binding;
     public static Activity act;
 
-    private String joinType = "normal";
+    private String joinType = "general";
     private String joinToken = "";
     CallbackManager facebookCallbackManager;
     OAuthLogin mOAuthLoginModule;
@@ -96,8 +96,8 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                                         joinType = "facebook";
                                         joinToken = object.getString("id");
                                         Log.i(StringUtil.TAG, "facebook result token: " + joinToken);
-                                        //TODO
-//                                        doLogin(facebook_token, facebook_token, false);
+
+                                        doLogin();
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -173,11 +173,12 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
 
                                 OAuthLogin.getInstance().logout(act);
 
-                                //TODO
+
                                 joinType = "naver";
                                 joinToken = naverResponse.getString("id");
                                 Log.i(StringUtil.TAG, "naver result token: " + joinToken);
-//                                reqJoinCheck("naver", naverResponse.getString("id"));
+
+                                doLogin();
                             }
                         } catch (Exception e) {
                             System.out.println(e);
@@ -211,15 +212,38 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                         if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             JSONObject job = jo.getJSONObject("value");
                             AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, StringUtil.getStr(job, "idx"));
-                            AppPreference.setProfilePref(act, AppPreference.PREF_ID, binding.etId.getText().toString());
-                            AppPreference.setProfilePref(act, AppPreference.PREF_PW, binding.etPw.getText().toString());
                             AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, StringUtil.getStr(job, "gender"));
                             AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, true);
+
+                            switch (joinType) {
+                                case "facebook":
+                                case "naver":
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_ID, joinToken);
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_PW, joinToken);
+                                    break;
+
+                                case "general":
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_ID, binding.etId.getText().toString());
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_PW, binding.etPw.getText().toString());
+                                    break;
+                            }
 
                             startActivity(new Intent(act, MainAct.class));
                             finish();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
+
+                            switch (joinType) {
+                                case "facebook":
+                                case "naver":
+                                    startActivity(new Intent(act, JoinAct.class).putExtra("join_type", joinType).putExtra("token", joinToken));
+                                    break;
+
+                                case "general":
+                                    Common.showToast(act, "Login failed");
+                                    break;
+                            }
                         }
 
                     } catch (JSONException e) {
@@ -233,8 +257,13 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
         };
 
         server.setTag("Login");
-        server.addParams("id", binding.etId.getText().toString());
-        server.addParams("pw", binding.etPw.getText().toString());
+        if(joinType.equalsIgnoreCase("general")) {
+            server.addParams("id", binding.etId.getText().toString());
+            server.addParams("pw", binding.etPw.getText().toString());
+        } else {
+            server.addParams("id", joinToken);
+            server.addParams("pw", joinToken);
+        }
         server.addParams("fcm", AppPreference.getProfilePref(act, AppPreference.PREF_FCM));
         server.execute(true, false);
     }
@@ -248,6 +277,8 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_login_btn:
+                joinType = "general";
+
                 if(binding.etId.length() == 0) {
                     Common.showToast(act, "Please enter your ID");
                 } else if(binding.etPw.length() == 0) {
@@ -265,7 +296,7 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.tv_join:
-                startActivity(new Intent(act, TermJoinAct.class).putExtra("join_type", Common.JOIN_TYPE_GENERAL));
+                startActivity(new Intent(act, JoinAct.class).putExtra("join_type", Common.JOIN_TYPE_GENERAL));
                 break;
         }
     }

@@ -2,6 +2,7 @@ package kr.co.core.kita.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -114,8 +115,11 @@ public class HomeLocationAct extends AppCompatActivity {
 
                             isScroll = false;
                         } else {
-                            if (page == 1)
-                                Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                            if (page == 1) {
+//                                Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                                Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                                Common.showToast(act, "There is no member.");
+                            }
 
                             isScroll = true;
                         }

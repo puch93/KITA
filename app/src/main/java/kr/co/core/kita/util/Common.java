@@ -31,15 +31,15 @@ public class Common {
     public static final String GENDER_W = "female";
 
     public static final String ITEM_01_CODE = "peso_1000";
-    public static final String ITEM_01_NAME = "1000 peso";
+    public static final String ITEM_01_NAME = "1000 PHP";
     public static final String ITEM_01_PRICE = "25000";
 
     public static final String ITEM_02_CODE = "peso_2000";
-    public static final String ITEM_02_NAME = "2000 peso";
+    public static final String ITEM_02_NAME = "2000 PHP";
     public static final String ITEM_02_PRICE = "50000";
 
     public static final String ITEM_03_CODE = "peso_5000";
-    public static final String ITEM_03_NAME = "5000 peso";
+    public static final String ITEM_03_NAME = "5000 PHP";
     public static final String ITEM_03_PRICE = "125000";
 
 
@@ -74,7 +74,7 @@ public class Common {
             act.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(act, act.getString(R.string.toast_network), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(act, "Please check the network status", Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -37,6 +37,21 @@
                 android:textColor="@color/color_292929"
                 android:textSize="19dp"
                 android:textStyle="bold" />
+
+            <FrameLayout
+                android:id="@+id/fl_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:paddingLeft="10dp"
+                android:paddingRight="20dp">
+
+                <ImageView
+                    android:layout_width="19dp"
+                    android:layout_height="19dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/btn_del" />
+            </FrameLayout>
         </FrameLayout>
 
         <ImageView

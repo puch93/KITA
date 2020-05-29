@@ -18,8 +18,16 @@ import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.core.kita.activity.PaymentAct;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
 
 
 public class BillingEntireManager implements PurchasesUpdatedListener {
@@ -136,7 +144,6 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                 }
             }
         };
-
     }
 
     //구입 가능한 상품의 리스트를 받아 오는 메소드
@@ -250,7 +257,7 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                 state_item = "Y";
 
                 Log.i(TAG, "purchase: " + purchase);
-//                sendPurchaseResult(purchase, "point");
+                sendPurchaseResult(purchase);
 
                 ConsumeParams consumeParams =
                         ConsumeParams.newBuilder()
@@ -269,103 +276,68 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
         }
     }
 
-//    private void sendPurchaseResult(final Purchase purchase, final String type) {
-//        ReqBasic server = new ReqBasic(ctx, NetUrls.PAY_RESULT) {
-//            @Override
-//            public void onAfter(int resultCode, HttpResult resultData) {
-//                if (resultData.getResult() != null) {
-//                    try {
-//                        JSONObject jo = new JSONObject(resultData.getResult());
-//
-//                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS) || StringUtil.getStr(jo, "result").equalsIgnoreCase("Y")) {
+    private void sendPurchaseResult(final Purchase purchase) {
+        ReqBasic server = new ReqBasic(ctx, NetUrls.PAY_RESULT) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS) || StringUtil.getStr(jo, "result").equalsIgnoreCase("Y")) {
 //                            afterListener.sendMessage("최근주문건에 대한 결제 완료되었습니다", true);
-//                            if(PayPointAct.act != null) {
-//                                PayPointAct.act.finish();
-//                            }
-//
-//                            if(PayMemberAct.act != null) {
-//                                PayMemberAct.act.finish();
-//                            }
-//
-//                            if(type.equalsIgnoreCase("ticket")) {
-//                                AppPreference.setProfilePrefBool(ctx, AppPreference.PREF_PAY_MEMBER, true);
-//                            }
-//                        } else {
-//
-//                        }
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                } else {
-//
-//                }
-//            }
-//        };
-//
-//        String name;
-//        String price;
-//        switch (purchase.getSku()) {
-//            case StringUtil.POINT_01_CODE:
-//                name = StringUtil.POINT_01_NAME;
-//                price = StringUtil.POINT_01_PRICE;
-//                break;
-//            case StringUtil.POINT_02_CODE:
-//                name = StringUtil.POINT_02_NAME;
-//                price = StringUtil.POINT_02_PRICE;
-//                break;
-//            case StringUtil.POINT_03_CODE:
-//                name = StringUtil.POINT_03_NAME;
-//                price = StringUtil.POINT_03_PRICE;
-//                break;
-//            case StringUtil.POINT_04_CODE:
-//                name = StringUtil.POINT_04_NAME;
-//                price = StringUtil.POINT_04_PRICE;
-//                break;
-//            case StringUtil.POINT_05_CODE:
-//                name = StringUtil.POINT_05_NAME;
-//                price = StringUtil.POINT_05_PRICE;
-//                break;
-//            case StringUtil.POINT_06_CODE:
-//                name = StringUtil.POINT_06_NAME;
-//                price = StringUtil.POINT_06_PRICE;
-//                break;
-//
-//
-//            case StringUtil.SUBS_01_CODE:
-//                name = StringUtil.SUBS_01_NAME;
-//                price = StringUtil.SUBS_01_PRICE;
-//                break;
-//            case StringUtil.SUBS_02_CODE:
-//                name = StringUtil.SUBS_02_NAME;
-//                price = StringUtil.SUBS_02_PRICE;
-//                break;
-//            case StringUtil.SUBS_03_CODE:
-//                name = StringUtil.SUBS_03_NAME;
-//                price = StringUtil.SUBS_03_PRICE;
-//                break;
-//            case StringUtil.SUBS_04_CODE:
-//                name = StringUtil.SUBS_04_NAME;
-//                price = StringUtil.SUBS_04_PRICE;
-//                break;
-//            default:
-//                return;
-//        }
-//
-//        server.setTag("Pay Result");
-//
-//        server.addParams("midx", AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX));
-//        server.addParams("itype", type);
-//        server.addParams("isubject", name);
-//        server.addParams("icode", purchase.getSku());
-//
-//        server.addParams("p_order_id", purchase.getOrderId());
-//        server.addParams("p_store_type", "GOOGLE");
-//        server.addParams("p_purchase_time", String.valueOf(purchase.getPurchaseTime()));
-//        server.addParams("p_purchase_price", price);
-//        server.addParams("p_signature", purchase.getPurchaseToken());
-//        server.addParams("p_info", purchase.getOriginalJson());
-//
-//        server.execute(true, false);
-//    }
+                            afterListener.sendMessage("Payment for recent order has been completed.", true);
+                            if(PaymentAct.act != null) {
+                                PaymentAct.act.setResult(Activity.RESULT_OK);
+                                PaymentAct.act.finish();
+                            }
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+
+                }
+            }
+        };
+
+        String name;
+        String price;
+
+        switch (purchase.getSku()) {
+            case Common.ITEM_01_CODE:
+                name = Common.ITEM_01_NAME;
+                price = Common.ITEM_01_PRICE;
+                break;
+            case Common.ITEM_02_CODE:
+                name = Common.ITEM_02_NAME;
+                price = Common.ITEM_02_PRICE;
+                break;
+            case Common.ITEM_03_CODE:
+                name = Common.ITEM_03_NAME;
+                price = Common.ITEM_03_PRICE;
+                break;
+            default:
+                return;
+        }
+
+        server.setTag("Pay Result");
+
+        server.addParams("midx", AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX));
+        server.addParams("itype", "point");
+        server.addParams("isubject", name);
+        server.addParams("icode", purchase.getSku());
+
+        server.addParams("p_order_id", purchase.getOrderId());
+        server.addParams("p_store_type", "GOOGLE");
+        server.addParams("p_purchase_time", String.valueOf(purchase.getPurchaseTime()));
+        server.addParams("p_purchase_price", price);
+        server.addParams("p_signature", purchase.getPurchaseToken());
+        server.addParams("p_info", purchase.getOriginalJson());
+
+        server.execute(true, false);
+    }
 }

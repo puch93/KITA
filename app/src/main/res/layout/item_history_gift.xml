@@ -70,7 +70,7 @@
                     android:textColor="@color/color_e307ec"
                     android:textSize="13dp"
                     android:textStyle="bold"
-                    tools:text="￦" />
+                    android:text="PHP " />
 
                 <TextView
                     android:id="@+id/tv_gift_price"

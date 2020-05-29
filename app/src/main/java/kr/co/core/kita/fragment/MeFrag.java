@@ -22,7 +22,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.EnlargeAct;
 import kr.co.core.kita.activity.GiftHistoryAct;
+import kr.co.core.kita.activity.PaymentAct;
 import kr.co.core.kita.activity.SettingAct;
 import kr.co.core.kita.activity.TalkUploadAct;
 import kr.co.core.kita.adapter.ProfileTalkAdapter;
@@ -48,8 +50,10 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
 
     private static final int SETTING = 1001;
     private static final int TALK_UPLOAD = 1002;
+    private static final int PAYMENT = 1003;
     public static final int TALK_DETAIL = 101;
 
+    private String p_image1 = "";
 
     @Nullable
     @Override
@@ -67,8 +71,10 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
 
 
         binding.flMenu.setOnClickListener(this);
+        binding.ivProfile.setOnClickListener(this);
         binding.llGiftArea.setOnClickListener(this);
         binding.tvUpload.setOnClickListener(this);
+        binding.llPointArea.setOnClickListener(this);
 
         getMyInfo();
         getMyTalkList();
@@ -133,7 +139,8 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             JSONObject job = jo.getJSONObject("value");
                             String nick = StringUtil.getStr(job, "nick");
-                            String p_image1 = StringUtil.getStr(job, "p_image1");
+                            p_image1 = StringUtil.getStr(job, "p_image1");
+                            String peso = StringUtil.getStr(job, "peso");
 
                             //TODO 추가 -- 선물 받은 개수 / 영상통화시 몇 peso 썼는지
 
@@ -145,9 +152,9 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                                     // 선물 받은 개수
                                     binding.tvGift.setText("0");
                                     // 영상통화시 몇 peso 썼는지
-                                    binding.tvPayment.setText("0");
+                                    binding.tvPhp.setText(peso);
                                     // 프로필 사진 등록
-                                    if(!StringUtil.isNull(p_image1))
+                                    if (!StringUtil.isNull(p_image1))
                                         Glide.with(act).load(p_image1).into(binding.ivProfile);
                                     else
                                         Glide.with(act).load(R.drawable.img_noimg02).into(binding.ivProfile);
@@ -158,6 +165,9 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                         } else {
 
                         }
+
+                        //선물받은 개수 가져오기
+                        getGiftHistory();
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -174,12 +184,55 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
         server.execute(true, false);
     }
 
+    private void getGiftHistory() {
+        list = new ArrayList<>();
+        ReqBasic server = new ReqBasic(act, NetUrls.GIFT_HISTORY) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONArray ja = jo.getJSONArray("data");
+                            act.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.tvGift.setText(String.valueOf(ja.length()));
+                                }
+                            });
+                        } else {
+
+                        }
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("gifted" + " History");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("type", "gifted");
+        server.execute(true, false);
+    }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_profile:
+                if(!StringUtil.isNull(p_image1)) {
+                    startActivity(new Intent(act, EnlargeAct.class).putExtra("imageUrl", p_image1));
+                }
+                break;
             case R.id.fl_menu:
-                act.startActivityForResult(new Intent(act, SettingAct.class), SETTING);
+                startActivityForResult(new Intent(act, SettingAct.class), SETTING);
                 break;
 
             case R.id.ll_gift_area:
@@ -189,14 +242,19 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
             case R.id.tv_upload:
                 startActivityForResult(new Intent(act, TalkUploadAct.class), TALK_UPLOAD);
                 break;
+
+            case R.id.ll_point_area:
+                startActivityForResult(new Intent(act, PaymentAct.class), PAYMENT);
+                break;
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
+                case PAYMENT:
                 case SETTING:
                     getMyInfo();
                     break;
@@ -206,7 +264,6 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                     Log.i(StringUtil.TAG, "onActivityResult: ");
                     getMyTalkList();
                     break;
-
             }
         }
     }

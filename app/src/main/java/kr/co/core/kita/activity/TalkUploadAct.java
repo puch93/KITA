@@ -126,7 +126,9 @@ public class TalkUploadAct extends AppCompatActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "comment"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "comment"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "comment"));
+                            Common.showToastNetwork(act);
                         }
 
                     } catch (JSONException e) {

@@ -15,11 +15,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.ChatAct;
 import kr.co.core.kita.activity.ProfileDetailAct;
 import kr.co.core.kita.data.HomeMemberData;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.ViewHolder> {
@@ -88,6 +97,45 @@ public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.Vi
                 act.startActivity(new Intent(act, ProfileDetailAct.class).putExtra("yidx", data.getIdx()));
             }
         });
+
+        holder.iv_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doCheckRoom(data.getIdx(), data.getProfile_img());
+            }
+        });
+    }
+
+    private void doCheckRoom(String yidx, String p_image1) {
+        ReqBasic server = new ReqBasic(act, NetUrls.CREATE_ROOM) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+                        JSONObject job = jo.getJSONObject("data");
+                        String room_idx = StringUtil.getStr(job, "room_idx");
+                        act.startActivity(new Intent(act, ChatAct.class)
+                                .putExtra("room_idx", room_idx)
+                                .putExtra("yidx", yidx)
+                                .putExtra("otherImage", p_image1)
+                        );
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Create Room");
+        server.addParams("type", "common");
+        server.addParams("uidx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("tidx", yidx);
+        server.execute(true, false);
     }
 
     @Override

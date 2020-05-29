@@ -186,7 +186,7 @@
                                 android:layout_width="55dp"
                                 android:layout_height="55dp"
                                 android:layout_gravity="center"
-                                android:src="@drawable/btn_gift_icon_01" />
+                                android:src="@drawable/btn_gift_icon_02" />
 
                         </FrameLayout>
 
@@ -583,7 +583,7 @@
                             android:layout_marginLeft="6dp"
                             android:layout_marginTop="7dp"
                             android:includeFontPadding="false"
-                            android:text="1000 PHP"
+                            android:text="10000 PHP"
                             android:textColor="@color/color_404040"
                             android:textSize="14dp"
                             android:textStyle="bold" />

@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import kr.co.core.kita.fragment.BaseFrag;
-import kr.co.core.kita.fragment.HistoryGiftedFrag;
+import kr.co.core.kita.fragment.GiftHistoryFrag;
 
 public class GiftHistoryPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -19,11 +19,14 @@ public class GiftHistoryPagerAdapter extends FragmentStatePagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        BaseFrag currentFragment = null;
+        GiftHistoryFrag currentFragment = new GiftHistoryFrag();
         switch (position) {
             case 0:
+                currentFragment.setType("gifted");
+
+                break;
             case 1:
-                currentFragment = new HistoryGiftedFrag();
+                currentFragment.setType("gift");
                 break;
 
         }

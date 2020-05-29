@@ -12,11 +12,14 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
+import java.util.TimeZone;
 
 public class StringUtil {
     public static final String TAG = "TEST_HOME";
@@ -29,6 +32,44 @@ public class StringUtil {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static String getRandomString() {
+        StringBuilder buffer = new StringBuilder();
+        Random random = new Random();
+
+        String[] nums = "1,2,3,4,5,6,7,8".split(",");
+
+        for (int i = 0; i < 8; i++) {
+            buffer.append(nums[random.nextInt(nums.length)]);
+        }
+
+        Log.i(StringUtil.TAG, "roomId: " + buffer.toString());
+        return buffer.toString();
+    }
+
+    public static String convertCallTime(long original, String patten) {
+        DateFormat df = new SimpleDateFormat(patten,  java.util.Locale.getDefault());
+        return df.format(original);
+    }
+
+    public static String convertDateFormat(String original, String after) {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", java.util.Locale.getDefault());
+        sf.setTimeZone(TimeZone.getTimeZone("KST"));
+        try {
+            Date old_date = sf.parse(original);
+            Date after_date = sf.parse(after);
+
+            long calDate = after_date.getTime() - old_date.getTime();
+            Log.i(TAG, "calDate: " + calDate);
+            Date date = new Date(calDate);
+            SimpleDateFormat dateFormat1 = new SimpleDateFormat("mm:ss", java.util.Locale.getDefault());
+            return dateFormat1.format(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
@@ -68,6 +109,18 @@ public class StringUtil {
                 s = jo.getString(key);
             } else {
                 s = "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
+
+    public static int getInt(JSONObject jo, String key) {
+        int s = 0;
+        try {
+            if (jo.has(key)) {
+                s = jo.getInt(key);
             }
         } catch (Exception e) {
             e.printStackTrace();

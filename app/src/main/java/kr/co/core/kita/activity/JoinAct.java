@@ -63,7 +63,7 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
     private String REGEX_NICK = "^[A-Za-z0-9ㄱ-ㅎ가-힣]{2,10}$"; // 영문 대/소문자, 숫자, 한글 (5~11자) (선택적)
 
 
-    private String join_type = "general";
+    private String token, join_type = "general";
     private String fcm = "";
     private String id = "";
     private String pw = "";
@@ -90,6 +90,11 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
         binding.tvSingUp.setOnClickListener(this);
 
         join_type = getIntent().getStringExtra("join_type");
+        token = getIntent().getStringExtra("token");
+
+        if(!join_type.equalsIgnoreCase("general")) {
+            binding.llNormalArea.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -128,36 +133,62 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.tv_sing_up:
-                if (StringUtil.isNull(mImgFilePath)) {
-                    Common.showToast(act, "Please register your Photo");
-                } else if (binding.etId.length() == 0 || !Pattern.matches(REGEX_ID, binding.etId.getText().toString())) {
-                    Common.showToast(act, "Please check your ID");
-                } else if (binding.etPw.length() == 0 || !Pattern.matches(REGEX_PW, binding.etPw.getText().toString())) {
-                    Common.showToast(act, "Please check your Password");
-                } else if (binding.etPwConfirm.length() == 0 || !binding.etPw.getText().toString().equalsIgnoreCase(binding.etPwConfirm.getText().toString())) {
-                    Common.showToast(act, "Please check your Password Confirm");
-                } else if (binding.etNick.length() == 0 || !Pattern.matches(REGEX_NICK, binding.etNick.getText().toString())) {
-                    Common.showToast(act, "Please check your Nickname");
-                } else if (binding.tvGender.length() == 0) {
-                    Common.showToast(act, "Please check your Gender selection");
-                } else if (binding.etIntro.length() == 0) {
-                    Common.showToast(act, "Please check your Introduction");
-                } else if (binding.tvRecentWork01.length() == 0) {
-                    Common.showToast(act, "Please check your Location");
-                } else {
-                    fcm = AppPreference.getProfilePref(act, AppPreference.PREF_FCM);
-                    id = binding.etId.getText().toString();
-                    pw = binding.etPw.getText().toString();
-                    nick = binding.etNick.getText().toString();
-                    gender = binding.tvGender.getText().toString().equalsIgnoreCase("Male") ? Common.GENDER_M : Common.GENDER_W;
-                    image = mImgFilePath;
-                    location = binding.tvRecentWork01.getText().toString();
-                    location2 = binding.etRecentWork02.getText().toString();
-                    intro = binding.etIntro.getText().toString();
-                    referrer = binding.etReferrer.getText().toString();
-                    facebook_id = binding.etFacebookId.getText().toString();
+                if (join_type.equalsIgnoreCase("general")) {
+                    if (StringUtil.isNull(mImgFilePath)) {
+                        Common.showToast(act, "Please register your Photo");
+                    } else if (binding.etId.length() == 0 || !Pattern.matches(REGEX_ID, binding.etId.getText().toString())) {
+                        Common.showToast(act, "Please check your ID");
+                    } else if (binding.etPw.length() == 0 || !Pattern.matches(REGEX_PW, binding.etPw.getText().toString())) {
+                        Common.showToast(act, "Please check your Password");
+                    } else if (binding.etPwConfirm.length() == 0 || !binding.etPw.getText().toString().equalsIgnoreCase(binding.etPwConfirm.getText().toString())) {
+                        Common.showToast(act, "Please check your Password Confirm");
+                    } else if (binding.etNick.length() == 0 || !Pattern.matches(REGEX_NICK, binding.etNick.getText().toString())) {
+                        Common.showToast(act, "Please check your Nickname");
+                    } else if (binding.tvGender.length() == 0) {
+                        Common.showToast(act, "Please check your Gender selection");
+                    } else if (binding.etIntro.length() == 0) {
+                        Common.showToast(act, "Please check your Introduction");
+                    } else if (binding.tvRecentWork01.length() == 0) {
+                        Common.showToast(act, "Please check your Location");
+                    } else {
+                        fcm = AppPreference.getProfilePref(act, AppPreference.PREF_FCM);
+                        id = binding.etId.getText().toString();
+                        pw = binding.etPw.getText().toString();
+                        nick = binding.etNick.getText().toString();
+                        gender = binding.tvGender.getText().toString().equalsIgnoreCase("Male") ? Common.GENDER_M : Common.GENDER_W;
+                        image = mImgFilePath;
+                        location = binding.tvRecentWork01.getText().toString();
+                        location2 = binding.etRecentWork02.getText().toString();
+                        intro = binding.etIntro.getText().toString();
+                        referrer = binding.etReferrer.getText().toString();
+                        facebook_id = binding.etFacebookId.getText().toString();
 
-                    doJoin();
+                        doJoin();
+                    }
+                } else {
+                    if (binding.etNick.length() == 0 || !Pattern.matches(REGEX_NICK, binding.etNick.getText().toString())) {
+                        Common.showToast(act, "Please check your Nickname");
+                    } else if (binding.tvGender.length() == 0) {
+                        Common.showToast(act, "Please check your Gender selection");
+                    } else if (binding.etIntro.length() == 0) {
+                        Common.showToast(act, "Please check your Introduction");
+                    } else if (binding.tvRecentWork01.length() == 0) {
+                        Common.showToast(act, "Please check your Location");
+                    } else {
+                        fcm = AppPreference.getProfilePref(act, AppPreference.PREF_FCM);
+                        id = token;
+                        pw = token;
+                        nick = binding.etNick.getText().toString();
+                        gender = binding.tvGender.getText().toString().equalsIgnoreCase("Male") ? Common.GENDER_M : Common.GENDER_W;
+                        image = mImgFilePath;
+                        location = binding.tvRecentWork01.getText().toString();
+                        location2 = binding.etRecentWork02.getText().toString();
+                        intro = binding.etIntro.getText().toString();
+                        referrer = binding.etReferrer.getText().toString();
+                        facebook_id = binding.etFacebookId.getText().toString();
+
+                        doJoin();
+                    }
                 }
                 break;
         }
@@ -172,9 +203,12 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            Common.showToast(act, "joined successfully");
                             doLogin();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
+                            Common.showToastNetwork(act);
                         }
 
                     } catch (JSONException e) {
@@ -218,12 +252,21 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
                         if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             JSONObject job = jo.getJSONObject("value");
                             AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, StringUtil.getStr(job, "idx"));
-                            AppPreference.setProfilePref(act, AppPreference.PREF_ID, id);
-                            AppPreference.setProfilePref(act, AppPreference.PREF_PW, pw);
                             AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, StringUtil.getStr(job, "gender"));
                             AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, true);
 
-                            Common.showToast(act, "joined successfully");
+                            switch (join_type) {
+                                case "facebook":
+                                case "naver":
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_ID, token);
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_PW, token);
+                                    break;
+
+                                case "general":
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_ID, binding.etId.getText().toString());
+                                    AppPreference.setProfilePref(act, AppPreference.PREF_PW, binding.etPw.getText().toString());
+                                    break;
+                            }
 
                             if (LoginAct.act != null) {
                                 LoginAct.act.finish();
@@ -232,7 +275,9 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
                             startActivity(new Intent(act, MainAct.class));
                             finish();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "value"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
+                            Common.showToast(act, "Login failed");
                         }
 
                     } catch (JSONException e) {
@@ -246,9 +291,14 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
         };
 
         server.setTag("Login");
-        server.addParams("id", id);
-        server.addParams("pw", pw);
-        server.addParams("fcm", fcm);
+        if(join_type.equalsIgnoreCase("general")) {
+            server.addParams("id", binding.etId.getText().toString());
+            server.addParams("pw", binding.etPw.getText().toString());
+        } else {
+            server.addParams("id", token);
+            server.addParams("pw", token);
+        }
+        server.addParams("fcm", AppPreference.getProfilePref(act, AppPreference.PREF_FCM));
         server.execute(true, false);
     }
 

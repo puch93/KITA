@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.TalkDetailAct;
 import kr.co.core.kita.data.TalkListData;
+import kr.co.core.kita.util.StringUtil;
 
 public class TalkListAdapter extends RecyclerView.Adapter<TalkListAdapter.ViewHolder> {
     ArrayList<TalkListData> list = new ArrayList<>();
@@ -28,6 +29,7 @@ public class TalkListAdapter extends RecyclerView.Adapter<TalkListAdapter.ViewHo
         this.list = list;
         this.act = act;
     }
+
 
     @NonNull
     @Override
@@ -55,17 +57,29 @@ public class TalkListAdapter extends RecyclerView.Adapter<TalkListAdapter.ViewHo
         holder.tv_reg_date.setText(data.getReg_date());
 
         // 프로필 사진
-        Glide.with(act)
-//                .load(data.getProfile_img())
-                .load(R.drawable.dongsuk)
-                .centerCrop()
-                .transform(new CircleCrop())
-                .into(holder.iv_profile);
+        if (StringUtil.isNull(data.getProfile_img())) {
+            Glide.with(act)
+                    .load(R.drawable.img_chatlist_noimg)
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        } else {
+            Glide.with(act)
+                    .load(data.getProfile_img())
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(holder.iv_profile);
+        }
 
         holder.tv_more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                act.startActivity(new Intent(act, TalkDetailAct.class));
+                act.startActivity(new Intent(act, TalkDetailAct.class)
+                        .putExtra("t_idx", data.getT_idx())
+                        .putExtra("u_idx", data.getU_idx())
+                        .putExtra("u_nick", data.getNick())
+                        .putExtra("u_image", data.getProfile_img())
+                        .putExtra("from", "list"));
             }
         });
 

@@ -21,4 +21,9 @@ public class ChattingData {
         this.contents = contents;
         this.read = read;
     }
+
+    public ChattingData(String date_line, String data_type) {
+        this.date_line = date_line;
+        this.data_type = data_type;
+    }
 }

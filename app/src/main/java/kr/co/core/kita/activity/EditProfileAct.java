@@ -167,7 +167,9 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
                             Common.showToast(act, "Edited successfully.");
                             finish();
                         } else {
-                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
+//                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                            Common.showToastNetwork(act);
                         }
 
                     } catch (JSONException e) {

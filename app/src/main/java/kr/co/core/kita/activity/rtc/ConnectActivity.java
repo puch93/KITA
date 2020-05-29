@@ -7,8 +7,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Random;
 
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class ConnectActivity extends Activity {
@@ -30,7 +38,7 @@ public class ConnectActivity extends Activity {
 
     int maxRetrMs, maxRetr, id, audioStartBitrate;
 
-    String roomId, type, test;
+    String roomId, type;
 
     private ProgressDialog pd;
 
@@ -42,13 +50,13 @@ public class ConnectActivity extends Activity {
     private static final int RTC_VIDEO_RECEIVE = 3;
 
     private String u_idx, u_nick, u_region, u_profile_img;
+    private long calledStartedTime = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         act = this;
         type = getIntent().getStringExtra("type");
-        test = getIntent().getStringExtra("test");
 
         u_idx = getIntent().getStringExtra("u_idx");
         u_nick = getIntent().getStringExtra("u_nick");
@@ -162,8 +170,7 @@ public class ConnectActivity extends Activity {
         Intent intent = null;
         if (type.equals("call")) {
             state = RTC_VIDEO_CALL;
-//            roomId = getRandomString();
-            roomId = test;
+            roomId = getRandomString();
 
             intent = new Intent(this, VideoCallAct.class);
             intent.putExtra("u_idx", u_idx);
@@ -172,8 +179,7 @@ public class ConnectActivity extends Activity {
             intent.putExtra("u_profile_img", u_profile_img);
         } else {
             state = RTC_VIDEO_RECEIVE;
-//            roomId = getIntent().getStringExtra("roomId");
-            roomId = test;
+            roomId = getIntent().getStringExtra("roomId");
 
             intent = new Intent(this, VideoReceiveAct.class);
             intent.putExtra("u_idx", u_idx);
@@ -241,30 +247,23 @@ public class ConnectActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            String time = null;
-            if (null != data) {
-                time = data.getStringExtra("result_time");
-            }
-
-            Intent intent = null;
-            intent = new Intent();
 
             switch (requestCode) {
-                case RTC_VOICE_CALL:
                 case RTC_VIDEO_CALL:
-                    Log.e(StringUtil.TAG, "success call in ConnectActivity");
-                    intent.putExtra("result_time", time);
-                    setResult(RESULT_OK, intent);
+                case RTC_VIDEO_RECEIVE:
+                    if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+                        Log.e(StringUtil.TAG, "success call in ConnectActivity");
+                        deduct_peso(data.getStringExtra("result_point"));
+                    }
                     break;
-
             }
         } else if (resultCode == RESULT_CANCELED) {
             switch (requestCode) {
-                case RTC_VOICE_CALL:
                 case RTC_VIDEO_CALL:
                     Log.e(StringUtil.TAG, "cancel call in ConnectActivity");
-                    setResult(RESULT_CANCELED);
-                    setResult(RESULT_CANCELED);
+                    break;
+
+                case RTC_VIDEO_RECEIVE:
                     break;
             }
         }
@@ -272,39 +271,33 @@ public class ConnectActivity extends Activity {
         finish();
     }
 
-//    private void doRequestPermission() {
-//        ArrayList<String> notGrantedPermissions = new ArrayList<>();
-//        for (String perm : permissions) {
-//            if (PermissionChecker.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
-//                notGrantedPermissions.add(perm);
-//            }
-//        }
-//        ActivityCompat.requestPermissions(this, notGrantedPermissions.toArray(new String[]{}), PERMISSIONS_REQUEST);
-//    }
-//
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults) {
-//
-//        switch (requestCode) {
-//            case PERMISSIONS_REQUEST:
-//                boolean permissionStatus = true;
-//
-//                for (int i = 0; i < grantResults.length; i++) {
-//                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-//                        permissionStatus = false;
-//                    }
-//                }
-//
-//                if (permissionStatus) {
-//                    //permission granted, after your to do
-//                    coreSetup();
-//                    connectToRoom(mode, type);
-//                } else {
-//                    //checking your permission. permission not granted
-//                    finish();
-//                }
-//                return;
-//        }
-//    }
+    private void deduct_peso(String point) {
+        ReqBasic server = new ReqBasic(act, NetUrls.DEDUCT_PESO) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+
+                        } else {
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Deduct Peso");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("peso", point);
+        server.execute(true, false);
+    }
 }
