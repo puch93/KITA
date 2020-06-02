@@ -54,6 +54,7 @@ public class SplashAct extends AppCompatActivity {
 
     private static final int PERMISSION = 1000;
     private static final int NETWORK = 1001;
+    private static final int OVERLAY = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class SplashAct extends AppCompatActivity {
         }, 1000);
     }
 
+
     private void checkVersion() {
         ReqBasic server = new ReqBasic(this, NetUrls.TERMS) {
             @Override
@@ -101,7 +103,7 @@ public class SplashAct extends AppCompatActivity {
                                     int tmp1 = Integer.parseInt(version[i]);
                                     int tmp2 = Integer.parseInt(version_me[i]);
 
-                                    if(tmp2 < tmp1) {
+                                    if (tmp2 < tmp1) {
                                         android.app.AlertDialog.Builder alertDialogBuilder =
                                                 new android.app.AlertDialog.Builder(new ContextThemeWrapper(act, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert));
                                         alertDialogBuilder.setTitle("Update");
@@ -141,6 +143,24 @@ public class SplashAct extends AppCompatActivity {
     private void startProgram() {
         if (!checkPermission()) {
             startActivityForResult(new Intent(act, PermissionAct.class), PERMISSION);
+        } else {
+            requestPermissionOverlay();
+        }
+    }
+
+    private void requestPermissionOverlay() {
+        // Check if Android M or higher
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                Log.i(StringUtil.TAG, "requestPermissionOverlay: ");
+                // Show alert dialog to the user saying a separate permission is needed
+                // Launch the settings activity if the user prefers
+                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + act.getPackageName()));
+                startActivityForResult(intent, OVERLAY);
+            } else {
+                checkSetting();
+            }
         } else {
             checkSetting();
         }
@@ -219,6 +239,10 @@ public class SplashAct extends AppCompatActivity {
             case NETWORK:
                 checkSetting();
                 break;
+
+            case OVERLAY:
+                requestPermissionOverlay();
+                break;
         }
     }
 
@@ -251,6 +275,7 @@ public class SplashAct extends AppCompatActivity {
                 });
         alertDialog.show();
     }
+
 
     private boolean checkPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

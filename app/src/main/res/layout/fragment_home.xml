@@ -35,20 +35,42 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/img_logo" />
 
-            <FrameLayout
-                android:id="@+id/fl_search"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:paddingLeft="10dp"
-                android:paddingRight="20dp">
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/btn_search" />
-            </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/fl_payment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="20dp">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/btn_shop" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="20dp">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/btn_search" />
+                </FrameLayout>
+            </LinearLayout>
         </FrameLayout>
 
 
@@ -80,6 +102,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Popular" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Newest" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="wrap_content"

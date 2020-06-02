@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.CallHistoryAct;
+import kr.co.core.kita.activity.PaymentAct;
 import kr.co.core.kita.activity.SearchAct;
 import kr.co.core.kita.adapter.ChatListAdapter;
 import kr.co.core.kita.data.ChattingLIstData;
@@ -35,7 +36,6 @@ import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 import static android.app.Activity.RESULT_OK;
-import static com.zhihu.matisse.MimeType.isImage;
 
 public class ChatFrag extends BaseFrag {
     FragmentChatBinding binding;
@@ -77,6 +77,13 @@ public class ChatFrag extends BaseFrag {
             }
         });
 
+        binding.flPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, PaymentAct.class));
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -86,7 +93,13 @@ public class ChatFrag extends BaseFrag {
         getChattingList();
     }
 
-    private void getChattingList() {
+    private boolean isImage(String msg) {
+        String reg = "^([\\S]+(\\.(?i)(jpg|png|jpeg))$)";
+
+        return msg.matches(reg);
+    }
+
+    public void getChattingList() {
         list = new ArrayList<>();
         ReqBasic server = new ReqBasic(act, NetUrls.LIST_CHAT) {
             @Override
@@ -107,6 +120,7 @@ public class ChatFrag extends BaseFrag {
                                 String no_read_count = StringUtil.getStr(job, "nonereadmsgcnt");
                                 String contents = StringUtil.getStr(job, "msg");
                                 if (isImage(contents)) {
+                                    Log.i(StringUtil.TAG, "onAfter: 이미지");
                                     contents = "이미지";
                                 }
                                 String date = StringUtil.getStr(job, "created_at");

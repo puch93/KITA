@@ -2,6 +2,7 @@ package kr.co.core.kita.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +13,6 @@ import androidx.databinding.DataBindingUtil;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivityPermissionBinding;
-import kr.co.core.kita.util.Common;
 
 
 public class PermissionAct extends BaseAct {
@@ -29,6 +29,7 @@ public class PermissionAct extends BaseAct {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_permission, null);
         act = this;
 
+
         binding.flBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,8 +40,8 @@ public class PermissionAct extends BaseAct {
         binding.flTerm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(act, TermAct.class));
-                Common.showToastDevelop(act);
+                startActivity(new Intent(act, TermAct.class));
+//                Common.showToastDevelop(act);
             }
         });
 
@@ -64,6 +65,8 @@ public class PermissionAct extends BaseAct {
             },0);
         }
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

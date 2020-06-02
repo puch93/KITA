@@ -46,6 +46,12 @@ public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemCli
     private boolean isScroll = false;
     private int page = 1;
 
+    private String search = "";
+
+    public void setSearchText(String searchText) {
+        search = searchText;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -108,12 +114,16 @@ public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemCli
                                 list.add(new HomeMemberData(idx, nick, intro, p_image1, loginYN.equalsIgnoreCase("Y")));
                             }
 
-                            act.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.setList(list);
-                                }
-                            });
+                            if(StringUtil.isNull(search)) {
+                                act.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.setList(list);
+                                    }
+                                });
+                            } else {
+                                setSearch(search);
+                            }
 
                             isScroll = false;
                         } else {

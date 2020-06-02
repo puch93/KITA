@@ -79,6 +79,7 @@ public class TalkListAdapter extends RecyclerView.Adapter<TalkListAdapter.ViewHo
                         .putExtra("u_idx", data.getU_idx())
                         .putExtra("u_nick", data.getNick())
                         .putExtra("u_image", data.getProfile_img())
+                        .putExtra("u_gender", data.getGender())
                         .putExtra("from", "list"));
             }
         });

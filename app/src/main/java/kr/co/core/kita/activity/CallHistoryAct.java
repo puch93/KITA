@@ -81,8 +81,9 @@ public class CallHistoryAct extends AppCompatActivity {
                                 String nick = StringUtil.getStr(job, "nick");
                                 String intro = StringUtil.getStr(job, "intro");
                                 String loginYN = StringUtil.getStr(job, "loginYN");
+                                String location = StringUtil.getStr(job, "location");
 
-                                list.add(new HistoryCallData(vcl_idx, t_idx, nick, p_image1,"Philippines", loginYN.equalsIgnoreCase("Y"), StringUtil.convertDateFormat(vcl_sdate, vcl_edate)));
+                                list.add(new HistoryCallData(vcl_idx, t_idx, nick, p_image1,location, loginYN.equalsIgnoreCase("Y"), StringUtil.convertDateFormat(vcl_sdate, vcl_edate)));
                             }
 
                             runOnUiThread(new Runnable() {

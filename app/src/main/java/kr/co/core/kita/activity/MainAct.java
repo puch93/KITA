@@ -10,6 +10,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivityMainBinding;
 import kr.co.core.kita.fragment.BaseFrag;
@@ -17,12 +20,17 @@ import kr.co.core.kita.fragment.ChatFrag;
 import kr.co.core.kita.fragment.HomeFrag;
 import kr.co.core.kita.fragment.MeFrag;
 import kr.co.core.kita.fragment.TalkFrag;
+import kr.co.core.kita.server.ReqBasic;
+import kr.co.core.kita.server.netUtil.HttpResult;
+import kr.co.core.kita.server.netUtil.NetUrls;
+import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.BackPressCloseHandler;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class MainAct extends BaseAct implements View.OnClickListener {
     ActivityMainBinding binding;
-    Activity act;
+    public static Activity act;
     FragmentManager fragmentManager;
 
     private BackPressCloseHandler backPressCloseHandler;
@@ -36,6 +44,8 @@ public class MainAct extends BaseAct implements View.OnClickListener {
     public static final String TAG_TALK = "talk";
     public static final String TAG_CHAT = "chat";
     public static final String TAG_ME = "me";
+
+    private int currentPos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +62,104 @@ public class MainAct extends BaseAct implements View.OnClickListener {
 
         binding.llMenu01.performClick();
 
-        getReleaseHashKey();
+        checkAutoPay();
+    }
 
+    public void refreshChatFrag() {
+        if(currentPos == 2) {
+            chatFrag.getChattingList();
+        }
+    }
+
+    // 구독중인지 체크
+    private void checkAutoPay() {
+        ReqBasic server = new ReqBasic(act, NetUrls.CHECK_AUTOPAY) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            //구독중
+                            checkChattingTicket();
+                        } else {
+                            //구독중 아님
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Check Auto Pay");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
+    }
+
+    // 채팅이용권 사용중인지 체크
+    private void checkChattingTicket() {
+        ReqBasic server = new ReqBasic(act, NetUrls.CHAT_TICKET_PURCHASED) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            // 이용권 사용중 일때
+                        } else {
+                            // 이용권 사용중 아닐때
+                            doBuyTicket();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Check Chatting Ticket");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
+    }
+
+    private void doBuyTicket() {
+        ReqBasic server = new ReqBasic(act, NetUrls.PAY_TICKET) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            finish();
+                        } else {
+//                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
+//                            Common.showToastNetwork(act);
+//                            Common.showToast(act, "Your PHP is not enough");
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                }
+            }
+        };
+
+        server.setTag("Pay Ticket");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
     }
 
 
@@ -104,6 +210,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_menu_01:
+                currentPos = 0;
                 switchLayout(v);
                 homeFrag = new HomeFrag();
 
@@ -111,6 +218,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_menu_02:
+                currentPos = 1;
                 switchLayout(v);
                 talkFrag = new TalkFrag();
 
@@ -118,6 +226,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_menu_03:
+                currentPos = 2;
                 switchLayout(v);
                 chatFrag = new ChatFrag();
 
@@ -125,6 +234,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_menu_04:
+                currentPos = 3;
                 switchLayout(v);
                 meFrag = new MeFrag();
 

@@ -196,3 +196,24 @@ peso=차감할 페소
 4. 영상통화 기록 리스트 가져오기
 /Chat/getMovieCallList
 m_idx=내인덱스
+
+
+
+======================== 추가 ========================
+신규가입회원 리스트 가져오기
+/Member/memberlist_new
+midx=자기회원번호
+
+내가보낸 첫번째메시지인지 체크
+/Chat/chkmyfirstchat
+midx
+room_idx
+
+채팅이용권 구독여부 확인
+/Member/autopay_chatchk
+m_idx=회원인덱스
+
+채팅이용권 구독취소
+/Member/autopay_cancel
+m_idx=회원인덱스
+

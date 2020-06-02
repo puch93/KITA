@@ -17,6 +17,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+
     <application
         android:name=".util.CustomApplication"
         android:icon="@drawable/app_icon"
@@ -33,7 +35,7 @@
         <activity android:name=".activity.EditProfileAct" />
         <activity android:name=".activity.PaymentAct" />
         <activity android:name=".activity.LoginAct" />
-        <activity android:name=".activity.rtc.ConnectActivity" />
+        <activity android:name=".activity.rtc.ConnectAct" />
         <activity android:name=".activity.rtc.VideoReceiveAct" />
         <activity android:name=".activity.rtc.VideoCallAct" />
         <activity android:name=".activity.EnlargeAct" />
@@ -50,6 +52,9 @@
         <activity android:name=".activity.ProfileDetailAct" />
         <activity android:name=".activity.BaseAct" />
         <activity android:name=".activity.PermissionAct" />
+        <activity
+            android:name=".dialog.GiftDlg"
+            android:theme="@style/ActivityDialog" />
         <activity
             android:name=".dialog.PaymentDlg"
             android:theme="@style/ActivityDialog" />

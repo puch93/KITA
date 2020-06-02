@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.CallHistoryAct;
+import kr.co.core.kita.activity.PaymentAct;
 import kr.co.core.kita.activity.SearchAct;
 import kr.co.core.kita.adapter.TalkPagerAdapter;
 import kr.co.core.kita.databinding.FragmentTalkBinding;
@@ -60,6 +61,13 @@ public class TalkFrag extends BaseFrag {
                 } else {
                     startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result_02), SEARCH);
                 }
+            }
+        });
+
+        binding.flPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, PaymentAct.class));
             }
         });
 

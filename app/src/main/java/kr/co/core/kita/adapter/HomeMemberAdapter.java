@@ -50,7 +50,8 @@ public class HomeMemberAdapter extends RecyclerView.Adapter<HomeMemberAdapter.Vi
         if (height <= 0) {
             height = act.getResources().getDimensionPixelSize(R.dimen.size_home_item_default);
         } else {
-            height = (int) (height * 1.42);
+//            height = (int) (height * 1.42);
+            height = (int) (height * 0.8);
         }
 
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) viewHolder.card_view.getLayoutParams();

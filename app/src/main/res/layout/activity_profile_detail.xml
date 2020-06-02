@@ -78,14 +78,13 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="358dp">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="358dp"
+                        android:layout_height="wrap_content"
                         android:scaleType="centerCrop"
-                        tools:src="@drawable/dongsuk"
                         tools:background="@color/color_e5e5e5" />
 
                     <LinearLayout
@@ -137,7 +136,7 @@
                                 android:id="@+id/tv_gift"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="112"
+                                tools:text="112"
                                 android:textColor="@color/color_white"
                                 android:textSize="14dp"
                                 android:textStyle="bold" />

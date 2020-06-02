@@ -203,8 +203,12 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
-                            Common.showToast(act, "joined successfully");
-                            doLogin();
+                            if(gender.equalsIgnoreCase("female")) {
+
+                            } else {
+                                Common.showToast(act, "joined successfully");
+                                doLogin();
+                            }
                         } else {
 //                            Common.showToast(act, StringUtil.getStr(jo, "value"));
                             Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));

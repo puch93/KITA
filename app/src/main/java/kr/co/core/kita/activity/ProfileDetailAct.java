@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -37,7 +38,7 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
     ProfileTalkAdapter adapter;
     ArrayList<ProfileTalkData> list = new ArrayList<>();
 
-    String yidx, nick, p_image1;
+    String yidx, nick, p_image1, gender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,23 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
         act = this;
 
         yidx = getIntent().getStringExtra("yidx");
+
+        /* set image height */
+        binding.ivProfile.post(new Runnable() {
+            @Override
+            public void run() {
+                int height = binding.ivProfile.getMeasuredWidth();
+                Log.e(StringUtil.TAG, "getMeasuredWidth: " + height);
+                height = (int) (binding.ivProfile.getWidth() * 0.75);
+                Log.e(StringUtil.TAG, "getWidth: " + height);
+                if (height <= 0) {
+                    height = getResources().getDimensionPixelSize(R.dimen.profile_me_default_height);
+                }
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.ivProfile.getLayoutParams();
+                params.height = height;
+                binding.ivProfile.setLayoutParams(params);
+            }
+        });
 
         binding.flBack.setOnClickListener(this);
         binding.flReport.setOnClickListener(this);
@@ -80,8 +98,10 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                             String idx = StringUtil.getStr(job, "idx");
                             nick = StringUtil.getStr(job, "nick");
                             p_image1 = StringUtil.getStr(job, "p_image1");
+                            gender = StringUtil.getStr(job, "gender");
                             String location = StringUtil.getStr(job, "location");
                             String location2 = StringUtil.getStr(job, "location2");
+                            String videocall_peso = StringUtil.getStr(job, "videocall_peso");
                             boolean heart = StringUtil.getStr(job, "heart_send").equalsIgnoreCase("Y");
 
                             //TODO 추가 -- 선물 받은 개수 / 영상통화시 몇 peso 썼는지
@@ -92,10 +112,8 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                                     // 닉네임
                                     binding.tvNickTop.setText(nick);
                                     binding.tvNick.setText(nick);
-                                    // 선물 받은 개수
-                                    binding.tvGift.setText("0");
                                     // 영상통화시 몇 peso 썼는지
-                                    binding.tvPayment.setText("0");
+                                    binding.tvPayment.setText(videocall_peso);
                                     // 내가 하트 했는지 여부
                                     binding.llHeart.setSelected(heart);
                                     // 프로필 사진 등록
@@ -104,7 +122,7 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                                     else
                                         Glide.with(act).load(R.drawable.img_noimg02).into(binding.ivProfile);
 
-                                    adapter.setInfo(idx, nick, p_image1);
+                                    adapter.setInfo(idx, nick, p_image1, gender);
                                 }
                             });
                         } else {
@@ -186,6 +204,7 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            Common.showToast(act, "Hearted successfully");
                             getOtherInfo();
                         } else {
 
@@ -225,7 +244,12 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                                 }
                             });
                         } else {
-
+                            act.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.tvGift.setText("0");
+                                }
+                            });
                         }
 
 
@@ -282,7 +306,7 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_profile:
-                if(!StringUtil.isNull(p_image1)) {
+                if (!StringUtil.isNull(p_image1)) {
                     startActivity(new Intent(act, EnlargeAct.class).putExtra("imageUrl", p_image1));
                 }
                 break;
@@ -301,7 +325,11 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                 doCheckRoom();
                 break;
             case R.id.ll_heart:
-                doHeartSwitch();
+                if (binding.llHeart.isSelected()) {
+                    Common.showToast(act, "Already Hearted.");
+                } else {
+                    doHeartSwitch();
+                }
                 break;
 
         }

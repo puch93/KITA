@@ -86,15 +86,20 @@ public class SettingAct extends BaseAct implements View.OnClickListener {
 
             case R.id.ll_term:
 //                startActivity(new Intent(act, TermSettingAct.class));
-//                startActivity(new Intent(act, TermAct.class));
-                Common.showToastDevelop(act);
+                startActivity(new Intent(act, TermAct.class));
+//                Common.showToastDevelop(act);
                 break;
 
             case R.id.ll_logout:
-                doLogout();
-                AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, false);
-                startActivity(new Intent(act, LoginAct.class));
-                finishAffinity();
+                showAlert(act, "Logout", "Would you like to logout?", new OnAfterConnection() {
+                    @Override
+                    public void onAfter() {
+                        doLogout();
+                        AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, false);
+                        startActivity(new Intent(act, LoginAct.class));
+                        finishAffinity();
+                    }
+                });
                 break;
         }
     }

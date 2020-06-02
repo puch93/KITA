@@ -55,12 +55,12 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="358dp">
+                    android:layout_height="wrap_content">
 
                     <ImageView
                         android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
-                        android:layout_height="358dp"
+                        android:layout_height="wrap_content"
                         android:scaleType="centerCrop"
                         tools:src="@drawable/dongsuk"
                         tools:background="@color/color_e5e5e5" />

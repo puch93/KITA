@@ -124,6 +124,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     private int peso = 0;
     boolean isMoney = false;
+    boolean isFunctionCalled = false;
 
     private static class ProxyRenderer implements VideoRenderer.Callbacks {
         private VideoRenderer.Callbacks target;
@@ -184,6 +185,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     LinearLayout beforeArea, afterArea;
 
     public static Activity act;
+    private Activity real_act;
     UserData userData;
 
 
@@ -217,6 +219,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         getWindow().getDecorView().setSystemUiVisibility(getSystemUiVisibility());
         setContentView(R.layout.activity_video_receive);
         act = this;
+        real_act = this;
 //        SSLConnect ssl = new SSLConnect();
 //        ssl.postHttps("https://appr.tc", 1000, 1000);
 
@@ -240,7 +243,9 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         afterArea = (LinearLayout) findViewById(R.id.ll_after_area);
         connectButton = (LinearLayout) findViewById(R.id.ll_connect);
 
-        getMyInfo();
+        if(AppPreference.getProfilePref(real_act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+            getMyInfo();
+        }
 
         /* 상대 데이터 세팅 */
         u_idx = getIntent().getStringExtra("u_idx");
@@ -252,12 +257,12 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         profileNickname.setText(u_nick);
         // 프로필 이미지
         if (StringUtil.isNull(u_profile_img)) {
-            Glide.with(act)
+            Glide.with(real_act)
                     .load(R.drawable.img_chatlist_noimg)
                     .transform(new CircleCrop())
                     .into(profileImage);
         } else {
-            Glide.with(act)
+            Glide.with(real_act)
                     .load(u_profile_img)
                     .transform(new CircleCrop())
                     .into(profileImage);
@@ -270,7 +275,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         ll_gift.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(act, GiftAct.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
+                startActivity(new Intent(real_act, GiftAct.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
             }
         });
 
@@ -474,7 +479,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     private void doDisconnect() {
         endTime = System.currentTimeMillis();
-        ReqBasic server = new ReqBasic(act, NetUrls.CALL_DISCONNECT) {
+        ReqBasic server = new ReqBasic(real_act, NetUrls.CALL_DISCONNECT) {
             @Override
             public void onAfter(int resultCode, HttpResult resultData) {
                 if (resultData.getResult() != null) {
@@ -489,16 +494,16 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Common.showToastNetwork(act);
+                        Common.showToastNetwork(real_act);
                     }
                 } else {
-                    Common.showToastNetwork(act);
+                    Common.showToastNetwork(real_act);
                 }
             }
         };
 
         server.setTag("Call Disconnect");
-        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("u_idx", AppPreference.getProfilePref(real_act, AppPreference.PREF_MIDX));
         server.addParams("t_idx", u_idx);
         server.addParams("vcl_sdate", String.valueOf(startTime));
         server.addParams("vcl_edate", String.valueOf(endTime));
@@ -622,9 +627,11 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     @Override
     protected void onDestroy() {
         Thread.setDefaultUncaughtExceptionHandler(null);
-        if (act != null) {
+        if (real_act != null) {
             disconnect();
         }
+
+        Common.showToast(real_act, "The call has been terminated.");
 
         super.onDestroy();
         unregisterReceiver();
@@ -655,7 +662,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                 }
             }
         };
-        act.registerReceiver(mReceiver, theFilter);
+        real_act.registerReceiver(mReceiver, theFilter);
 
     }
 
@@ -671,13 +678,51 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
+                if(!iceConnected) {
+                    doDisconnectPass();
+                }
                 disconnect();
             }
         }, 500);
     }
 
+    private void doDisconnectPass() {
+        if (!isFunctionCalled) {
+            ReqBasic server = new ReqBasic(real_act, NetUrls.CALL_DISCONNECT) {
+                @Override
+                public void onAfter(int resultCode, HttpResult resultData) {
+                    if (resultData.getResult() != null) {
+                        try {
+                            JSONObject jo = new JSONObject(resultData.getResult());
+
+                            if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                                isFunctionCalled = true;
+                            } else {
+
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Common.showToastNetwork(real_act);
+                        }
+                    } else {
+                        Common.showToastNetwork(real_act);
+                    }
+                }
+            };
+
+            server.setTag("Call Disconnect Pass");
+            server.addParams("u_idx", AppPreference.getProfilePref(real_act, AppPreference.PREF_MIDX));
+            server.addParams("t_idx", u_idx);
+            server.addParams("vcl_sdate", "");
+            server.addParams("vcl_edate", "");
+            server.addParams("room_id", roomId);
+            server.execute(true, false);
+        }
+    }
+
     public void onCallConnect() {
-        act.runOnUiThread(new Runnable() {
+        real_act.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 vibrator.cancel();
@@ -742,8 +787,8 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
-        if (act != null) {
-            act.runOnUiThread(new Runnable() {
+        if (real_act != null) {
+            real_act.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     vibrator.cancel();
@@ -803,7 +848,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
             String result_point = String.valueOf((int) (result_multiply * 115));
             String result_time = String.valueOf(result_time_long);
 
-            Intent resultIntent = new Intent(VideoReceiveAct.this, ConnectActivity.class);
+            Intent resultIntent = new Intent(VideoReceiveAct.this, ConnectAct.class);
             resultIntent.putExtra("result_time", result_time);
             resultIntent.putExtra("result_point", result_point);
 
@@ -814,7 +859,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     }
 
     private void getMyInfo() {
-        ReqBasic server = new ReqBasic(act, NetUrls.INFO_ME) {
+        ReqBasic server = new ReqBasic(real_act, NetUrls.INFO_ME) {
             @Override
             public void onAfter(int resultCode, HttpResult resultData) {
                 if (resultData.getResult() != null) {
@@ -826,7 +871,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                             peso = Integer.parseInt(StringUtil.getStr(job, "peso"));
                             if (peso == 0) {
                                 onCallHangUp();
-                                Common.showToast(act, "Your PHP is not enough");
+                                Common.showToast(real_act, "Your PHP is not enough");
                             }
                         } else {
 
@@ -834,16 +879,16 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Common.showToastNetwork(act);
+                        Common.showToastNetwork(real_act);
                     }
                 } else {
-                    Common.showToastNetwork(act);
+                    Common.showToastNetwork(real_act);
                 }
             }
         };
 
         server.setTag("My Info");
-        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("u_idx", AppPreference.getProfilePref(real_act, AppPreference.PREF_MIDX));
         server.execute(true, false);
     }
 
@@ -1007,7 +1052,14 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     @Override
     public void onChannelError(final String description) {
-        disconnect();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Common.showToast(real_act, "The connection is not smooth. Please try again in a few minutes.");
+                doDisconnectPass();
+                disconnect();
+            }
+        });
     }
 
     @Override
@@ -1092,10 +1144,10 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
             @Override
             public void run() {
                 if (iceConnected) {
-                    if (act != null) {
+                    if (real_act != null) {
                         currentTime = System.currentTimeMillis() - calledStartedTime;
 
-                        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+                        if(AppPreference.getProfilePref(real_act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
                             long result_time_long = (System.currentTimeMillis() - calledStartedTime) / 1000;
                             double result_multiply = (double) result_time_long / 60;
                             int result_point = (int) (result_multiply * 20);
@@ -1123,6 +1175,11 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     @Override
     public void onPeerConnectionError(final String description) {
-        disconnect();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                disconnect();
+            }
+        });
     }
 }

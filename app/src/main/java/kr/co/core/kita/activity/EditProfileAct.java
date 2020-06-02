@@ -168,7 +168,7 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
                             finish();
                         } else {
 //                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
-                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                            Log.i(StringUtil.TAG, "value: " + StringUtil.getStr(jo, "value"));
                             Common.showToastNetwork(act);
                         }
 
@@ -232,10 +232,10 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            String value = data.getStringExtra("value");
 
             switch (requestCode) {
                 case SELECT:
+                    String value = data.getStringExtra("value");
                     binding.tvRecentWork01.setText(value);
                     break;
                 case PICK_DIALOG:
@@ -318,6 +318,7 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
+
 
                     MediaScannerConnection.scanFile(act, new String[]{photoUri.getPath()}, null,
                             new MediaScannerConnection.OnScanCompletedListener() {

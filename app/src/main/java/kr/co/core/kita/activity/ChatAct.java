@@ -51,7 +51,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import kr.co.core.kita.BuildConfig;
 import kr.co.core.kita.R;
-import kr.co.core.kita.activity.rtc.ConnectActivity;
+import kr.co.core.kita.activity.rtc.ConnectAct;
 import kr.co.core.kita.adapter.ChatAdapter;
 import kr.co.core.kita.data.ChattingData;
 import kr.co.core.kita.databinding.ActivityChatBinding;
@@ -80,6 +80,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
     private boolean exitState = false;
 
     private boolean isPossible = false;
+    private boolean isFirstMsg = true;
     private String peso = "";
 
 
@@ -102,6 +103,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
         yidx = getIntent().getStringExtra("yidx");
         otherImage = getIntent().getStringExtra("otherImage");
 
+        // 내 페소 정보가져오기
         getMyInfo();
 
         checkChattingTicket();
@@ -109,6 +111,89 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
         setLayout();
 
         setupSocketClient();
+
+        checkFirstMsg();
+    }
+
+    private void checkFirstMsg() {
+        ReqBasic server = new ReqBasic(act, NetUrls.FIRST_MSG) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            isFirstMsg = false;
+                        } else {
+                            isFirstMsg = true;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("First Msg");
+        server.addParams("midx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("room_idx", room_idx);
+        server.execute(true, false);
+    }
+
+    private void checkFirstMsgAfter() {
+        ReqBasic server = new ReqBasic(act, NetUrls.FIRST_MSG) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            isFirstMsg = false;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showAlert(act, "Video Call", "Would you like to make a video call?", new OnAfterConnection() {
+                                        @Override
+                                        public void onAfter() {
+                                            if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+                                                if(!peso.equalsIgnoreCase("0")) {
+                                                    getOtherInfo();
+                                                } else {
+                                                    Common.showToast(act, "Your PHP is not enough");
+                                                }
+                                            } else {
+                                                getOtherInfo();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
+                        } else {
+                            isFirstMsg = true;
+                            Common.showToast(act, "After sending a chat, you can make a video call.");
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("First Msg");
+        server.addParams("midx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("room_idx", room_idx);
+        server.execute(true, false);
     }
 
     @Override
@@ -131,6 +216,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
         binding.flCall.setOnClickListener(this);
         binding.flSend.setOnClickListener(this);
         binding.flDelete.setOnClickListener(this);
+        binding.flGift.setOnClickListener(this);
 
 
         // EditText 포커스될때 키보드가 UI 가리는 것 막음
@@ -331,13 +417,47 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                             String p_image1 = StringUtil.getStr(job, "p_image1");
                             String location = StringUtil.getStr(job, "location");
 
-                            Intent intent = new Intent(act, ConnectActivity.class);
+                            Intent intent = new Intent(act, ConnectAct.class);
                             intent.putExtra("type", "call");
                             intent.putExtra("u_idx", idx);
                             intent.putExtra("u_nick", nick);
                             intent.putExtra("u_region", location);
                             intent.putExtra("u_profile_img", p_image1);
                             startActivity(intent);
+                        } else {
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Other Info");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("y_idx", yidx);
+        server.execute(true, false);
+    }
+
+    private void getOtherInfo_gift() {
+        ReqBasic server = new ReqBasic(act, NetUrls.INFO_OTHER) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            JSONObject job = jo.getJSONObject("value");
+                            String nick = StringUtil.getStr(job, "nick");
+
+                            startActivity(new Intent(act, GiftAct.class).putExtra("yidx", yidx).putExtra("nick", nick));
+
                         } else {
 
                         }
@@ -417,25 +537,33 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                 finish();
                 break;
 
+            case R.id.fl_gift:
+                getOtherInfo_gift();
+                break;
+
             case R.id.fl_more:
                 startActivityForResult(new Intent(act, PictureDlg.class), PICK_DIALOG);
                 break;
 
             case R.id.fl_call:
-                showAlert(act, "Video Call", "Would you like to make a video call?", new OnAfterConnection() {
-                    @Override
-                    public void onAfter() {
-                        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
-                            if(!peso.equalsIgnoreCase("0")) {
-                                getOtherInfo();
+                if(isFirstMsg) {
+                    checkFirstMsgAfter();
+                } else {
+                    showAlert(act, "Video Call", "Would you like to make a video call?", new OnAfterConnection() {
+                        @Override
+                        public void onAfter() {
+                            if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
+                                if(!peso.equalsIgnoreCase("0")) {
+                                    getOtherInfo();
+                                } else {
+                                    Common.showToast(act, "Your PHP is not enough");
+                                }
                             } else {
-                                Common.showToast(act, "Your PHP is not enough");
+                                getOtherInfo();
                             }
-                        } else {
-                            getOtherInfo();
                         }
-                    }
-                });
+                    });
+                }
                 break;
 
             case R.id.fl_delete:

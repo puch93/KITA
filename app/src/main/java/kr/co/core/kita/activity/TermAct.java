@@ -47,7 +47,7 @@ public class TermAct extends AppCompatActivity {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         StringUtil.logLargeString(jo.toString());
-                        String app_term_condition = StringUtil.getStr(jo, "app_term_condition");
+                        String app_term_condition = StringUtil.getStr(jo, "app_customer_notice");
 
                         runOnUiThread(new Runnable() {
                             @Override

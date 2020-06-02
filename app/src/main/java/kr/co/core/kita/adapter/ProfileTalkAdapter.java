@@ -27,7 +27,7 @@ public class ProfileTalkAdapter extends RecyclerView.Adapter<ProfileTalkAdapter.
     ArrayList<ProfileTalkData> list = new ArrayList<>();
     Activity act;
 
-    String u_idx, u_nick, u_image;
+    String u_idx, u_nick, u_image, gender;
 
     public void setMeFrag(MeFrag meFrag) {
         this.meFrag = meFrag;
@@ -37,10 +37,11 @@ public class ProfileTalkAdapter extends RecyclerView.Adapter<ProfileTalkAdapter.
 
     public static final int TALK_DETAIL = 101;
 
-    public void setInfo(String u_idx, String u_nick, String u_image) {
+    public void setInfo(String u_idx, String u_nick, String u_image, String gender) {
         this.u_idx = u_idx;
         this.u_nick = u_nick;
         this.u_image = u_image;
+        this.gender = gender;
     }
 
     public ProfileTalkAdapter(Activity act, ArrayList<ProfileTalkData> list) {
@@ -88,6 +89,7 @@ public class ProfileTalkAdapter extends RecyclerView.Adapter<ProfileTalkAdapter.
                             .putExtra("t_idx", data.getT_idx())
                             .putExtra("u_idx", u_idx)
                             .putExtra("u_nick", u_nick)
+                            .putExtra("u_gender", gender)
                             .putExtra("u_image", u_image), TALK_DETAIL);
                 } else {
                     Log.i(StringUtil.TAG, "act: ");
@@ -95,6 +97,7 @@ public class ProfileTalkAdapter extends RecyclerView.Adapter<ProfileTalkAdapter.
                             .putExtra("t_idx", data.getT_idx())
                             .putExtra("u_idx", u_idx)
                             .putExtra("u_nick", u_nick)
+                            .putExtra("u_gender", gender)
                             .putExtra("u_image", u_image), TALK_DETAIL);
                 }
             }

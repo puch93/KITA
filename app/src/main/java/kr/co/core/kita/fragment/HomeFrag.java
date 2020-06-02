@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.CallHistoryAct;
+import kr.co.core.kita.activity.PaymentAct;
 import kr.co.core.kita.activity.SearchAct;
 import kr.co.core.kita.adapter.HomePagerAdapter;
 import kr.co.core.kita.databinding.FragmentHomeBinding;
@@ -34,7 +35,8 @@ public class HomeFrag extends BaseFrag {
     private static final int SEARCH = 101;
     private HomePagerAdapter adapter;
     private int currentPos = 0;
-    private String search_result = "";
+    private String search_result_01 = "";
+    private String search_result_02 = "";
 
     @Nullable
     @Override
@@ -54,7 +56,18 @@ public class HomeFrag extends BaseFrag {
         binding.flSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result), SEARCH);
+                if(currentPos == 0) {
+                    startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result_01), SEARCH);
+                } else {
+                    startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result_02), SEARCH);
+                }
+            }
+        });
+
+        binding.flPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(act, PaymentAct.class));
             }
         });
 
@@ -67,9 +80,17 @@ public class HomeFrag extends BaseFrag {
         if(resultCode == RESULT_OK) {
             switch (requestCode) {
                 case SEARCH:
-                    search_result = data.getStringExtra("value");
-                    HomePopularFrag frag = (HomePopularFrag) adapter.instantiateItem(binding.viewPager, 0);
-                    frag.setSearch(search_result);
+                    if(currentPos == 0) {
+                        search_result_01 = data.getStringExtra("value");
+                        HomePopularFrag frag = (HomePopularFrag) adapter.instantiateItem(binding.viewPager, 0);
+                        frag.setSearch(search_result_01);
+                        adapter.setSearch_result_01(search_result_01);
+                    } else {
+                        search_result_02 = data.getStringExtra("value");
+                        HomeNewestFrag frag = (HomeNewestFrag) adapter.instantiateItem(binding.viewPager, 1);
+                        frag.setSearch(search_result_02);
+                        adapter.setSearch_result_02(search_result_02);
+                    }
                     break;
             }
         }
@@ -91,6 +112,11 @@ public class HomeFrag extends BaseFrag {
         TextView tabTextView2 = (TextView) tabLayout2.getChildAt(1);
         tabTextView2.setTypeface(null, Typeface.NORMAL);
 
+        // set tab layout
+        LinearLayout tabLayout3 = (LinearLayout) ((ViewGroup) binding.tabLayout.getChildAt(0)).getChildAt(2);
+        TextView tabTextView3 = (TextView) tabLayout3.getChildAt(1);
+        tabTextView3.setTypeface(null, Typeface.NORMAL);
+
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -99,10 +125,10 @@ public class HomeFrag extends BaseFrag {
 
                 binding.viewPager.setCurrentItem(tab.getPosition(), true);
 
-                if(currentPos == 0) {
+                if(currentPos != 2) {
                     binding.flSearch.setVisibility(View.VISIBLE);
                 } else {
-                    binding.flSearch.setVisibility(View.INVISIBLE);
+                    binding.flSearch.setVisibility(View.GONE);
                 }
 
 
@@ -128,5 +154,4 @@ public class HomeFrag extends BaseFrag {
             }
         });
     }
-
 }

@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:includeFontPadding="false"
-                android:text="Private Policy"
+                android:text="Privacy Policy"
                 android:textColor="@color/color_292929"
                 android:textSize="16dp"
                 android:textStyle="bold" />

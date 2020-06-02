@@ -38,20 +38,42 @@
                 android:textSize="19dp"
                 android:textStyle="bold" />
 
-            <FrameLayout
-                android:id="@+id/fl_delete"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 android:layout_gravity="right"
-                android:paddingLeft="10dp"
-                android:paddingRight="20dp">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="19dp"
-                    android:layout_height="19dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/btn_del" />
-            </FrameLayout>
+                <FrameLayout
+                    android:id="@+id/fl_gift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/btn_sendgift" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/fl_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="20dp">
+
+                    <ImageView
+                        android:layout_width="19dp"
+                        android:layout_height="19dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/btn_del" />
+                </FrameLayout>
+            </LinearLayout>
         </FrameLayout>
 
         <ImageView
@@ -67,9 +89,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:fadingEdge="none"
                 android:overScrollMode="never"
-                android:layout_height="match_parent"
                 tools:background="#000000" />
 
             <ImageView

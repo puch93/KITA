@@ -45,43 +45,60 @@
             android:layout_height="1dp"
             android:background="@color/color_e5e5e5" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="135.3dp"
-            android:fadingEdge="none"
-            android:overScrollMode="never" />
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:fadingEdge="none">
 
-        <EditText
-            android:id="@+id/et_contents"
-            android:layout_width="match_parent"
-            android:layout_height="212dp"
-            android:gravity="top"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            android:padding="16.7dp"
-            android:textColor="@color/color_404040"
-            android:textColorHint="@color/color_aaaaaa"
-            android:hint="Please fill in the blanks"
-            android:background="@drawable/bg_myupload_input" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="135.3dp"
+                    android:fadingEdge="none"
+                    android:overScrollMode="never" />
 
-        <TextView
-            android:id="@+id/tv_upload"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/color_e307ec"
-            android:gravity="center"
-            android:text="Upload"
-            android:textColor="@color/color_white"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/et_contents"
+                    android:layout_width="match_parent"
+                    android:layout_height="212dp"
+                    android:gravity="top"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:padding="16.7dp"
+                    android:textColor="@color/color_404040"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:textColorHint="@color/color_aaaaaa"
+                    android:hint="Please fill in the blanks"
+                    android:background="@drawable/bg_myupload_input" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/tv_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/color_e307ec"
+                    android:gravity="center"
+                    android:text="Upload"
+                    android:textColor="@color/color_white"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </layout>

@@ -3,6 +3,7 @@ package kr.co.core.kita.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.databinding.DataBindingUtil;
@@ -28,6 +29,7 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
 
     private View selectedView;
     BillingEntireManager manager;
+    private boolean isAutoPay = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
         CustomApplication application = (CustomApplication) getApplication();
         manager = application.getManagerObject();
 
+        checkAutoPay();
 
         binding.flBack.setOnClickListener(this);
         binding.llTicket.setOnClickListener(this);
@@ -47,6 +50,7 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
         binding.tvGoogle.setOnClickListener(this);
         binding.tvZeropay.setOnClickListener(this);
         binding.tvTicket.setOnClickListener(this);
+        binding.tvSubs.setOnClickListener(this);
 
         binding.llItem01.setTag(R.string.pay_item_code, Common.ITEM_01_CODE);
         binding.llItem01.setTag(R.string.pay_item_name, Common.ITEM_01_NAME);
@@ -61,6 +65,38 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
         binding.llItem03.setTag(R.string.pay_item_price, Common.ITEM_03_PRICE);
 
         binding.llItem01.performClick();
+    }
+
+    // 구독중인지 체크
+    private void checkAutoPay() {
+        ReqBasic server = new ReqBasic(act, NetUrls.CHECK_AUTOPAY) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            //구독중
+                            isAutoPay = true;
+                        } else {
+                            //구독중 아님
+                            isAutoPay = false;
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Check Auto Pay");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
     }
 
 
@@ -81,7 +117,7 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
                     try {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
-                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             Common.showToast(act, "Already in use. Please repurchase after the expiration date.");
                         } else {
                             doBuyTicket();
@@ -102,6 +138,45 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
         server.execute(true, false);
     }
 
+    private void cancelAutoPay() {
+        ReqBasic server = new ReqBasic(act, NetUrls.CANCEL_AUTOPAY) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                            Common.showToast(act, "Canceled successfully.");
+                            isAutoPay = false;
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    binding.tvTicket.setVisibility(View.VISIBLE);
+                                    binding.tvSubs.setVisibility(View.GONE);
+                                }
+                            });
+
+                        } else {
+                            Common.showToastNetwork(act);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Cancel Auto Pay");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
+    }
+
     private void doBuyTicket() {
         ReqBasic server = new ReqBasic(act, NetUrls.PAY_TICKET) {
             @Override
@@ -110,12 +185,13 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
                     try {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
-                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             Common.showToast(act, "Purchased successfully");
                             finish();
                         } else {
 //                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
-                            Common.showToastNetwork(act);
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                            Common.showToast(act, "Your PHP is not enough");
                         }
 
                     } catch (JSONException e) {
@@ -142,7 +218,6 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
                 break;
 
             case R.id.ll_ticket:
-                binding.tvTicket.setVisibility(View.VISIBLE);
                 binding.llButtonArea.setVisibility(View.GONE);
 
                 binding.llItem01.setSelected(false);
@@ -150,12 +225,31 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
                 binding.llItem03.setSelected(false);
 
                 binding.llTicket.setSelected(true);
+
+                if (isAutoPay) {
+                    binding.tvTicket.setVisibility(View.GONE);
+                    binding.tvSubs.setVisibility(View.VISIBLE);
+                } else {
+                    binding.tvTicket.setVisibility(View.VISIBLE);
+                    binding.tvSubs.setVisibility(View.GONE);
+                }
                 break;
+
+            case R.id.tv_subs:
+                showAlert(act, "Cancel subscription", "Would you like to unsubscribe?", new OnAfterConnection() {
+                    @Override
+                    public void onAfter() {
+                        cancelAutoPay();
+                    }
+                });
+                break;
+
 
             case R.id.ll_item01:
             case R.id.ll_item02:
             case R.id.ll_item03:
                 binding.tvTicket.setVisibility(View.GONE);
+                binding.tvSubs.setVisibility(View.GONE);
                 binding.llButtonArea.setVisibility(View.VISIBLE);
 
                 selectedView = v;

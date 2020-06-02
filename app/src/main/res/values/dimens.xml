@@ -9,6 +9,8 @@
     <dimen name="size_profile_talk_default">102dp</dimen>
 
     <dimen name="size_home_item_minus">46dp</dimen>
-    <dimen name="size_home_item_default">223dp</dimen>
+    <dimen name="size_home_item_default">150dp</dimen>
     <dimen name="size_call_item_default">157dp</dimen>
+    <dimen name="profile_detail_default_height">232dp</dimen>
+    <dimen name="profile_me_default_height">358dp</dimen>
 </resources>

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,11 +71,29 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
         binding.recyclerView.addItemDecoration(new AllOfDecoration(act, AllOfDecoration.PROFILE_DETAIL));
 
 
+        /* set click listener */
         binding.flMenu.setOnClickListener(this);
         binding.ivProfile.setOnClickListener(this);
         binding.llGiftArea.setOnClickListener(this);
         binding.tvUpload.setOnClickListener(this);
         binding.llPointArea.setOnClickListener(this);
+
+        /* set image height */
+        binding.ivProfile.post(new Runnable() {
+            @Override
+            public void run() {
+                int height = binding.ivProfile.getMeasuredWidth();
+                Log.e(StringUtil.TAG, "getMeasuredWidth: " + height);
+                height = (int) (binding.ivProfile.getWidth() * 0.75);
+                Log.e(StringUtil.TAG, "getWidth: " + height);
+                if (height <= 0) {
+                    height = getResources().getDimensionPixelSize(R.dimen.profile_me_default_height);
+                }
+                FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) binding.ivProfile.getLayoutParams();
+                params.height = height;
+                binding.ivProfile.setLayoutParams(params);
+            }
+        });
 
         getMyInfo();
         getMyTalkList();
@@ -159,7 +178,7 @@ public class MeFrag extends BaseFrag implements View.OnClickListener {
                                     else
                                         Glide.with(act).load(R.drawable.img_noimg02).into(binding.ivProfile);
 
-                                    adapter.setInfo(AppPreference.getProfilePref(act, AppPreference.PREF_MIDX), nick, p_image1);
+                                    adapter.setInfo(AppPreference.getProfilePref(act, AppPreference.PREF_MIDX), nick, p_image1, AppPreference.getProfilePref(act, AppPreference.PREF_GENDER));
                                 }
                             });
                         } else {

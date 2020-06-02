@@ -282,7 +282,7 @@
                     android:layout_marginLeft="29.3dp"
                     android:layout_marginTop="20dp"
                     android:includeFontPadding="false"
-                    android:text="Referrer"
+                    android:text="Recommender"
                     android:textColor="@color/color_404040"
                     android:textSize="13.3dp"
                     android:textStyle="bold" />
@@ -294,7 +294,7 @@
                     android:layout_marginLeft="29.7dp"
                     android:layout_marginRight="29.7dp"
                     android:background="@null"
-                    android:hint="Referrer ID (option)"
+                    android:hint="Recommender ID (option)"
                     android:singleLine="true"
                     android:textColor="@color/color_404040"
                     android:textSize="12dp" />

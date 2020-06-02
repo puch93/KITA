@@ -2,6 +2,7 @@ package kr.co.core.kita.dialog;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -69,6 +70,8 @@ public class ReportDlg extends BaseDlg {
                             Common.showToast(act, "Reported successfully");
                             finish();
                         } else {
+                            Common.showToast(act, "Already reported");
+                            Log.i(StringUtil.TAG, "value: " + StringUtil.getStr(jo, "value"));
                             finish();
                         }
 

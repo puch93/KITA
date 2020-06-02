@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +53,24 @@ public class TalkUploadAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_talk_upload, null);
         act = this;
+
+        /* EditText 포커스될때 키보드가 UI 가리는 것 막음 */
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        /* EditText 포커스될때 ui 맨밑으로 */
+        binding.scrollView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    binding.scrollView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.scrollView.scrollTo(0, binding.scrollView.getBottom());
+                        }
+                    }, 0);
+                }
+            }
+        });
+
 
         list.add(null);
 

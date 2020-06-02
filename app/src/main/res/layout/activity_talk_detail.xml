@@ -152,7 +152,7 @@
                         <kr.co.core.kita.util.SmartViewPager
                             android:id="@+id/imagePager"
                             android:layout_width="match_parent"
-                            android:layout_height="232dp" />
+                            android:layout_height="wrap_content" />
 
                         <com.chahinem.pageindicator.PageIndicator
                             android:id="@+id/pageIndicator"
@@ -240,6 +240,8 @@
                 android:hint="Please enter a comment."
                 android:paddingLeft="20dp"
                 android:paddingTop="16dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingBottom="16dp"
                 android:textColor="@color/color_404040"
                 android:textSize="13dp" />

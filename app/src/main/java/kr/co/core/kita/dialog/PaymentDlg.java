@@ -76,8 +76,7 @@ public class PaymentDlg extends BaseDlg {
                 "&CONNECTCODE=APP" +
                 "&_APP_MEM_IDX=" + AppPreference.getProfilePref(act, AppPreference.PREF_MIDX) +
                 "&PRODUCTNAME=" + i_name +
-//                "&PRICE=" + i_price +
-                "&PRICE=" + "100" +
+                "&PRICE=" + i_price +
                 "&ZEROEXTEND1=" + i_code +
                 "&ZEROEXTEND2=kita" +
                 "&returnUrl=" + Base64.encodeToString(resulturl.getBytes(), 0) +

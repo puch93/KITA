@@ -77,6 +77,12 @@ public class NetUrls {
     public static final String LIST_CALL_HISTORY = DOMAIN + "/Chat/getMovieCallList";
 
 
+    /* 추가 */
+    public static final String LIST_NEWEST = DOMAIN + "/Member/memberlist_new";
+    public static final String FIRST_MSG = DOMAIN + "/Chat/chkmyfirstchat";
+    public static final String CHECK_AUTOPAY = DOMAIN + "/Member/autopay_chatchk";
+    public static final String CANCEL_AUTOPAY = DOMAIN + "/Member/autopay_cancel";
+
     public static final String SUCCESS = "success";
     public static final String FAIL = "fail";
 }
