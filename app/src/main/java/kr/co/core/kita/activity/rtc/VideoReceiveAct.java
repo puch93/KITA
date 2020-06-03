@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -208,6 +209,9 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     LinearLayout ll_gift;
     long startTime, endTime;
 
+    MediaPlayer receiveSound;
+    boolean soundStatus = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -278,6 +282,12 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                 startActivity(new Intent(real_act, GiftAct.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
             }
         });
+
+        Log.i(TAG, "receiveSound: start");
+        receiveSound = MediaPlayer.create(real_act, R.raw.marimba);
+        receiveSound.setLooping(true);
+        receiveSound.start();
+        soundStatus = true;
 
         // 진동끄기
         runOnUiThread(new Runnable() {
@@ -631,6 +641,14 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
             disconnect();
         }
 
+        // 소리끄기
+        if (soundStatus) {
+            receiveSound.stop();
+            receiveSound.release();
+            soundStatus = false;
+        }
+
+
         Common.showToast(real_act, "The call has been terminated.");
 
         super.onDestroy();
@@ -767,6 +785,13 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
 //        callingStateText.setVisibility(View.GONE);
 
+        // 소리끄기
+        if (soundStatus) {
+            receiveSound.stop();
+            receiveSound.release();
+            soundStatus = false;
+        }
+
         //시간 세팅
         calledStartedTime = System.currentTimeMillis();
 //        callTime.setVisibility(View.VISIBLE);
@@ -787,6 +812,14 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
 
     // Disconnect from remote resources, dispose of local resources, and exit.
     private void disconnect() {
+        // 소리끄기
+        if (soundStatus) {
+            receiveSound.stop();
+            receiveSound.release();
+            soundStatus = false;
+        }
+
+
         if (real_act != null) {
             real_act.runOnUiThread(new Runnable() {
                 @Override

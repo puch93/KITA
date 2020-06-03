@@ -209,7 +209,7 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                     try {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
-                        if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             JSONObject job = jo.getJSONObject("value");
                             AppPreference.setProfilePref(act, AppPreference.PREF_MIDX, StringUtil.getStr(job, "idx"));
                             AppPreference.setProfilePref(act, AppPreference.PREF_GENDER, StringUtil.getStr(job, "gender"));
@@ -230,7 +230,7 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
 
                             startActivity(new Intent(act, MainAct.class));
                             finish();
-                        } else {
+                        } else if (StringUtil.getStr(jo, "result").equalsIgnoreCase("N")) {
 //                            Common.showToast(act, StringUtil.getStr(jo, "value"));
                             Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
 
@@ -244,7 +244,11 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
                                     Common.showToast(act, "Login failed");
                                     break;
                             }
+                        } else {
+                            Common.showToast(act, "The manager is processing approval.");
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
                         }
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -257,7 +261,7 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
         };
 
         server.setTag("Login");
-        if(joinType.equalsIgnoreCase("general")) {
+        if (joinType.equalsIgnoreCase("general")) {
             server.addParams("id", binding.etId.getText().toString());
             server.addParams("pw", binding.etPw.getText().toString());
         } else {
@@ -279,9 +283,9 @@ public class LoginAct extends BaseAct implements View.OnClickListener {
             case R.id.ll_login_btn:
                 joinType = "general";
 
-                if(binding.etId.length() == 0) {
+                if (binding.etId.length() == 0) {
                     Common.showToast(act, "Please enter your ID");
-                } else if(binding.etPw.length() == 0) {
+                } else if (binding.etPw.length() == 0) {
                     Common.showToast(act, "Please enter your Password");
                 } else {
                     doLogin();

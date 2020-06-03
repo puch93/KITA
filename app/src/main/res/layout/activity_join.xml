@@ -57,23 +57,23 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:background="@color/color_fafafa"
-                    android:layout_height="360dp">
+                    android:layout_height="360dp"
+                    android:background="@color/color_fafafa">
 
 
                     <ImageView
                         android:id="@+id/iv_image_none"
                         android:layout_width="113.7dp"
                         android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
                         android:layout_gravity="center"
+                        android:adjustViewBounds="true"
                         android:src="@drawable/img_edit_register" />
 
                     <ImageView
                         android:id="@+id/iv_profile"
                         android:layout_width="match_parent"
-                        android:scaleType="centerCrop"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
 
                     <ImageView
                         android:id="@+id/iv_profile_reg"
@@ -93,16 +93,33 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="29.3dp"
-                        android:layout_marginTop="20dp"
-                        android:includeFontPadding="false"
-                        android:text="ID"
-                        android:textColor="@color/color_404040"
-                        android:textSize="13.3dp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:paddingLeft="29.3dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:includeFontPadding="false"
+                            android:text="ID"
+                            android:textColor="@color/color_404040"
+                            android:textSize="13.3dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:includeFontPadding="false"
+                            android:text="English lower case or numbers / 5~11 letters"
+                            android:textColor="@color/color_404040"
+                            android:textSize="10dp" />
+
+
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/et_id"
@@ -127,16 +144,31 @@
 
                     <!-- password area -->
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="29.3dp"
-                        android:layout_marginTop="20dp"
-                        android:includeFontPadding="false"
-                        android:text="Password"
-                        android:textColor="@color/color_404040"
-                        android:textSize="13.3dp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:paddingLeft="29.3dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:includeFontPadding="false"
+                            android:text="Password"
+                            android:textColor="@color/color_404040"
+                            android:textSize="13.3dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:includeFontPadding="false"
+                            android:text="English upper/lower case + number + special character / 6~12 letters"
+                            android:textColor="@color/color_404040"
+                            android:textSize="10dp" />
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/et_pw"
@@ -195,16 +227,32 @@
 
                 <!-- nick name area -->
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:paddingLeft="29.3dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="29.3dp"
-                    android:layout_marginTop="20dp"
-                    android:includeFontPadding="false"
-                    android:text="Nickname"
-                    android:textColor="@color/color_404040"
-                    android:textSize="13.3dp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:includeFontPadding="false"
+                        android:text="Nickname"
+                        android:textColor="@color/color_404040"
+                        android:textSize="13.3dp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:includeFontPadding="false"
+                        android:text="English upper/lower case or number or Korean / 2~10 letters"
+                        android:textColor="@color/color_404040"
+                        android:textSize="10dp" />
+                </LinearLayout>
 
                 <EditText
                     android:id="@+id/et_nick"

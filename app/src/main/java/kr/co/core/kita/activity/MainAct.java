@@ -25,7 +25,6 @@ import kr.co.core.kita.server.netUtil.HttpResult;
 import kr.co.core.kita.server.netUtil.NetUrls;
 import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.BackPressCloseHandler;
-import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class MainAct extends BaseAct implements View.OnClickListener {
@@ -89,10 +88,8 @@ public class MainAct extends BaseAct implements View.OnClickListener {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Common.showToastNetwork(act);
                     }
                 } else {
-                    Common.showToastNetwork(act);
                 }
             }
         };
@@ -120,10 +117,8 @@ public class MainAct extends BaseAct implements View.OnClickListener {
 
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Common.showToastNetwork(act);
                     }
                 } else {
-                    Common.showToastNetwork(act);
                 }
             }
         };
@@ -142,11 +137,9 @@ public class MainAct extends BaseAct implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
-                            finish();
+
                         } else {
-//                            Common.showToast(act, StringUtil.getStr(jo, "msg"));
-//                            Common.showToastNetwork(act);
-//                            Common.showToast(act, "Your PHP is not enough");
+                            cancelAutoPay();
                         }
 
                     } catch (JSONException e) {
@@ -158,6 +151,31 @@ public class MainAct extends BaseAct implements View.OnClickListener {
         };
 
         server.setTag("Pay Ticket");
+        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.execute(true, false);
+    }
+
+    private void cancelAutoPay() {
+        ReqBasic server = new ReqBasic(act, NetUrls.CANCEL_AUTOPAY) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+                        } else {
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                }
+            }
+        };
+
+        server.setTag("Cancel Auto Pay");
         server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
         server.execute(true, false);
     }

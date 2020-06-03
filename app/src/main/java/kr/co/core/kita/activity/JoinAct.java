@@ -60,7 +60,7 @@ public class JoinAct extends BaseAct implements View.OnClickListener {
 
     private String REGEX_ID = "^[a-z0-9]{5,11}$"; // 영문 소문자, 숫자 (5~11자) (선택적)
     private String REGEX_PW = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{6,12}$"; // 영문 대/소문자, 특수문자 (6~12자) (필수적)
-    private String REGEX_NICK = "^[A-Za-z0-9ㄱ-ㅎ가-힣]{2,10}$"; // 영문 대/소문자, 숫자, 한글 (5~11자) (선택적)
+    private String REGEX_NICK = "^[A-Za-z0-9ㄱ-ㅎ가-힣]{2,10}$"; // 영문 대/소문자, 숫자, 한글 (2~10자) (선택적)
 
 
     private String token, join_type = "general";
