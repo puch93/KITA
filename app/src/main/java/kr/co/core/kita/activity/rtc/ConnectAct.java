@@ -49,7 +49,7 @@ public class ConnectAct extends Activity {
     private static final int RTC_VIDEO_CALL = 2;
     private static final int RTC_VIDEO_RECEIVE = 3;
 
-    private String u_idx, u_nick, u_region, u_profile_img;
+    private String u_idx, u_nick, u_region, u_profile_img, u_gender;
     private long calledStartedTime = 0;
 
     @Override
@@ -62,6 +62,7 @@ public class ConnectAct extends Activity {
         u_nick = getIntent().getStringExtra("u_nick");
         u_region = getIntent().getStringExtra("u_region");
         u_profile_img = getIntent().getStringExtra("u_profile_img");
+        u_gender = getIntent().getStringExtra("u_gender");
 
         //Permissions Granted
         coreSetup();
@@ -177,6 +178,7 @@ public class ConnectAct extends Activity {
             intent.putExtra("u_nick", u_nick);
             intent.putExtra("u_region", u_region);
             intent.putExtra("u_profile_img", u_profile_img);
+            intent.putExtra("u_gender", u_gender);
         } else {
             state = RTC_VIDEO_RECEIVE;
             roomId = getIntent().getStringExtra("roomId");
@@ -253,7 +255,7 @@ public class ConnectAct extends Activity {
                 case RTC_VIDEO_RECEIVE:
                     if (AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {
                         Log.e(StringUtil.TAG, "success call in ConnectActivity");
-                        deduct_peso(data.getStringExtra("result_point"));
+//                        deduct_peso(data.getStringExtra("result_point"));
                     }
                     break;
             }

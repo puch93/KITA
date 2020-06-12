@@ -60,7 +60,7 @@ import java.util.Set;
 
 import kr.co.core.kita.R;
 import kr.co.core.kita.activity.BaseAct;
-import kr.co.core.kita.activity.GiftAct;
+import kr.co.core.kita.dialog.CallGiftDlg;
 import kr.co.core.kita.server.ReqBasic;
 import kr.co.core.kita.server.netUtil.HttpResult;
 import kr.co.core.kita.server.netUtil.NetUrls;
@@ -188,6 +188,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
     public static Activity act;
     private Activity real_act;
     UserData userData;
+    public boolean disconnectBtnState = false;
 
 
     Vibrator vibrator = null;
@@ -279,7 +280,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
         ll_gift.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(real_act, GiftAct.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
+                startActivity(new Intent(real_act, CallGiftDlg.class).putExtra("yidx", u_idx).putExtra("nick", u_nick));
             }
         });
 
@@ -881,7 +882,7 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
             String result_point = String.valueOf((int) (result_multiply * 115));
             String result_time = String.valueOf(result_time_long);
 
-            Intent resultIntent = new Intent(VideoReceiveAct.this, ConnectAct.class);
+            Intent resultIntent = new Intent();
             resultIntent.putExtra("result_time", result_time);
             resultIntent.putExtra("result_point", result_point);
 
@@ -1188,12 +1189,49 @@ public class VideoReceiveAct extends BaseAct implements AppRTCClient.SignalingEv
                                 isMoney = true;
                                 onCallHangUp();
                             }
+
+                            int real_time = (int) result_time_long % 60;
+                            if (result_time_long != 0) {
+                                if (real_time == 0) {
+                                    deduct_peso();
+                                }
+                            }
                         }
 //                        callTime.setText(getDate(originTime, "mm:ss"));
                     }
                 }
             }
         });
+    }
+
+    private void deduct_peso() {
+        ReqBasic server = new ReqBasic(act, NetUrls.DEDUCT_PESO) {
+            @Override
+            public void onAfter(int resultCode, HttpResult resultData) {
+                if (resultData.getResult() != null) {
+                    try {
+                        JSONObject jo = new JSONObject(resultData.getResult());
+
+                        if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
+
+                        } else {
+                            Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Common.showToastNetwork(act);
+                    }
+                } else {
+                    Common.showToastNetwork(act);
+                }
+            }
+        };
+
+        server.setTag("Deduct Peso");
+        server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+        server.addParams("peso", "40");
+        server.execute(true, false);
     }
 
     public static String getDate(long milliSeconds, String dateFormat) {

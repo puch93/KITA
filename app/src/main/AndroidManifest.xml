@@ -53,6 +53,9 @@
         <activity android:name=".activity.BaseAct" />
         <activity android:name=".activity.PermissionAct" />
         <activity
+            android:name=".dialog.CallGiftDlg"
+            android:theme="@style/ActivityDialog" />
+        <activity
             android:name=".dialog.GiftDlg"
             android:theme="@style/ActivityDialog" />
         <activity

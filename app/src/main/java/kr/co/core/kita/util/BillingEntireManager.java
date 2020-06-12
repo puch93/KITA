@@ -6,6 +6,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -40,13 +42,17 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
     private Context ctx;
 
     private List<SkuDetails> mSkuDetailsList_item;
+    private List<SkuDetails> mSkuDetailsList_subs;
 
     // 아이템 소비 리스너
     private ConsumeResponseListener mConsumeListener;
+    // 구독 소비 리스너
+    private AcknowledgePurchaseResponseListener acknowledgePurchaseResponseListener;
 
     private String TAG = getClass().getSimpleName();
 
     private String state_item = "Y";
+    private String state_subs = "N";
 
     /**
      * 구글 플레이스토어 계정 정보가 없습니다
@@ -56,6 +62,10 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
     private String manager_state_message = "";
 
     private AfterBilling afterListener;
+
+    public String getSubscription_state() {
+        return this.state_subs;
+    }
 
     public String getInapp_state() {
         return this.state_item;
@@ -114,6 +124,36 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                         }
                     }
 
+
+
+
+                    /* 구독 */
+                    //구독여부체크
+                    Purchase.PurchasesResult result_subs = mBillingClient.queryPurchases(BillingClient.SkuType.SUBS);
+                    Log.i(TAG, "subs result: " + result_subs);
+                    Log.i(TAG, "subs getPurchasesList: " + result_subs.getPurchasesList());
+                    Log.i(TAG, "subs getResponseCode: " + result_subs.getResponseCode());
+
+                    BillingResult result_billing2 = result_subs.getBillingResult();
+                    Log.i(TAG, "subs result_billing.getResponseCode: " + result_billing2.getResponseCode());
+                    Log.i(TAG, "subs result_billing.getDebugMessage: " + result_billing2.getDebugMessage());
+
+                    List<Purchase> list_subs = result_subs.getPurchasesList();
+
+                    //구독중 아님
+                    if (list_subs.size() == 0) {
+                        state_subs = "N";
+                    } else {
+                        //구독중
+                        try {
+                            JSONObject job = new JSONObject(list_subs.get(0).getOriginalJson());
+                            if (job.getBoolean("acknowledged"))
+                                state_subs = "Y";
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                     //오류
                 } else {
                     Log.d(TAG, "구글 결제 서버 접속에 실패하였습니다.\n오류코드: " + billingResult.getResponseCode());
@@ -144,21 +184,40 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                 }
             }
         };
+
+        acknowledgePurchaseResponseListener = new AcknowledgePurchaseResponseListener() {
+            @Override
+            public void onAcknowledgePurchaseResponse(BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    Log.d(TAG, "구독을 성공적으로 소모하였습니다.");
+                    return;
+                } else {
+                    Log.d(TAG, "구독 소모에 실패하였습니다. 오류코드 (" + billingResult.getResponseCode() + ")");
+                    return;
+                }
+            }
+        };
     }
 
     //구입 가능한 상품의 리스트를 받아 오는 메소드
     private void getSkuDetailList() {
         //구글 상품 정보들의 ID를 만들어 줌
         List<String> Sku_ID_List_INAPP = new ArrayList<>();
+        List<String> Sku_ID_List_SUBS = new ArrayList<>();
 
         Sku_ID_List_INAPP.add(Common.ITEM_01_CODE);
         Sku_ID_List_INAPP.add(Common.ITEM_02_CODE);
         Sku_ID_List_INAPP.add(Common.ITEM_03_CODE);
 
+        Sku_ID_List_SUBS.add(Common.SUBS_CHAT_CODE);
+
 
         //인앱 에 대한 SkuDetailsList 객체를 만듬
         SkuDetailsParams.Builder params_item = SkuDetailsParams.newBuilder();
         params_item.setSkusList(Sku_ID_List_INAPP).setType(BillingClient.SkuType.INAPP);
+        //구독 에 대한 SkuDetailsList 객체를 만듬
+        SkuDetailsParams.Builder params_subs = SkuDetailsParams.newBuilder();
+        params_subs.setSkusList(Sku_ID_List_SUBS).setType(BillingClient.SkuType.SUBS);
 
 
         //인앱 --> 비동기 상태로 앱의 정보를 가지고 옴
@@ -193,15 +252,52 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                 mSkuDetailsList_item = skuDetailsList;
             }
         });
+
+        //인앱 --> 비동기 상태로 앱의 정보를 가지고 옴
+        mBillingClient.querySkuDetailsAsync(params_subs.build(), new SkuDetailsResponseListener() {
+            @Override
+            public void onSkuDetailsResponse(BillingResult billingResult, List<SkuDetails> skuDetailsList) {
+                //상품 정보를 가지고 오지 못한 경우
+                if (billingResult.getResponseCode() != BillingClient.BillingResponseCode.OK) {
+                    Log.d(TAG, "(구독) 상품 정보를 가지고 오던 중 오류가 발생했습니다.\n오류코드: " + billingResult.getResponseCode());
+                    return;
+                }
+
+                if (skuDetailsList == null) {
+                    Log.d(TAG, "(구독) 상품 정보가 존재하지 않습니다.");
+                    return;
+                }
+
+                //응답 받은 데이터들의 숫자를 출력
+                Log.d(TAG, "(구독) 응답 받은 데이터 숫자: " + skuDetailsList.size());
+
+                //받아온 상품 정보를 차례로 호출
+                for (int sku_idx = 0; sku_idx < skuDetailsList.size(); sku_idx++) {
+                    //해당 인덱스의 객체를 가지고 옴
+                    SkuDetails _skuDetail = skuDetailsList.get(sku_idx);
+
+                    //해당 인덱스의 상품 정보를 출력
+                    Log.d(TAG, _skuDetail.getSku() + ": " + _skuDetail.getTitle() + ", " + _skuDetail.getPrice());
+                    Log.d(TAG, _skuDetail.getOriginalJson());
+                }
+
+                //받은 값을 멤버 변수로 저장
+                mSkuDetailsList_subs = skuDetailsList;
+            }
+        });
     }
 
 
     //실제 구입 처리를 하는 메소드
-    public void purchase(String item, Activity act) {
+    public void purchase(String item, boolean isInApp, Activity act) {
         SkuDetails skuDetails = null;
         List<SkuDetails> mSkuDetailsList = null;
 
-        mSkuDetailsList = mSkuDetailsList_item;
+        if (isInApp) {
+            mSkuDetailsList = mSkuDetailsList_item;
+        } else {
+            mSkuDetailsList = mSkuDetailsList_subs;
+        }
 
         if (null != mSkuDetailsList) {
             for (int i = 0; i < mSkuDetailsList.size(); i++) {
@@ -254,16 +350,34 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
         if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED) {
             // Grant entitlement to the user.
             // 인앱 소비
+            if (!purchase.getSku().contains("subs")) {
                 state_item = "Y";
 
                 Log.i(TAG, "purchase: " + purchase);
-                sendPurchaseResult(purchase);
+                sendPurchaseResult(purchase, "point");
 
                 ConsumeParams consumeParams =
                         ConsumeParams.newBuilder()
                                 .setPurchaseToken(purchase.getPurchaseToken())
                                 .build();
                 mBillingClient.consumeAsync(consumeParams, mConsumeListener);
+            } else {
+                // 구독 소비
+                // Acknowledge the purchase if it hasn't already been acknowledged.
+                if (!purchase.isAcknowledged()) {
+                    state_subs = "Y";
+
+                    Log.e(TAG, "subs: " + purchase);
+
+                    sendPurchaseResult(purchase, "ticket");
+
+                    AcknowledgePurchaseParams acknowledgePurchaseParams =
+                            AcknowledgePurchaseParams.newBuilder()
+                                    .setPurchaseToken(purchase.getPurchaseToken())
+                                    .build();
+                    mBillingClient.acknowledgePurchase(acknowledgePurchaseParams, acknowledgePurchaseResponseListener);
+                }
+            }
 
         } else if (purchase.getPurchaseState() == Purchase.PurchaseState.PENDING) {
             // Here you can confirm to the user that they've started the pending
@@ -271,12 +385,18 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
             // are given to them. You can also choose to remind the user in the
             // future to complete the purchase if you detect that it is still
             // pending.
-            state_item = "pending";
-            afterListener.sendMessage("결제사 승인이 늦어지고 있습니다. 몇분 후 앱을 재실행하여 결제가 정상적으로 진행되었는지 확인해주시기 바랍니다.", true);
+
+            if (!purchase.getSku().contains("subs")) {
+                state_item = "pending";
+                afterListener.sendMessage("결제사 승인이 늦어지고 있습니다. 몇분 후 앱을 재실행하여 결제가 정상적으로 진행되었는지 확인해주시기 바랍니다.", true);
+            } else {
+                state_subs = "pending";
+                afterListener.sendMessage("결제사 승인이 늦어지고 있습니다. 몇분 후 앱을 재실행하여 결제가 정상적으로 진행되었는지 확인해주시기 바랍니다.", true);
+            }
         }
     }
 
-    private void sendPurchaseResult(final Purchase purchase) {
+    private void sendPurchaseResult(final Purchase purchase, String type) {
         ReqBasic server = new ReqBasic(ctx, NetUrls.PAY_RESULT) {
             @Override
             public void onAfter(int resultCode, HttpResult resultData) {
@@ -287,7 +407,7 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS) || StringUtil.getStr(jo, "result").equalsIgnoreCase("Y")) {
 //                            afterListener.sendMessage("최근주문건에 대한 결제 완료되었습니다", true);
                             afterListener.sendMessage("Payment for recent order has been completed.", true);
-                            if(PaymentAct.act != null) {
+                            if (PaymentAct.act != null) {
                                 PaymentAct.act.setResult(Activity.RESULT_OK);
                                 PaymentAct.act.finish();
                             }
@@ -320,6 +440,11 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
                 name = Common.ITEM_03_NAME;
                 price = Common.ITEM_03_PRICE;
                 break;
+
+            case Common.SUBS_CHAT_CODE:
+                name = Common.SUBS_CHAT_NAME;
+                price = Common.SUBS_CHAT_PRICE;
+                break;
             default:
                 return;
         }
@@ -327,7 +452,7 @@ public class BillingEntireManager implements PurchasesUpdatedListener {
         server.setTag("Pay Result");
 
         server.addParams("midx", AppPreference.getProfilePref(ctx, AppPreference.PREF_MIDX));
-        server.addParams("itype", "point");
+        server.addParams("itype", type);
         server.addParams("isubject", name);
         server.addParams("icode", purchase.getSku());
 

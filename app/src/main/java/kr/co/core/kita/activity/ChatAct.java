@@ -416,6 +416,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                             String nick = StringUtil.getStr(job, "nick");
                             String p_image1 = StringUtil.getStr(job, "p_image1");
                             String location = StringUtil.getStr(job, "location");
+                            String gender = StringUtil.getStr(job, "gender");
 
                             Intent intent = new Intent(act, ConnectAct.class);
                             intent.putExtra("type", "call");
@@ -423,6 +424,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                             intent.putExtra("u_nick", nick);
                             intent.putExtra("u_region", location);
                             intent.putExtra("u_profile_img", p_image1);
+                            intent.putExtra("u_gender", gender);
                             startActivity(intent);
                         } else {
 

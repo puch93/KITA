@@ -42,6 +42,10 @@ public class Common {
     public static final String ITEM_03_NAME = "5000 PHP";
     public static final String ITEM_03_PRICE = "125000";
 
+    public static final String SUBS_CHAT_CODE = "subs_chat";
+    public static final String SUBS_CHAT_NAME = "Unlimited chat";
+    public static final String SUBS_CHAT_PRICE = "37500";
+
 
 
 

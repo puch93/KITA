@@ -165,7 +165,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="3dp"
                             android:includeFontPadding="false"
-                            android:text="English upper/lower case + number + special character / 6~12 letters"
+                            android:text="any character / remove blank / 4~12 letters"
                             android:textColor="@color/color_404040"
                             android:textSize="10dp" />
                     </LinearLayout>

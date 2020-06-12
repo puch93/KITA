@@ -186,6 +186,7 @@ t_idx=상대방 인덱스
 vcl_sdate=통화시작시간
 vcl_edate=통화종료시간
 room_id=영상통화 고유ID
+peso=이 영상통화에서 얼마의 peso가 나갔는지
 
 3. 페소차감
 /Chat/setMovieCallPoint

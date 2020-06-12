@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "1025227267701",
-    "firebase_url": "https://kita-2e271.firebaseio.com",
-    "project_id": "kita-2e271",
-    "storage_bucket": "kita-2e271.appspot.com"
+    "project_number": "682790455216",
+    "firebase_url": "https://kita-495fc.firebaseio.com",
+    "project_id": "kita-495fc",
+    "storage_bucket": "kita-495fc.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1025227267701:android:f366d3c91d8ad7fe58623c",
+        "mobilesdk_app_id": "1:682790455216:android:6d324d210165a9836e7875",
         "android_client_info": {
           "package_name": "kr.co.core.kita"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1025227267701-le0j0kjmkuvi9km86k6r311ehndeoj7e.apps.googleusercontent.com",
+          "client_id": "682790455216-68kqba5sv1o3tc4uvfp4g6mobqjn8djk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDWGlO5QGa6UC_uJA00kYtIxCv3mgxsRYs"
+          "current_key": "AIzaSyA4NyO6VsV3Zs5g6uNdmuztve1UqJ6HHms"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1025227267701-le0j0kjmkuvi9km86k6r311ehndeoj7e.apps.googleusercontent.com",
+              "client_id": "682790455216-68kqba5sv1o3tc4uvfp4g6mobqjn8djk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -50,7 +50,7 @@
             android:layout_marginLeft="19.7dp"
             android:layout_marginTop="23.7dp"
             android:includeFontPadding="false"
-            android:text="Unlimited chat"
+            android:text="Unlimited chat (a month)"
             android:textColor="@color/color_292929"
             android:textSize="14dp"
             android:textStyle="bold" />
@@ -260,17 +260,17 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/tv_subs"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="@color/color_1b1a26"
-            android:visibility="gone"
-            android:gravity="center"
-            android:text="Cancel subscription"
-            android:textColor="@color/color_white"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+<!--        <TextView-->
+<!--            android:id="@+id/tv_subs"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="55dp"-->
+<!--            android:background="@color/color_1b1a26"-->
+<!--            android:visibility="gone"-->
+<!--            android:gravity="center"-->
+<!--            android:text="Cancel subscription"-->
+<!--            android:textColor="@color/color_white"-->
+<!--            android:textSize="18dp"-->
+<!--            android:textStyle="bold" />-->
 
         <TextView
             android:id="@+id/tv_ticket"
@@ -296,19 +296,6 @@
                 android:background="@color/color_1b1a26"
                 android:gravity="center"
                 android:text="In-app payment"
-                android:textColor="@color/color_white"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-
-            <TextView
-                android:id="@+id/tv_zeropay"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="55dp"
-                android:background="@color/color_e307ec"
-                android:gravity="center"
-                android:text="Other payment"
                 android:textColor="@color/color_white"
                 android:textSize="18dp"
                 android:textStyle="bold" />

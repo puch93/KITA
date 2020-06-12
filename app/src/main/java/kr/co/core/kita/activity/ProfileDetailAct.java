@@ -48,6 +48,14 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
 
         yidx = getIntent().getStringExtra("yidx");
 
+        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase(Common.GENDER_M)) {
+            binding.llPointArea.setVisibility(View.GONE);
+            binding.ivLine.setVisibility(View.GONE);
+        } else {
+            binding.llPointArea.setVisibility(View.VISIBLE);
+            binding.ivLine.setVisibility(View.VISIBLE);
+        }
+
         /* set image height */
         binding.ivProfile.post(new Runnable() {
             @Override
@@ -101,7 +109,7 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                             gender = StringUtil.getStr(job, "gender");
                             String location = StringUtil.getStr(job, "location");
                             String location2 = StringUtil.getStr(job, "location2");
-                            String videocall_peso = StringUtil.getStr(job, "videocall_peso");
+                            String peso = StringUtil.getStr(job, "peso");
                             boolean heart = StringUtil.getStr(job, "heart_send").equalsIgnoreCase("Y");
 
                             //TODO 추가 -- 선물 받은 개수 / 영상통화시 몇 peso 썼는지
@@ -112,8 +120,15 @@ public class ProfileDetailAct extends BaseAct implements View.OnClickListener {
                                     // 닉네임
                                     binding.tvNickTop.setText(nick);
                                     binding.tvNick.setText(nick);
-                                    // 영상통화시 몇 peso 썼는지
-                                    binding.tvPayment.setText(videocall_peso);
+                                    // 상대 peso 표시
+                                    if(!AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase(Common.GENDER_M)) {
+                                        if(gender.equalsIgnoreCase(Common.GENDER_M)) {
+                                            binding.tvPayment.setText(peso);
+                                        } else {
+                                            binding.llPointArea.setVisibility(View.GONE);
+                                            binding.ivLine.setVisibility(View.GONE);
+                                        }
+                                    }
                                     // 내가 하트 했는지 여부
                                     binding.llHeart.setSelected(heart);
                                     // 프로필 사진 등록

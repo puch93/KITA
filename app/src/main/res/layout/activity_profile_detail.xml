@@ -158,11 +158,13 @@
                         </LinearLayout>
 
                         <ImageView
+                            android:id="@+id/iv_line"
                             android:layout_width="1dp"
                             android:layout_height="24dp"
                             android:background="@color/color_white" />
 
                         <LinearLayout
+                            android:id="@+id/ll_point_area"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

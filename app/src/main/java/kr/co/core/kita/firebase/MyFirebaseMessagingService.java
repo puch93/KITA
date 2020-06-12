@@ -261,6 +261,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String nick = StringUtil.getStr(jo, "nick");
             String profile_img = StringUtil.getStr(jo, "sender_img");
             String location = StringUtil.getStr(jo, "sender_location");
+            String gender = StringUtil.getStr(jo, "gender");
 
             new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
@@ -272,6 +273,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.putExtra("u_nick", nick);
                     intent.putExtra("u_region", location);
                     intent.putExtra("u_profile_img", profile_img);
+                    intent.putExtra("u_gender", gender);
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
