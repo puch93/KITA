@@ -79,7 +79,7 @@ public class CallHistoryAct extends AppCompatActivity {
                                 String vc_refidx = StringUtil.getStr(job, "vc_refidx");
                                 String p_image1 = StringUtil.getStr(job, "p_image1");
                                 String nick = StringUtil.getStr(job, "nick");
-                                String intro = StringUtil.getStr(job, "intro");
+                                String intro = Common.decodeEmoji(StringUtil.getStr(job, "intro"));
                                 String loginYN = StringUtil.getStr(job, "loginYN");
                                 String location = StringUtil.getStr(job, "location");
 

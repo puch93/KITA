@@ -198,7 +198,7 @@ public class TalkDetailAct extends BaseAct implements View.OnClickListener {
                                     binding.imagePager.setAdapter(imagePagerAdapter);
                                     binding.pageIndicator.attachTo(binding.imagePager);
 
-                                    binding.tvContents.setText(StringUtil.getStr(job, "content"));
+                                    binding.tvContents.setText(Common.decodeEmoji(StringUtil.getStr(job, "content")));
                                     binding.tvRegDate.setText(StringUtil.converTime(StringUtil.getStr(job, "tb_regdate"), "yyyy.MM.dd hh:mm"));
                                     binding.tvCountComment.setText(StringUtil.getStr(job, "tb_commentcnt"));
 

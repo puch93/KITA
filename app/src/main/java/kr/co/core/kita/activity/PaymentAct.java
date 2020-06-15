@@ -261,7 +261,7 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
 
             case R.id.tv_google:
                 if (selectedView == null) {
-                    Common.showToast(act, "결제할 아이템을 선택해주세요");
+                    Common.showToast(act, "Please select an item to pay");
                 } else {
                     if (manager.getManager_state().equals("N")) {
                         Common.showToast(act, manager.getManager_state_message());
@@ -280,27 +280,19 @@ public class PaymentAct extends BaseAct implements View.OnClickListener {
 //                break;
 
             case R.id.tv_ticket:
-//                showAlert(act, "Unlimited chat", "Would you like to purchase this item?", new OnAfterConnection() {
-//                    @Override
-//                    public void onAfter() {
-//                        checkChattingTicket();
-//                    }
-//                });
-
                 if (selectedView == null) {
-                    Common.showToast(act, "결제할 아이템을 선택해주세요");
+                    Common.showToast(act, "Please select an item to pay");
                 } else {
-//                    Common.showToast(act, "name: " + (String) selectedView.getTag(R.string.pay_subs_name) + "\n" +
-//                            "code: " + (String) selectedView.getTag(R.string.pay_subs_code) + "\n" +
-//                            "price: " + (String) selectedView.getTag(R.string.pay_subs_price)
-//                    );
-
-                    if (manager.getManager_state().equals("N")) {
-                        Common.showToast(act, manager.getManager_state_message());
-                    } else if (manager.getSubscription_state().equalsIgnoreCase("pending")) {
-                        Common.showToast(act, "카드사 승인중인 결제가 있습니다. 몇분 후 앱을 재실행하여 결제가 정상적으로 진행되었는지 확인해주시기 바랍니다.");
+                    if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase(Common.GENDER_M)) {
+                        if (manager.getManager_state().equals("N")) {
+                            Common.showToast(act, manager.getManager_state_message());
+                        } else if (manager.getSubscription_state().equalsIgnoreCase("pending")) {
+                            Common.showToast(act, "카드사 승인중인 결제가 있습니다. 몇분 후 앱을 재실행하여 결제가 정상적으로 진행되었는지 확인해주시기 바랍니다.");
+                        } else {
+                            manager.purchase((String) selectedView.getTag(R.string.pay_item_code), false, act);
+                        }
                     } else {
-                        manager.purchase((String) selectedView.getTag(R.string.pay_item_code), false, act);
+                        Common.showToast(act, "It cannot be purchased. Female members can chat for free.");
                     }
                 }
                 break;

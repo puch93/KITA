@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -106,7 +108,11 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
         // 내 페소 정보가져오기
         getMyInfo();
 
-        checkChattingTicket();
+        if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase(Common.GENDER_M)) {
+            checkChattingTicket();
+        } else {
+            isPossible = true;
+        }
 
         setLayout();
 
@@ -215,7 +221,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
         binding.flMore.setOnClickListener(this);
         binding.flCall.setOnClickListener(this);
         binding.flSend.setOnClickListener(this);
-        binding.flDelete.setOnClickListener(this);
+//        binding.flDelete.setOnClickListener(this);
         binding.flGift.setOnClickListener(this);
 
 
@@ -251,7 +257,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                         JSONObject jo = new JSONObject(resultData.getResult());
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
-                            Common.showToast(act, "The chat room has been deleted.");
+                            Common.showToast(act, "Leave the chat room.");
                             finish();
                         } else {
 
@@ -324,7 +330,11 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
 
                     String msg = resultData.getResult().replaceAll("\"", "");
 
-                    sendMessage(msg);
+                    try {
+                        sendMessage(URLEncoder.encode(msg,"UTF-8"));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     Common.showToastNetwork(act);
                 }
@@ -377,7 +387,11 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
 
                         if( StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             if(isText) {
-                                sendMessage(binding.etContents.getText().toString());
+                                try {
+                                    sendMessage(URLEncoder.encode(binding.etContents.getText().toString(),"UTF-8"));
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
                                 binding.etContents.setText("");
                             } else {
                                 sendImage();
@@ -519,7 +533,11 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                 } else {
                     if (isPossible) {
                         Log.i(StringUtil.TAG, "isPossible: true");
-                        sendMessage(binding.etContents.getText().toString());
+                        try {
+                            sendMessage(URLEncoder.encode(binding.etContents.getText().toString(),"UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
                         binding.etContents.setText("");
                     } else {
                         Log.i(StringUtil.TAG, "isPossible: false");
@@ -568,14 +586,14 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                 }
                 break;
 
-            case R.id.fl_delete:
-                showAlert(act, "Leave", "Are you leaving this room?", new OnAfterConnection() {
-                    @Override
-                    public void onAfter() {
-                        doLeave();
-                    }
-                });
-                break;
+//            case R.id.fl_delete:
+//                showAlert(act, "Leave", "Are you leaving this room?", new OnAfterConnection() {
+//                    @Override
+//                    public void onAfter() {
+//                        doLeave();
+//                    }
+//                });
+//                break;
         }
     }
 
@@ -856,7 +874,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                         String u_idx = StringUtil.getStr(jo, "user_idx");
 
                         // 메시지
-                        String contents = StringUtil.getStr(jo, "msg");
+                        String contents = Common.decodeEmoji(StringUtil.getStr(jo, "msg"));
 
                         // 보낸 시간
                         String send_time = StringUtil.converTime(StringUtil.getStr(jo, "created_at"), "a hh:mm");
@@ -930,7 +948,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                 String u_idx = StringUtil.getStr(chat, "user_idx");
 
                 // 메시지
-                String contents = StringUtil.getStr(chat, "msg");
+                String contents = Common.decodeEmoji(StringUtil.getStr(chat, "msg"));
 
                 // 보낸 시간
                 String send_time = StringUtil.converTime(StringUtil.getStr(chat, "created_at"), "a hh:mm");

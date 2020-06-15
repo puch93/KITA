@@ -21,6 +21,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,15 +162,17 @@ public class TalkUploadAct extends AppCompatActivity {
             }
         };
 
-        server.setTag("Register Talk");
-        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
-        for (int i = 1; i < list.size(); i++) {
-            String realPath = StringUtil.getPath(act, list.get(i));
-            File file = new File(realPath);
-            long fileSize = file.length();
-            Log.i(StringUtil.TAG, "file size: " + file.length());
-            // 10485760 용량제한
-            server.addFileParams("image" + i, file);
+
+        try {
+            server.setTag("Register Talk");
+            server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+            for (int i = 1; i < list.size(); i++) {
+                String realPath = StringUtil.getPath(act, list.get(i));
+                File file = new File(realPath);
+                long fileSize = file.length();
+                Log.i(StringUtil.TAG, "file size: " + file.length());
+                // 10485760 용량제한
+                server.addFileParams("image" + i, file);
 
 //            if (fileSize > 10485760) {
 //                BitmapFactory.Options options = new BitmapFactory.Options();
@@ -203,9 +207,12 @@ public class TalkUploadAct extends AppCompatActivity {
 //            } else {
 //                server.addFileParams("image" + i, file);
 //            }
+            }
+            server.addParams("content", URLEncoder.encode(binding.etContents.getText().toString(),"UTF-8"));
+            server.execute(true, true);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        server.addParams("content", binding.etContents.getText().toString());
-        server.execute(true, true);
     }
 
     @Override

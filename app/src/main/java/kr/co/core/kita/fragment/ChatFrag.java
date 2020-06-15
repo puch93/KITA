@@ -49,6 +49,8 @@ public class ChatFrag extends BaseFrag {
 
     private static final int SEARCH = 101;
 
+    boolean isSearch = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public class ChatFrag extends BaseFrag {
         binding.flSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isSearch = true;
                 startActivityForResult(new Intent(act, SearchAct.class).putExtra("data", search_result), SEARCH);
             }
         });
@@ -90,7 +93,11 @@ public class ChatFrag extends BaseFrag {
     @Override
     public void onResume() {
         super.onResume();
-        getChattingList();
+        if(!isSearch) {
+            getChattingList();
+        } else {
+            isSearch = false;
+        }
     }
 
     private boolean isImage(String msg) {
@@ -118,7 +125,7 @@ public class ChatFrag extends BaseFrag {
                                 Log.i(StringUtil.TAG, "job(" + i + "): " + job);
 
                                 String no_read_count = StringUtil.getStr(job, "nonereadmsgcnt");
-                                String contents = StringUtil.getStr(job, "msg");
+                                String contents = Common.decodeEmoji(StringUtil.getStr(job, "msg"));
                                 if (isImage(contents)) {
                                     Log.i(StringUtil.TAG, "onAfter: 이미지");
                                     contents = "이미지";

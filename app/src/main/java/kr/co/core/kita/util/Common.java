@@ -11,6 +11,8 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -70,6 +72,17 @@ public class Common {
                     Toast.makeText(act, msg, Toast.LENGTH_LONG).show();
                 }
             });
+        }
+    }
+
+    public static String decodeEmoji (String message) {
+        String myString= null;
+        try {
+            return URLDecoder.decode(message, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return message;
+        } catch (IllegalArgumentException e){
+            return "";
         }
     }
 

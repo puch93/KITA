@@ -19,11 +19,13 @@ public class CustomApplication extends Application {
 
     /* billing */
     public BillingEntireManager getManagerObject() {
-        if (null != manager) {
-            return manager;
-        } else {
-            return reInitBilling();
-        }
+//        if (null != manager) {
+//            return manager;
+//        } else {
+//            return reInitBilling();
+//        }
+
+        return reInitBilling();
     }
 
     public BillingEntireManager reInitBilling() {

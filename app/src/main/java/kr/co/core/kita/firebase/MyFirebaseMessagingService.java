@@ -33,6 +33,7 @@ import kr.co.core.kita.server.ReqBasic;
 import kr.co.core.kita.server.netUtil.HttpResult;
 import kr.co.core.kita.server.netUtil.NetUrls;
 import kr.co.core.kita.util.AppPreference;
+import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -168,6 +169,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         return msg.matches(reg);
     }
 
+
     private void sendChattingNotification(JSONObject jo) {
         String msg_from = StringUtil.getStr(jo, "msg_from");
         String gender = StringUtil.getStr(jo, "gender");
@@ -178,7 +180,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String nick = StringUtil.getStr(jo, "nick");
         String type = StringUtil.getStr(jo, "type");
         String target_idx = StringUtil.getStr(jo, "target_idx");
-        String message = StringUtil.getStr(jo, "message");
+        String message = Common.decodeEmoji(StringUtil.getStr(jo, "message"));
         String sender_img = StringUtil.getStr(jo, "sender_img");
 
         String title = nick + "'s Chat";

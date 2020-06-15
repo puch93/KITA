@@ -314,8 +314,10 @@ public class SplashAct extends AppCompatActivity {
                         } else {
 //                            Common.showToast(act, StringUtil.getStr(jo, "value"));
                             Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "value"));
-                            Common.showToast(act, "Login failed");
-
+                            Common.showToast(act, "Auto Login failed");
+                            AppPreference.setProfilePrefBool(act, AppPreference.PREF_AUTO_LOGIN_STATE, false);
+                            startActivity(new Intent(act, LoginAct.class));
+                            finish();
                         }
 
                     } catch (JSONException e) {

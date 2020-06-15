@@ -103,9 +103,10 @@ public class HomeLocationAct extends AppCompatActivity {
                                 String loginYN = StringUtil.getStr(job, "loginYN");
                                 String p_image1 = StringUtil.getStr(job, "p_image1");
                                 String nick = StringUtil.getStr(job, "nick");
-                                String intro = StringUtil.getStr(job, "intro");
+                                String intro = Common.decodeEmoji(StringUtil.getStr(job, "intro"));
                                 list.add(new HomeMemberData(idx, nick, intro, p_image1, loginYN.equalsIgnoreCase("Y")));
                             }
+
                             act.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {

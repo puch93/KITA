@@ -29,8 +29,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 
 import kr.co.core.kita.BuildConfig;
@@ -115,7 +117,7 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
 
                         if (StringUtil.getStr(jo, "result").equalsIgnoreCase("Y") || StringUtil.getStr(jo, "result").equalsIgnoreCase(NetUrls.SUCCESS)) {
                             JSONObject job = jo.getJSONObject("value");
-                            String intro = StringUtil.getStr(job, "intro");
+                            String intro = Common.decodeEmoji(StringUtil.getStr(job, "intro"));
                             String location = StringUtil.getStr(job, "location");
                             String location2 = StringUtil.getStr(job, "location2");
                             mImgFilePath_origin = StringUtil.getStr(job, "p_image1");
@@ -182,19 +184,25 @@ public class EditProfileAct extends BaseAct implements View.OnClickListener {
             }
         };
 
-        server.setTag("Edit Profile");
-        server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
-        server.addParams("intro", binding.etIntro.getText().toString());
-        server.addParams("location", binding.tvRecentWork01.getText().toString());
-        server.addParams("location2", binding.etRecentWork02.getText().toString());
-        if (!isPhotoChanged && !StringUtil.isNull(mImgFilePath_origin)) {
-            File file = downloadImage(mImgFilePath_origin);
-            server.addFileParams("image", file);
-        } else {
-            File file = new File(mImgFilePath);
-            server.addFileParams("image", file);
+
+        try {
+            server.setTag("Edit Profile");
+            server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
+            server.addParams("intro", URLEncoder.encode(binding.etIntro.getText().toString(),"UTF-8"));
+
+            server.addParams("location", binding.tvRecentWork01.getText().toString());
+            server.addParams("location2", binding.etRecentWork02.getText().toString());
+            if (!isPhotoChanged && !StringUtil.isNull(mImgFilePath_origin)) {
+                File file = downloadImage(mImgFilePath_origin);
+                server.addFileParams("image", file);
+            } else {
+                File file = new File(mImgFilePath);
+                server.addFileParams("image", file);
+            }
+            server.execute(true, false);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
-        server.execute(true, false);
     }
 
     @Override

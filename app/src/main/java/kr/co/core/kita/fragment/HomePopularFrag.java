@@ -109,21 +109,17 @@ public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemCli
                                 String loginYN = StringUtil.getStr(job, "loginYN");
                                 String p_image1 = StringUtil.getStr(job, "p_image1");
                                 String nick = StringUtil.getStr(job, "nick");
-                                String intro = StringUtil.getStr(job, "intro");
+                                String intro = Common.decodeEmoji(StringUtil.getStr(job, "intro"));
 
                                 list.add(new HomeMemberData(idx, nick, intro, p_image1, loginYN.equalsIgnoreCase("Y")));
                             }
 
-                            if(StringUtil.isNull(search)) {
-                                act.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        adapter.setList(list);
-                                    }
-                                });
-                            } else {
-                                setSearch(search);
-                            }
+                            act.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter.setList(list);
+                                }
+                            });
 
                             isScroll = false;
                         } else {
@@ -131,6 +127,13 @@ public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemCli
 //                                Common.showToast(act, StringUtil.getStr(jo, "msg"));
                                 Log.i(StringUtil.TAG, "msg: " + StringUtil.getStr(jo, "msg"));
                                 Common.showToast(act, "There is no member.");
+                                list = new ArrayList<>();
+                                act.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        adapter.setList(list);
+                                    }
+                                });
                             }
 
                             isScroll = true;
@@ -153,27 +156,32 @@ public class HomePopularFrag extends BaseFrag implements PopupMenu.OnMenuItemCli
         server.setTag("Popular");
         server.addParams("m_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
         server.addParams("type", binding.tvSort.getText().toString().equalsIgnoreCase("Gift") ? "gift" : "heart");
+        server.addParams("search", search);
         server.addParams("pagenum", String.valueOf(page));
         server.execute(true, false);
     }
 
 
     public void setSearch(String contents) {
+        search = contents;
+        list = new ArrayList<>();
+        page = 1;
+        getHomePopularList();
 
-        if (!StringUtil.isNull(contents)) {
-            isScroll = true;
-            ArrayList<HomeMemberData> search_list = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getNick().contains(contents)) {
-                    search_list.add(list.get(i));
-                }
-            }
-
-            adapter.setList(search_list);
-        } else {
-            adapter.setList(list);
-            isScroll = false;
-        }
+//        if (!StringUtil.isNull(contents)) {
+//            isScroll = true;
+//            ArrayList<HomeMemberData> search_list = new ArrayList<>();
+//            for (int i = 0; i < list.size(); i++) {
+//                if (list.get(i).getNick().contains(contents)) {
+//                    search_list.add(list.get(i));
+//                }
+//            }
+//
+//            adapter.setList(search_list);
+//        } else {
+//            adapter.setList(list);
+//            isScroll = false;
+//        }
     }
 
     @Override

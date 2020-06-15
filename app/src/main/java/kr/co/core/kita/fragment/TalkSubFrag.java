@@ -50,6 +50,8 @@ public class TalkSubFrag extends BaseFrag {
         this.type = type;
     }
 
+    private String search ="";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -140,25 +142,32 @@ public class TalkSubFrag extends BaseFrag {
         server.addParams("u_idx", AppPreference.getProfilePref(act, AppPreference.PREF_MIDX));
         server.addParams("type", type);
         server.addParams("pagenum", String.valueOf(page));
+        server.addParams("search", search);
         server.execute(true, false);
     }
 
     public void setSearch(String contents) {
+        search = contents;
+        page = 1;
+        list = new ArrayList<>();
 
-        if (!StringUtil.isNull(contents)) {
-            isScroll = true;
-            ArrayList<TalkListData> search_list = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getContents().contains(contents)) {
-                    search_list.add(list.get(i));
-                }
-            }
+        getTalkList();
 
-            adapter.setList(search_list);
-        } else {
-            adapter.setList(list);
-            isScroll = false;
-        }
+
+//        if (!StringUtil.isNull(contents)) {
+//            isScroll = true;
+//            ArrayList<TalkListData> search_list = new ArrayList<>();
+//            for (int i = 0; i < list.size(); i++) {
+//                if (list.get(i).getContents().contains(contents)) {
+//                    search_list.add(list.get(i));
+//                }
+//            }
+//
+//            adapter.setList(search_list);
+//        } else {
+//            adapter.setList(list);
+//            isScroll = false;
+//        }
     }
 
 

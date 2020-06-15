@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="right"
                     android:paddingLeft="15dp"
-                    android:paddingRight="15dp">
+                    android:paddingRight="20dp">
 
                     <ImageView
                         android:layout_width="19dp"
@@ -59,20 +59,21 @@
                         android:src="@drawable/btn_sendgift" />
                 </FrameLayout>
 
-                <FrameLayout
-                    android:id="@+id/fl_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="20dp">
+<!--                <FrameLayout-->
+<!--                    android:id="@+id/fl_delete"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:visibility="gone"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_gravity="right"-->
+<!--                    android:paddingLeft="15dp"-->
+<!--                    android:paddingRight="20dp">-->
 
-                    <ImageView
-                        android:layout_width="19dp"
-                        android:layout_height="19dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/btn_del" />
-                </FrameLayout>
+<!--                    <ImageView-->
+<!--                        android:layout_width="19dp"-->
+<!--                        android:layout_height="19dp"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:src="@drawable/btn_del" />-->
+<!--                </FrameLayout>-->
             </LinearLayout>
         </FrameLayout>
 
