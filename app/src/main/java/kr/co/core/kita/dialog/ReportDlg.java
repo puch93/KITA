@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.BaseAct;
 import kr.co.core.kita.server.ReqBasic;
 import kr.co.core.kita.server.netUtil.HttpResult;
 import kr.co.core.kita.server.netUtil.NetUrls;
@@ -17,8 +18,7 @@ import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
-
-public class ReportDlg extends BaseDlg {
+public class ReportDlg extends BaseAct {
     Activity act;
 
     private String yidx;

@@ -569,7 +569,7 @@ public class ChatAct extends BaseAct implements View.OnClickListener {
                 if(isFirstMsg) {
                     checkFirstMsgAfter();
                 } else {
-                    showAlert(act, "Video Call", "Would you like to make a video call?", new OnAfterConnection() {
+                    showAlert(act, "Video Call", "Would you like to make video call?", new OnAfterConnection() {
                         @Override
                         public void onAfter() {
                             if(AppPreference.getProfilePref(act, AppPreference.PREF_GENDER).equalsIgnoreCase("male")) {

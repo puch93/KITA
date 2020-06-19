@@ -3,6 +3,7 @@ package kr.co.core.kita.activity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,7 +16,7 @@ public class BaseAct extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
     }
 
     public void showAlert(Activity act, String title, String contents, OnAfterConnection onAfterConnection) {

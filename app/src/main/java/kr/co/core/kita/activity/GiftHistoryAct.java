@@ -19,7 +19,7 @@ import kr.co.core.kita.adapter.GiftHistoryPagerAdapter;
 import kr.co.core.kita.databinding.ActivityGiftHistoryBinding;
 import kr.co.core.kita.util.StringUtil;
 
-public class GiftHistoryAct extends AppCompatActivity {
+public class GiftHistoryAct extends BaseAct {
     ActivityGiftHistoryBinding binding;
     Activity act;
 

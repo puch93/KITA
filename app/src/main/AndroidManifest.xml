@@ -48,7 +48,6 @@
         <activity android:name=".activity.JoinAct" />
         <activity android:name=".activity.MainAct" />
         <activity android:name=".activity.TalkDetailAct" />
-        <activity android:name=".dialog.BaseDlg" />
         <activity android:name=".activity.ProfileDetailAct" />
         <activity android:name=".activity.BaseAct" />
         <activity android:name=".activity.PermissionAct" />
@@ -57,9 +56,6 @@
             android:theme="@style/ActivityDialog" />
         <activity
             android:name=".dialog.GiftDlg"
-            android:theme="@style/ActivityDialog" />
-        <activity
-            android:name=".dialog.PaymentDlg"
             android:theme="@style/ActivityDialog" />
         <activity
             android:name=".dialog.PictureDlg"

@@ -102,7 +102,7 @@ public class TalkSubFrag extends BaseFrag {
                             for (int i = 0; i < ja.length(); i++) {
                                 JSONObject job = ja.getJSONObject(i);
                                 String tb_idx = StringUtil.getStr(job, "tb_idx");
-                                String content = StringUtil.getStr(job, "content");
+                                String content = Common.decodeEmoji(StringUtil.getStr(job, "content"));
                                 String tb_regdate = StringUtil.converTime(StringUtil.getStr(job, "tb_regdate"), "yyyy.MM.dd");
 
                                 String u_idx = StringUtil.getStr(job, "u_idx");

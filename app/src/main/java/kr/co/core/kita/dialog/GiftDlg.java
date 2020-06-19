@@ -8,10 +8,10 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.BaseAct;
 import kr.co.core.kita.activity.GiftHistoryAct;
 
-
-public class GiftDlg extends BaseDlg {
+public class GiftDlg extends BaseAct {
     Activity act;
 
     @Override

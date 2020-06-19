@@ -16,7 +16,7 @@ import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
 
-public class EnlargeAct extends AppCompatActivity {
+public class EnlargeAct extends BaseAct {
     ActivityEnlargeBinding binding;
     Activity act;
 

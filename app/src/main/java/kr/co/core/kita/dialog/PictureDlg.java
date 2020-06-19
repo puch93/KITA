@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.WindowManager;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.BaseAct;
 
-
-public class PictureDlg extends BaseDlg {
+public class PictureDlg extends BaseAct {
     public static final String CAMERA = "camera";
     public static final String GALLERY = "gallery";
     Activity act;

@@ -14,13 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import kr.co.core.kita.R;
+import kr.co.core.kita.activity.BaseAct;
 import kr.co.core.kita.adapter.SelectAdapter;
 import kr.co.core.kita.data.SelectData;
 import kr.co.core.kita.databinding.DialogSelectBinding;
 import kr.co.core.kita.util.StringUtil;
 
-
-public class SelectDlg extends BaseDlg {
+public class SelectDlg extends BaseAct {
     DialogSelectBinding binding;
     Activity act;
 

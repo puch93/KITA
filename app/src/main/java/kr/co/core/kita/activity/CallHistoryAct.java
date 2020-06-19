@@ -26,7 +26,7 @@ import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
-public class CallHistoryAct extends AppCompatActivity {
+public class CallHistoryAct extends BaseAct {
     ActivityCallHistoryBinding binding;
     Activity act;
 

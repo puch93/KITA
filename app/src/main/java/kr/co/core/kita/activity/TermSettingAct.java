@@ -18,7 +18,7 @@ import kr.co.core.kita.adapter.TermPagerAdapter;
 import kr.co.core.kita.databinding.ActivityTermSettingBinding;
 import kr.co.core.kita.util.StringUtil;
 
-public class TermSettingAct extends AppCompatActivity {
+public class TermSettingAct extends BaseAct {
     ActivityTermSettingBinding binding;
 
     @Override

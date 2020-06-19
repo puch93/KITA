@@ -43,7 +43,7 @@ import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
-public class SplashAct extends AppCompatActivity {
+public class SplashAct extends BaseAct {
     ActivitySplashBinding binding;
     Activity act;
 

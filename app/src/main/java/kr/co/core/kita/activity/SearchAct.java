@@ -11,7 +11,7 @@ import androidx.databinding.DataBindingUtil;
 import kr.co.core.kita.R;
 import kr.co.core.kita.databinding.ActivitySearchBinding;
 
-public class SearchAct extends AppCompatActivity {
+public class SearchAct extends BaseAct {
     ActivitySearchBinding binding;
     Activity act;
 

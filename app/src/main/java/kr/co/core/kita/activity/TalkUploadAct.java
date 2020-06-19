@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -38,7 +37,7 @@ import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.Glide4Engine;
 import kr.co.core.kita.util.StringUtil;
 
-public class TalkUploadAct extends AppCompatActivity {
+public class TalkUploadAct extends BaseAct {
     ActivityTalkUploadBinding binding;
     Activity act;
 

@@ -29,7 +29,7 @@ import kr.co.core.kita.util.AppPreference;
 import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
-public class HomeLocationAct extends AppCompatActivity {
+public class HomeLocationAct extends BaseAct {
     ActivityHomeLocationBinding binding;
     private Activity act;
 

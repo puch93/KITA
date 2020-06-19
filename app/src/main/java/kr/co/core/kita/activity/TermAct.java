@@ -18,7 +18,7 @@ import kr.co.core.kita.server.netUtil.NetUrls;
 import kr.co.core.kita.util.Common;
 import kr.co.core.kita.util.StringUtil;
 
-public class TermAct extends AppCompatActivity {
+public class TermAct extends BaseAct {
     ActivityTermBinding binding;
     Activity act;
 
