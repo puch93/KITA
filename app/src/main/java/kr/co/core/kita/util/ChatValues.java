@@ -2,6 +2,7 @@ package kr.co.core.kita.util;
 
 public class ChatValues {
     public static final String SOCKET_URL = "http://kita.adamstore.co.kr:1448";
+    //public static final String SOCKET_URL = "http://facetalk.coreplanet.co.kr:1439"; <- 페이스톡 테스트 url
 
     public static final String ROOMIDX = "room_idx";
     public static final String TALKER = "user_idx";
