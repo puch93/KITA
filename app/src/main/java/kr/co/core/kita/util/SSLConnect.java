@@ -54,7 +54,7 @@ public class SSLConnect {
     }
 
     public HttpsURLConnection postHttps(String url, int connTimeout, int readTimeout) {
-        trustAllHosts();
+//        trustAllHosts();
 
         HttpsURLConnection https = null;
         try {

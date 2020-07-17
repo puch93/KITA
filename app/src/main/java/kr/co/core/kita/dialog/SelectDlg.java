@@ -50,12 +50,15 @@ public class SelectDlg extends BaseAct {
         switch (getIntent().getStringExtra("type")) {
             case TYPE_REGION_W:
                 array = Arrays.asList(getResources().getStringArray(R.array.region_select_w));
+                binding.tvType.setText("Select Region");
                 break;
             case TYPE_REGION_M:
                 array = Arrays.asList(getResources().getStringArray(R.array.region_select_m));
+                binding.tvType.setText("Select Region");
                 break;
             case TYPE_GENDER:
                 array = Arrays.asList(getResources().getStringArray(R.array.gender_select));
+                binding.tvType.setText("Select Gender");
                 break;
         }
 

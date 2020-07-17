@@ -61,7 +61,7 @@ public class MainAct extends BaseAct implements View.OnClickListener {
 
         binding.llMenu01.performClick();
 
-        checkAutoPay();
+//        checkAutoPay();
 
         Log.i(StringUtil.TAG, "onCreate: " + System.currentTimeMillis());
     }
